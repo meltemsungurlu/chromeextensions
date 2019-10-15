@@ -1,0 +1,27 @@
+@font-face {
+	font-family: 'FontAwesome';
+	src: url('fonts/faws/fontawesome-webfont.eot?v=4.7.0');
+	src: url('fonts/faws/fontawesome-webfont.eot?#iefix&v=4.7.0')
+		format('embedded-opentype'),
+		url('fonts/faws/fontawesome-webfont.woff2?v=4.7.0') format('woff2'),
+		url('fonts/faws/fontawesome-webfont.woff?v=4.7.0') format('woff'),
+		url('fonts/faws/fontawesome-webfont.ttf?v=4.7.0') format('truetype'),
+		url('fonts/faws/fontawesome-webfont.svg?v=4.7.0#fontawesomeregular')
+		format('svg');
+	font-weight: normal;
+	font-style: normal;
+}
+
+ 
+@font-face {
+    font-family: 'fontello';
+    src: url('fonts/fontello/fontello.eot?17917003');
+    src: url('fonts/fontello/fontello.eot?17917003#iefix') 
+    format('embedded-opentype'), 
+    url('fonts/fontello/fontello.woff2?17917003') format('woff2'), 
+    url('fonts/fontello/fontello.woff?17917003') format('woff'), 
+    url('fonts/fontello/fontello.ttf?17917003') format('truetype'), 
+    url('fonts/fontello/fontello.svg?17917003#fontello') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}

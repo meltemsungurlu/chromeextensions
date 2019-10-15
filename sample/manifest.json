@@ -1,25 +1,59 @@
 {
-    "name": "Template Project",
+    "name": "Hadiii Template Project",
     "version": "1.0.0.1",
     "description": "Build an Extension Template!",
 	"background": {
-      "scripts": ["background.js"],
+      "scripts": [	"shared/bootstrap.js","background.js"],
       "persistent": false
     },
+
+  	"content_scripts": [
+  		{
+  			"matches": [
+  				"http://*/*",
+  				"https://*/*"
+  			],
+          "run_at": "document_end",
+  			"exclude_matches": [
+  				"http://api.hadiii.com/*"
+  			],
+  			"js": [
+  				"shared/bootstrap.js",
+    				"content.js"
+  			],
+  			"css": [
+  				"shared/bootstrap.css"
+  			]
+  		},
+      {
+        "matches": [
+          "http://*.youtube.com/*",
+          "https://*.youtube.com/*"
+        ],
+          "run_at": "document_end",
+        "js": [
+          "shared/bootstrap.js",
+            "ytb.js"
+        ],
+        "css": [
+          "shared/bootstrap.css"
+        ]
+      }
+  	],
     "page_action": {
      "default_popup": "popup.html",
       "default_icon": {
-        "16": "images/get_started16.png",
-        "32": "images/get_started32.png",
-        "48": "images/get_started48.png",
-        "128": "images/get_started128.png"
+        "16": "shared/images/get_started16.png",
+        "32": "shared/images/get_started32.png",
+        "48": "shared/images/get_started48.png",
+        "128": "shared/images/get_started128.png"
       }
    },
    "icons": {
-     "16": "images/get_started16.png",
-     "32": "images/get_started32.png",
-     "48": "images/get_started48.png",
-     "128": "images/get_started128.png"
+     "16": "shared/images/get_started16.png",
+     "32": "shared/images/get_started32.png",
+     "48": "shared/images/get_started48.png",
+     "128": "shared/images/get_started128.png"
    },
 "permissions": ["activeTab","declarativeContent","storage"],
 "options_page": "options.html",

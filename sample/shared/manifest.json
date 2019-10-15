@@ -1,0 +1,18 @@
+/**
+* @link https://developer.chrome.com/extensions/manifest
+* @link https://developer.chrome.com/extensions/shared_modules
+*/
+{
+  "version": "1.0",
+  "name": "Hadiii Shared Extension Module",
+  "manifest_version":2,
+  "export": {
+
+    "whitelist": [
+      "fjllaobfnfijppmdmpbnmdanjboebhfd", //twitter assistant
+      "anbjpaholmkdpfpdbpcipnilalkkhkbd" // whatsapp
+    ]
+  }
+
+
+}
