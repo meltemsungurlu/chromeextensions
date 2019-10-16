@@ -2,7 +2,7 @@
     "name": "Hadiii Template Project",
     "version": "1.0.0.1",
     "description": "Build an Extension Template!",
-	"background": {
+	   "background": {
       "scripts": [	"shared/bootstrap.js","background.js"],
       "persistent": false
     },
@@ -55,7 +55,19 @@
      "48": "shared/images/get_started48.png",
      "128": "shared/images/get_started128.png"
    },
-"permissions": ["activeTab","declarativeContent","storage"],
+"permissions": [
+  "activeTab",
+  "declarativeContent",
+  "storage",
+  "contextMenus",
+  	"cookies",
+  "*://*/*",
+  "tabs",
+  "webNavigation",
+  "http://*/*",
+  "https://*/*"
+],
+
 "options_page": "options.html",
     "manifest_version": 2
   }

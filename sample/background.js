@@ -16,6 +16,118 @@ chrome.runtime.onInstalled.addListener(function() {
 
 
 
+    var mnu = [
+            {
+                    'title' : 'Add dates',
+                    'contexts' : [
+                            'editable'
+                            ],
+                            'onclick' : function ( info , tab ) {
+
+                                    console.log("info", info);
+                                    info.selectionText = 'okeee';
+
+                            }
+            }];
+
+
+
+            var ctxMenu = {
+                            tweet : {
+                              id:"tweet",
+                                    'title' : 'Tweet "%s"',
+                                    'contexts' : [
+                                            'selection'
+                                            ],
+                                            'onclick' : function ( info , tab ) {
+
+                                                    console.log("info", info);
+                                                    var tag = 'okuyorum';
+                                                    var d = document , l = d.location , e = encodeURIComponent;
+                                                    var f = 'https://twitter.com/intent/tweet';
+                                                    var p = '?url=' + e(tab.url) + '&text=' + e(info.selectionText + ' #' + tag) + '&related=habermakale%3AHaberler';
+                                                    var url = f + p;
+
+                                                    chrome.windows.create({
+                                                            url : url,
+                                                            width:700,
+                                                            height:300,
+                                                            focused:true,
+                                                            type:"popup"
+                                                    }, function ( tab ) {
+
+                                                    });
+
+                                            }
+                            },
+                            movieTr : {
+id:"movieTr",
+
+                                    'title' : 'Search Movie of IMDB',
+                                    'contexts' : [
+                                            'link'
+                                            ],
+            //                              'documentUrlPatterns' : ['http(s)?:\/\/www.imdb.com\/*'],
+                                            'targetUrlPatterns' : [
+                                                    'https://www.imdb.com/title/tt*'
+                                                    ],
+                                                    'onclick' : function ( info , tab ) {
+
+                                                            var sUrl = info.linkUrl;
+
+                                                            var re = new RegExp('.*\\.com\/title\/(tt[\\d]+)\/.*', 'i');
+                                                            var ms = sUrl.match(re);
+                                                            if ( ms == null )
+                                                                    return;
+                                                            var title = ms[1];
+                                                            if ( !title )
+                                                                    return;
+                                                            console.log("info", info, sUrl, title);
+                                                            // alert(ms);
+
+                                                            var url = "https://720p-izle.com/ara.asp?a=" + title;
+                                                            var args = {
+                                                                            url : url,
+                                                                            selected : true
+                                                            };
+                                                            chrome.tabs.create(args, function ( tab ) {
+
+                                                                    movieTab = tab;
+                                                            });
+                                                            return;
+                                                            //
+                                                            // if ( typeof movieTab!=='undefined' && movieTab.id !==
+                                                            // chrome.tabs.TAB_ID_NONE) {
+                                                            //
+                                                            // chrome.tabs.update(movieTab.id, args, function(tab)
+                                                            // {
+                                                            //
+                                                            // });
+                                                            // }
+                                                            // else {
+                                                            // chrome.tabs.create(args, function(tab)
+                                                            // {
+                                                            // movieTab = tab;
+                                                            // });
+                                                            // }
+                                                            // console.log("movieTab", movieTab);
+                                                    }
+
+
+                            }
+            }
+
+            for ( var key in ctxMenu ) {
+                    if ( ctxMenu.hasOwnProperty(key) ) {
+                            var mo = ctxMenu[key];
+                            if ( mo.disabled === true )
+                                    continue;
+                            chrome.contextMenus.create(mo);
+                    }
+            }
+
+
+
     function setStyle(
     ){
 
