@@ -3,8 +3,11 @@
     "version": "1.0.0.1",
     "description": "Build an Extension Template!",
 	   "background": {
-      "scripts": [	"shared/bootstrap.js","background.js"],
-      "persistent": false
+      "scripts": [
+        "shared/bootstrap.js",
+        "background.js"
+      ],
+      "persistent": true
     },
 
   	"content_scripts": [
