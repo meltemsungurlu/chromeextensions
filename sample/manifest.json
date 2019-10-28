@@ -46,17 +46,17 @@
     "page_action": {
      "default_popup": "popup.html",
       "default_icon": {
-        "16": "shared/images/get_started16.png",
-        "32": "shared/images/get_started32.png",
-        "48": "shared/images/get_started48.png",
-        "128": "shared/images/get_started128.png"
+        "16": "shared/images/hadiii-16.png",
+        "32": "shared/images/hadiii-32.png",
+        "48": "shared/images/hadiii-48.png",
+        "128": "shared/images/hadiii-128.png"
       }
    },
    "icons": {
-     "16": "shared/images/get_started16.png",
-     "32": "shared/images/get_started32.png",
-     "48": "shared/images/get_started48.png",
-     "128": "shared/images/get_started128.png"
+     "16": "shared/images/hadiii-16.png",
+     "32": "shared/images/hadiii-32.png",
+     "48": "shared/images/hadiii-48.png",
+     "128": "shared/images/hadiii-128.png"
    },
 "permissions": [
   "activeTab",

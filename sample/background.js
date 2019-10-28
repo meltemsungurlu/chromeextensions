@@ -2,6 +2,7 @@ chrome.runtime.onInstalled.addListener(function() {
     chrome.storage.sync.set({color: '#3aa757'}, function() {
       console.log("The color is green.");
     });
+
   });
 
   chrome.declarativeContent.onPageChanged.removeRules(undefined, function() {
@@ -15,23 +16,9 @@ chrome.runtime.onInstalled.addListener(function() {
     });
 
 
-
-    var mnu = [
-            {
-                    'title' : 'Add dates',
-                    'contexts' : [
-                            'editable'
-                            ],
-                            'onclick' : function ( info , tab ) {
-
-                                    console.log("info", info);
-                                    info.selectionText = 'okeee';
-
-                            }
-            }];
-
-
-
+// https://webteizle.vip/filtre.asp?a=passengers
+//https://developer.chrome.com/apps/contextMenus
+ 
             var ctxMenu = {
                             tweet : {
                               id:"tweet",
@@ -65,27 +52,38 @@ id:"movieTr",
 
                                     'title' : 'Search Movie of IMDB',
                                     'contexts' : [
-                                            'link'
+                                            'link','page'
                                             ],
-            //                              'documentUrlPatterns' : ['http(s)?:\/\/www.imdb.com\/*'],
+                                            'documentUrlPatterns' : ['https://www.imdb.com/*'],
                                             'targetUrlPatterns' : [
                                                     'https://www.imdb.com/title/tt*'
                                                     ],
                                                     'onclick' : function ( info , tab ) {
+                                                    	 
+                                                            var sUrl =   info.linkUrl || info.pageUrl ;
+                                                      
+                                                           if(typeof sUrl==='undefined') return ;
 
-                                                            var sUrl = info.linkUrl;
+                                                            var re = new RegExp('.*\\.com\/title\/(tt[\\d]+)\/.*', 'i');
+                                                            var ms = sUrl.match(re);
 
+                                                            if ( ms == null )    return;
+                                                         
+                                                            
+                                                           
+                                                            
                                                             var re = new RegExp('.*\\.com\/title\/(tt[\\d]+)\/.*', 'i');
                                                             var ms = sUrl.match(re);
                                                             if ( ms == null )
                                                                     return;
+                                                            
                                                             var title = ms[1];
                                                             if ( !title )
                                                                     return;
                                                             console.log("info", info, sUrl, title);
                                                             // alert(ms);
 
-                                                            var url = "https://720p-izle.com/ara.asp?a=" + title;
+                                                            var url = "https://webteizle.vip/filtre.asp?a=" + title;
                                                             var args = {
                                                                             url : url,
                                                                             selected : true
@@ -96,21 +94,29 @@ id:"movieTr",
                                                             });
                                                             return;
                                                             //
-                                                            // if ( typeof movieTab!=='undefined' && movieTab.id !==
-                                                            // chrome.tabs.TAB_ID_NONE) {
+                                                            // if ( typeof
+															// movieTab!=='undefined'
+															// && movieTab.id
+															// !==
+                                                            // chrome.tabs.TAB_ID_NONE)
+															// {
                                                             //
-                                                            // chrome.tabs.update(movieTab.id, args, function(tab)
+                                                            // chrome.tabs.update(movieTab.id,
+															// args,
+															// function(tab)
                                                             // {
                                                             //
                                                             // });
                                                             // }
                                                             // else {
-                                                            // chrome.tabs.create(args, function(tab)
+                                                            // chrome.tabs.create(args,
+															// function(tab)
                                                             // {
                                                             // movieTab = tab;
                                                             // });
                                                             // }
-                                                            // console.log("movieTab", movieTab);
+                                                            // console.log("movieTab",
+															// movieTab);
                                                     }
 
 

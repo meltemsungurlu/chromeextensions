@@ -5171,7 +5171,7 @@ function ___parser() {
                 ca.event.raise('element-parsed', this, window, false);
         }
         window.___parseElement___ = parseElement;
-        console.warn('add domready support for parseElement event.');
+        console.info('add domready support for parseElement event.');
 }
 
 function ___event()
@@ -5308,6 +5308,6 @@ ___domReady();
 ___parser();
 
 ___dom();
-console.warn('bootstrap.js loaded');
+console.log('bootstrap.js loaded');
 
 
