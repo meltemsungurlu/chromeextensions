@@ -160,7 +160,7 @@ return;
                         }.bind(fn);
                 }
 
-        } 
+        }
 })(window.console);
 
 class baseControl {
@@ -168,12 +168,12 @@ class baseControl {
 
                 var control = _$('div');
 
-                document.body.appendChild(control); 
+                document.body.appendChild(control);
                 var container = _$('div');
                 control.add(  container);
 
                 this._control = control;
-                this._container = container; 
+                this._container = container;
         }
         get control(){
                 return this._control;
@@ -189,7 +189,7 @@ class contentPanel extends baseControl {
                 if ( typeof css !== 'undefined' ) {
                         this.control.css(css);
                 }
-                this.control.cls("chrome-pop-window llebnplhkecpjbnlgafdfinohdfdchjn"); 
+                this.control.cls("chrome-pop-window llebnplhkecpjbnlgafdfinohdfdchjn");
                 this.container.cls('chrome-container');
                 var closer = _$('div');
 
@@ -247,7 +247,7 @@ class utility {
             console.log('injecting...')
             // if(typeof document ==='undefined') return;
             var target = document.head || document.documentElement;
-       
+
 
             var styleLoaded = false;
             var href = chrome.extension.getURL('_modules/llebnplhkecpjbnlgafdfinohdfdchjn/bootstrap.css');
@@ -292,29 +292,29 @@ class utility {
                         css += '@font-face { ';
                         css +=" font-family: 'fontello' ; ";
                         css +=" src: url('"  +  chrome.extension.getURL('shared/fonts/fontello/fontello.eot?68012377')+ "');";
-                        css +=" src: url('"  +  chrome.extension.getURL('shared/fonts/fontello/fontello.eot?68012377#iefix')+ "') "; 
+                        css +=" src: url('"  +  chrome.extension.getURL('shared/fonts/fontello/fontello.eot?68012377#iefix')+ "') ";
                         css +=" format('embedded-opentype'),  \n";
 
                         css +=" src: url('"  +  chrome.extension.getURL('shared/fonts/fontello/fontello.woff2?68012377')+  "') " +"format('woff2')" + ', \n';
                         css +=" src: url('"  +  chrome.extension.getURL('shared/fonts/fontello/fontello.woff?68012377')+  "') " +"format('woff')" + ', \n';
                         css +=" src: url('"  +  chrome.extension.getURL('shared/fonts/fontello/fontello.ttf?68012377')+  "') " +"format('truetype')" + ', \n';
                         css +=" src: url('"  +  chrome.extension.getURL('shared/fonts/fontello/fontello.svg?68012377#fontello')+  "') " +"format('svg')" + ' ; \n';
- 
+
                         css +=' font-weight: normal; font-style: normal;';
                         css +='}';
-                        
-                        
+
+
                         css += '@font-face { ';
                         css +=" font-family: 'FontAwesome' ; ";
                         css +=" src: url('"  +  chrome.extension.getURL('shared/fonts/faws/fontawesome-webfont.eot?v=4.7.0')+ "');";
-                        css +=" src: url('"  +  chrome.extension.getURL('shared/fonts/faws/fontawesome-webfont.eot?#iefix&v=4.7.0')+ "') "; 
+                        css +=" src: url('"  +  chrome.extension.getURL('shared/fonts/faws/fontawesome-webfont.eot?#iefix&v=4.7.0')+ "') ";
                         css +=" format('embedded-opentype'),  \n";
 
                         css +=" src: url('"  +  chrome.extension.getURL('shared/fonts/faws/fontawesome-webfont.woff2?v=4.7.0')+  "') " +"format('woff2')" + ', \n';
                         css +=" src: url('"  +  chrome.extension.getURL('shared/fonts/faws/fontawesome-webfont.woff?v=4.7.0')+  "') " +"format('woff')" + ', \n';
                         css +=" src: url('"  +  chrome.extension.getURL('shared/fonts/faws/fontawesome-webfont.ttf?v=4.7.0')+  "') " +"format('truetype')" + ', \n';
                         css +=" src: url('"  +  chrome.extension.getURL('shared/fonts/faws/fontawesome-webfont.svg?v=4.7.0#fontello')+  "') " +"format('svg')" + ' ; \n';
- 
+
                         css +=' font-weight: normal; font-style: normal;';
                         css +='}';
 
@@ -336,6 +336,25 @@ class utility {
         static  uniqid(pre)
         {
                 return (pre === false ? '' : (pre && pre.length ? (pre + '_') : 'id_')) + ('' + Math.random()).substring(2, 10);
+        }
+
+        static addMenuItems(items){
+          chrome.runtime.sendMessage({
+            contextMenuItems: items
+          }, function(response) {
+          	  console.log(response);
+          	});
+        }
+/**
+Moko
+*/
+        static addMenuListener(callBack){
+          chrome.extension.onMessage.addListener(function (message, sender, callback) {
+              if (message.menuItem ) {
+        callBack(message.menuItem,message.info,message.tab);
+              }
+
+          });
         }
 }
 function __cookie() {
@@ -489,7 +508,7 @@ function ___dom(){
         }
         /**
          * Initializes DOMElement
-         * 
+         *
          * @function
          * @name $
          * @param {String}
@@ -542,7 +561,7 @@ function ___dom(){
         };
         /**
          * returns whether form is dirty
-         * 
+         *
          * @name HTMLFormElement#dirty
          * @returns {bool}
          */
@@ -554,7 +573,7 @@ function ___dom(){
          */
         /**
          * insert object into form as dimensional name form
-         * 
+         *
          * @function
          * @name HTMLFormElement#addObject
          * @param {string}
@@ -577,7 +596,7 @@ function ___dom(){
          * @name HTMLFormElement#resetDirty
          */
         /**
-         * 
+         *
          * @memberOf __closure
          */
         const __prototype__ = {};
@@ -630,7 +649,7 @@ function ___dom(){
                                         if (this instanceof HTMLTextAreaElement) {
                                                 this.innerText='';
                                                 this.defaultValue='';
-                                                this.value=''; 
+                                                this.value='';
                                         } else if (this instanceof HTMLInputElement) {
                                                 if (this.type == "checkbox" || this.type == "radio"){
                                                         this.defaultChecked = false;
@@ -646,7 +665,7 @@ function ___dom(){
                                                 this.defaultValue='';
                                                 this.value='';
                                                 var option = this.options.item(0);
-                                                while (option) { 
+                                                while (option) {
                                                         option.defaultSelected = false;
                                                         option = option.nextElementSibling;
                                                 }
@@ -917,7 +936,7 @@ function ___dom(){
                          * looks up divs with validate attribute and match it
                          * with input with same name sets their class as
                          * validator
-                         * 
+                         *
                          * @deprecated
                          */
                         handle : function() {
@@ -1105,7 +1124,7 @@ function ___dom(){
                         /**
                          * Rules digit input and use setError for fault entry
                          * Use onkeypress
-                         * 
+                         *
                          * @example onkeypress="this.maskDigit(3,event);"
                          * @function
                          * @name HTMLInputElement#maskDigit
@@ -1134,7 +1153,7 @@ function ___dom(){
                         handle : /**
                          * Set className 'spin' and disables
                          * form
-                         * 
+                         *
                          * @function
                          * @name HTMLInputElement#spin
                          * @param {boolean}
@@ -1153,7 +1172,7 @@ function ___dom(){
                         prototypeOf : HTMLInputElement,
                         /**
                          * Assign enter key press functionality to element
-                         * 
+                         *
                          * @function
                          * @name HTMLInputElement#setKeyPress
                          * @param {Object}
@@ -1161,7 +1180,7 @@ function ___dom(){
                          *                used
                          * @param {Function}
                          *                hnd
-                         * 
+                         *
                          */
                         handle : function(assgn, hnd) {
                                 if (this.onkeypress)
@@ -1180,7 +1199,7 @@ function ___dom(){
         };
         /**
          * toolTip options
-         * 
+         *
          * @public
          * @namespace
          * @name toolTipOptions
@@ -1191,7 +1210,7 @@ function ___dom(){
          * @property {string} className
          * @property {string} hideEvent event name that causes tip to disappear
          * @property {string|Object} style
-         * 
+         *
          */
         /**
          * @type {Function}
@@ -1356,9 +1375,9 @@ function ___dom(){
          * ca.event.listen('click',function(e){ e.stopPropagation();
          * e.stopImmediatePropagation(); }.bind(this),this,true);
          * this.initializeUpload.call(this); }">Dosya yükle</div>
-         * 
+         *
          * events upload-initialize , upload-complete
-         * 
+         *
          * @param {object}
          *                args { debug : false, filter : 'jpg,jpeg,gif,png',
          *                overwrite : false, maxLength : -1, temporary : true, }
@@ -1538,7 +1557,7 @@ function ___dom(){
         };
         /**
          * parses dom
-         * 
+         *
          * @revision for loop revised as negative and iterative
          * @function
          * @name HTMLElement#parseDOM
@@ -1549,7 +1568,7 @@ function ___dom(){
         __prototype__.parseDOM = parseDom;;
         /**
          * disables element for keyboard and mouse actions
-         * 
+         *
          * @function
          * @name HTMLElement#disable
          * @returns {void}
@@ -1689,7 +1708,7 @@ function ___dom(){
         };
         /**
          * disables element for keyboard and mouse actions
-         * 
+         *
          * @function
          * @name HTMLElement#disable__
          * @returns {void}
@@ -1805,7 +1824,7 @@ function ___dom(){
                 }
         };
         /**
-         * 
+         *
          * @memberOf __prototype__
          */
         __prototype__.disable_ = function(on, progress) {
@@ -1874,7 +1893,7 @@ function ___dom(){
         };
         /**
          * enables dragging support
-         * 
+         *
          * @function
          * @name HTMLElement#canDrag
          * @param {bool}
@@ -1974,10 +1993,10 @@ function ___dom(){
         };
         /**
          * fill container element
-         * 
+         *
          * @function
          * @name HTMLElement#fillHeight
-         * 
+         *
          * @memberOf __prototype__
          */
         __prototype__.fillHeight = function() {
@@ -1997,7 +2016,7 @@ function ___dom(){
                 this.style.height = h + 'px';
         };
         /**
-         * 
+         *
          * @memberOf __prototype__
          */
         __prototype__.dispose = function() {
@@ -2024,13 +2043,13 @@ function ___dom(){
         /**
          * removes child elements and attributes raises cancellable clear event
          * on element
-         * 
+         *
          * @function
          * @name HTMLElement#clear
          * @param {bool}
          *                destruct whether remove attributes and descendant
          *                nodes
-         * 
+         *
          * @memberOf __prototype__
          */
         __prototype__.clear = function(destruct) {
@@ -2080,7 +2099,7 @@ function ___dom(){
         };
         /**
          * switches style display none or block
-         * 
+         *
          * @function
          * @name HTMLElement#toggle
          * @param {bool}
@@ -2089,7 +2108,7 @@ function ___dom(){
          *                cb called on DOMElement instance with visibility
          *                parameter
          * @version 1.001
-         * 
+         *
          * @memberOf __prototype__
          */
         __prototype__.toggle = function(on, cb) {
@@ -2115,7 +2134,7 @@ function ___dom(){
         };
         /**
          * switches style display to block
-         * 
+         *
          * @function
          * @name HTMLElement#show
          * @param {Function}
@@ -2143,14 +2162,14 @@ function ___dom(){
         };
         /**
          * removes Element , raises cancellable will-remove and remove events
-         * 
+         *
          * @function
          * @name HTMLElement#remove
          * @param {bool}
          *                dispose either dispose attributes and object
          *                properties
          * @return removed object (this) if not removed returns false
-         * 
+         *
          * @memberOf __prototype__
          */
         __prototype__.remove = function(dispose) {
@@ -2172,13 +2191,13 @@ function ___dom(){
          * changes style display of Element o none If element has
          * data-control-event-display-params parameter uses it by changing class
          * name for visibility change
-         * 
+         *
          * @function
          * @name HTMLElement#hide
          * @param {Function}
          *                h called on DOMElement instance with visibility
          *                parameter
-         * 
+         *
          * @memberOf __prototype__
          */
         __prototype__.hide = function(h) {
@@ -2318,7 +2337,7 @@ function ___dom(){
                 return out;
         };
         /**
-         * 
+         *
          * @memberOf __prototype__
          */
         __prototype__.prepend = function() {
@@ -2347,7 +2366,7 @@ function ___dom(){
          *                rc x1,y1,x2,y2 pixel coordinates
          * @param {String}
          *                t title when over
-         * 
+         *
          */
         __prototype__.setRectClick = function(ch, rc, t, e) {
                 var e = e || window.event;
@@ -2418,7 +2437,7 @@ function ___dom(){
                 ca.event.raise('slide', on, this, false);
         };
         /**
-         * 
+         *
          * @memberOf __prototype__
          */
         __prototype__.animate = function() {
@@ -2524,7 +2543,7 @@ function ___dom(){
                 return this.style.display == 'none';
         };
         /**
-         * 
+         *
          * @memberOf __prototype__
          */
         __prototype__.isVisible = function(h) {
@@ -2539,7 +2558,7 @@ function ___dom(){
                 return isv;
         };
         /**
-         * 
+         *
          * @memberOf __prototype__
          */
         __prototype__.disableEvent = function() {
@@ -2553,7 +2572,7 @@ function ___dom(){
                 }
         };
         /**
-         * 
+         *
          * @memberOf __prototype__
          */
         __prototype__.html = function(v) {
@@ -2565,7 +2584,7 @@ function ___dom(){
                 return this;
         };
         /**
-         * 
+         *
          * @memberOf __prototype__
          */
         __prototype__.text = function(v) {
@@ -2587,7 +2606,7 @@ function ___dom(){
         };
         /**
          * sets element style
-         * 
+         *
          * @function
          * @name HTMLElement#css
          * @param {String|Object}
@@ -2629,7 +2648,7 @@ function ___dom(){
         };
         /**
          * return element has parentElement
-         * 
+         *
          * @function
          * @name HTMLElement#hasParent
          * @param {Function}
@@ -2642,7 +2661,7 @@ function ___dom(){
         };
         /**
          * return element parentElement
-         * 
+         *
          * @function
          * @name HTMLElement#hasParent
          * @param {Function}
@@ -2662,7 +2681,7 @@ function ___dom(){
         };
         /**
          * return element parentElement at given depth
-         * 
+         *
          * @function
          * @name HTMLElement#hasParent
          * @param {int}
@@ -2679,7 +2698,7 @@ function ___dom(){
                 return p;
         };
         /**
-         * 
+         *
          * @memberOf __prototype__
          */
         __prototype__.hasClass = function(cls) {
@@ -2793,13 +2812,13 @@ function ___dom(){
         __prototype__.attrib = __prototype__.att;
         /**
          * sets attributes of element
-         * 
+         *
          * @function
          * @name HTMLElement#atts
          * @param {Object}
          *                ats attributes
          * @returns {HTMLElement}
-         * 
+         *
          * @memberOf __prototype__
          * @private
          */
@@ -2832,11 +2851,11 @@ function ___dom(){
         };
         /**
          * centerScreen Not implemented
-         * 
+         *
          * @function
          * @name HTMLElement#centerScreen
          * @returns {void}
-         * 
+         *
          * @memberOf __prototype__
          */
         __prototype__.centerScreen = function() {
@@ -2862,7 +2881,7 @@ function ___dom(){
                         },
                         /**
                          * returns the form of div element
-                         * 
+                         *
                          * @name HTMLDivElement#form
                          * @returns {HTMLFormElement}
                          * @memberOf __property__
@@ -2894,7 +2913,7 @@ function ___dom(){
                         },
                         /**
                          * returns the checkbox is checked or set checked
-                         * 
+                         *
                          * @name HTMLDivElement#checked
                          * @returns {boolean}
                          */
@@ -2915,7 +2934,7 @@ function ___dom(){
                         },
                         /**
                          * returns element size by calculating padding
-                         * 
+                         *
                          * @name HTMLElement#clientSize
                          * @returns {w,h}
                          */
@@ -2951,7 +2970,7 @@ function ___dom(){
                         dirty : [
                                 /**
                                  * returns whether element is dirty
-                                 * 
+                                 *
                                  * @name HTMLTextAreaElement#dirty
                                  * @returns {bool}
                                  */
@@ -2974,7 +2993,7 @@ function ___dom(){
                                 },
                                 /**
                                  * returns whether element is dirty
-                                 * 
+                                 *
                                  * @name HTMLSelectElement#dirty
                                  * @returns {bool}
                                  */
@@ -3009,7 +3028,7 @@ function ___dom(){
                                 },
                                 /**
                                  * returns whether element is dirty
-                                 * 
+                                 *
                                  * @name HTMLInputElement#dirty
                                  * @returns {bool}
                                  */
@@ -3376,7 +3395,7 @@ function ___dom(){
                                 /**
                                  * returns element or parent that has
                                  * data-control-draggable attribute
-                                 * 
+                                 *
                                  * @name HTMLElement#dragEventTarget
                                  * @returns {HTMLElement}
                                  */
@@ -3391,7 +3410,7 @@ function ___dom(){
                                 },
                                 /**
                                  * returns getClientRects first indexed item
-                                 * 
+                                 *
                                  * @name HTMLElement#clientRect
                                  * @returns {Object} Rectangle object
                                  */
@@ -3462,7 +3481,7 @@ function ___dom(){
                                 /**
                                  * returns element or parent that has
                                  * data-control-closure-scope attribute
-                                 * 
+                                 *
                                  * @name HTMLElement#closureScope
                                  * @returns {HTMLElement}
                                  */
@@ -3511,7 +3530,7 @@ function ___dom(){
                                 /**
                                  * returns element or parent that has
                                  * data-control-render-target attribute
-                                 * 
+                                 *
                                  * @name HTMLElement#eventTarget
                                  * @returns {HTMLElement}
                                  */
@@ -3527,7 +3546,7 @@ function ___dom(){
                                 },
                                 /**
                                  * returns element padding metrics
-                                 * 
+                                 *
                                  * @name HTMLElement#computedBorder
                                  * @returns {HTMLElement}
                                  */
@@ -3555,7 +3574,7 @@ function ___dom(){
                                 },
                                 /**
                                  * returns element padding metrics
-                                 * 
+                                 *
                                  * @name HTMLElement#computedPadding
                                  * @returns {HTMLElement}
                                  */
@@ -3580,7 +3599,7 @@ function ___dom(){
                                 /**
                                  * returns element or parent that has
                                  * data-event-target attribute
-                                 * 
+                                 *
                                  * @name HTMLElement#eventTarget
                                  * @returns {HTMLElement}
                                  */
@@ -3601,7 +3620,7 @@ function ___dom(){
                                 /**
                                  * returns element or parent that has
                                  * data-event-target attribute
-                                 * 
+                                 *
                                  * @name HTMLElement#eventTarget
                                  * @returns {HTMLElement}
                                  */
@@ -3621,7 +3640,7 @@ function ___dom(){
                                 /**
                                  * returns element have data-event-bridge
                                  * attribute
-                                 * 
+                                 *
                                  * @name HTMLElement#isEventBridge
                                  * @returns {HTMLElement}
                                  */
@@ -3633,7 +3652,7 @@ function ___dom(){
                                 /**
                                  * returns element or parent that has
                                  * data-event-bridge attribute
-                                 * 
+                                 *
                                  * @name HTMLElement#eventBridge
                                  * @returns {HTMLElement}
                                  */
@@ -3650,7 +3669,7 @@ function ___dom(){
                                 /**
                                  * returns element or parent that has
                                  * data-event-node attribute
-                                 * 
+                                 *
                                  * @name HTMLElement#eventNode
                                  * @returns {HTMLElement}
                                  */
@@ -3683,7 +3702,7 @@ function ___dom(){
                                 /**
                                  * returns value of element or parent that has
                                  * data-event-target attribute
-                                 * 
+                                 *
                                  * @name HTMLElement#eventTarget
                                  * @returns {HTMLElement}
                                  */
@@ -3700,7 +3719,7 @@ function ___dom(){
                                 /**
                                  * returns element or parent that has
                                  * data-control-group attribute
-                                 * 
+                                 *
                                  * @name HTMLElement#controlGroup
                                  * @returns {HTMLElement}
                                  */
@@ -3717,7 +3736,7 @@ function ___dom(){
                                 /**
                                  * returns element display state using
                                  * data-control-event-display-params attribute
-                                 * 
+                                 *
                                  * @name HTMLElement#visible
                                  * @returns {bool}
                                  */
@@ -3735,7 +3754,7 @@ function ___dom(){
                                 },
                                 /**
                                  * returns element offset position
-                                 * 
+                                 *
                                  * @name HTMLElement#visible
                                  * @returns {Object} left,top
                                  */
@@ -3776,12 +3795,12 @@ function ___dom(){
         __property__.itemCommand = __property__.controlCommand;
         /**
          * Raise element before element [el] by setting z-index
-         * 
+         *
          * @function
          * @name HTMLElement#justBefore
          * @param {HTMLElement}
          *                el
-         * 
+         *
          * @memberOf __prototype__
          */
         __prototype__.justBefore = function(el) {
@@ -3792,11 +3811,11 @@ function ___dom(){
         };
         /**
          * Raise control top of other controls by setting z-index
-         * 
+         *
          * @function
          * @name HTMLElement#topMost
-         * 
-         * 
+         *
+         *
          * @memberOf __prototype__
          */
         __prototype__.topMost = function() {
@@ -3818,14 +3837,14 @@ function ___dom(){
                 return this;
         };
         /**
-         * 
+         *
          * @memberOf __prototype__
          */
         __prototype__.setTitle = {
                         prototypeOf : HTMLDocument,
                         /**
                          * sets title of document
-                         * 
+                         *
                          * @function
                          * @name HTMLDocument#setTitle
                          * @param {String}
@@ -3847,7 +3866,7 @@ function ___dom(){
                         }
         };
         /**
-         * 
+         *
          * @memberOf __prototype__
          */
         __prototype__.HTMLCollection = {
@@ -3856,7 +3875,7 @@ function ___dom(){
                                 /**
                                  * applies select array function on
                                  * HTMLCollection
-                                 * 
+                                 *
                                  * @function
                                  * @name HTMLCollection#select
                                  * @returns {Array} of HTMLElement
@@ -3867,7 +3886,7 @@ function ___dom(){
                                 },
                                 /**
                                  * applies each array function on HTMLCollection
-                                 * 
+                                 *
                                  * @function
                                  * @name HTMLCollection#each
                                  */
@@ -3877,7 +3896,7 @@ function ___dom(){
                                 },
                                 /**
                                  * applies find array function on HTMLCollection
-                                 * 
+                                 *
                                  * @function
                                  * @name HTMLCollection#find
                                  */
@@ -3888,7 +3907,7 @@ function ___dom(){
                                 /**
                                  * converts HTMLCollection to array and returns
                                  * it
-                                 * 
+                                 *
                                  * @function
                                  * @name HTMLCollection#toArray
                                  * @returns {Array} of HTMLElement
@@ -3926,7 +3945,7 @@ function ___dom(){
         };
         /**
          * adds element to element
-         * 
+         *
          * @function
          * @name HTMLElement#addTo
          * @param {HTMLElement}
@@ -3935,7 +3954,7 @@ function ___dom(){
          */
         /**
          * prepends element to element
-         * 
+         *
          * @function
          * @name HTMLElement#prependTo
          * @param {HTMLElement}
@@ -4039,13 +4058,13 @@ function ___dom(){
         loadProperties();
         /**
          * Whether validation enabled for this element
-         * 
+         *
          * @name HTMLElement#canValidate
          * @return bool
          */
         /**
          * returns whether element is disabled (has disabled attribute)
-         * 
+         *
          * @name HTMLElement#disabled
          * @returns {bool}
          */
@@ -4293,7 +4312,7 @@ function ___parser() {
                                 hash : {
                                         /**
                                          * //FIXME DEPRECATE
-                                         * 
+                                         *
                                          * @namespace
                                          * @name dataAttributeParser.event.hash.listener
                                          */
@@ -5181,7 +5200,7 @@ function ___event()
 
                         /**
                          * Event Object
-                         * 
+                         *
                          * @namespace
                          * @name ca.event
                          */
@@ -5290,12 +5309,12 @@ window.use = function(ns)
         for (var i = 0; i < nsArr.length; i++) {
                 var n = nsArr[i];
                 if ( !ctx.hasOwnProperty(n))
-                        Object.defineProperty(ctx,n, { 
+                        Object.defineProperty(ctx,n, {
                                 enumerable: true,
                                 configurable: false,
                                 writable: true,
-                                value: {} 
-                        }); 
+                                value: {}
+                        });
                 ctx = ctx[n];
 
         }
@@ -5309,5 +5328,3 @@ ___parser();
 
 ___dom();
 console.log('bootstrap.js loaded');
-
-

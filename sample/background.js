@@ -1,4 +1,4 @@
-chrome.runtime.onInstalled.addListener(function() {
+chrome.runtime.onInstalled.addListener(function () {
     chrome.storage.sync.set({color: '#3aa757'}, function() {
       console.log("The color is green.");
     });
@@ -15,127 +15,92 @@ chrome.runtime.onInstalled.addListener(function() {
       }]);
     });
 
+var contentMenuItems=[];
+  chrome.runtime.onMessage.addListener(
+		  function(request, sender, sendResponse) {
+         console.log(request);
+			  if (request.greeting )
+				  console.log(request.greeting);
+			  ;
+		    console.log(sender.tab ?
+		                "from a content script:" + sender.tab.url :
+		                "from the extension");
+		    if (request.greeting == "hello")
+		      sendResponse({farewell: "goodbye from background"});
+
+if(request.contextMenuItems){
+  for (var i=0;i<request.contextMenuItems.length;i++) {
+    var mo = request.contextMenuItems[i];
+var jsonStr=JSON.stringify(mo);
+
+if ( contentMenuItems.indexOf(jsonStr)!==-1 )
+        continue;
+
+contentMenuItems.push(jsonStr);
+
+    if ( mo.disabled === true )
+            continue;
+            mo['onclick'] = function ( info , tab ) {
+              console.log("item " + info.menuItemId + " was clicked");
+                  console.log("info: " +  info );
+                  console.log("tab: " +  tab );
+
+                  // Add all you functional Logic here
+                  chrome.tabs.query({
+                      "active": true,
+                      "currentWindow": true
+                  }, function (tabs) {
+                      chrome.tabs.sendMessage(tabs[0].id, {
+                          menuItem: mo,
+                          info:info,
+                          tab:tabs[0]
+                      });
+                  });
+            }
+    chrome.contextMenus.create(mo);
+  }
+    sendResponse({farewell: "Menu items added"});
+}
+
+
+		  });
 
 // https://webteizle.vip/filtre.asp?a=passengers
-//https://developer.chrome.com/apps/contextMenus
- 
-            var ctxMenu = {
-                            tweet : {
-                              id:"tweet",
-                                    'title' : 'Tweet "%s"',
-                                    'contexts' : [
-                                            'selection'
-                                            ],
-                                            'onclick' : function ( info , tab ) {
+// https://developer.chrome.com/apps/contextMenus
 
-                                                    console.log("info", info);
-                                                    var tag = 'okuyorum';
-                                                    var d = document , l = d.location , e = encodeURIComponent;
-                                                    var f = 'https://twitter.com/intent/tweet';
-                                                    var p = '?url=' + e(tab.url) + '&text=' + e(info.selectionText + ' #' + tag) + '&related=habermakale%3AHaberler';
-                                                    var url = f + p;
+  
 
-                                                    chrome.windows.create({
-                                                            url : url,
-                                                            width:700,
-                                                            height:300,
-                                                            focused:true,
-                                                            type:"popup"
-                                                    }, function ( tab ) {
+  
+            var ctxMenu = [];
+            
+            var mnf=chrome.runtime.getManifest();
+            console.log('manifest',mnf);            
+if(!('update_url' in mnf)) ctxMenu.push( {
 
-                                                    });
-
-                                            }
-                            },
-                            movieTr : {
-id:"movieTr",
-
-                                    'title' : 'Search Movie of IMDB',
-                                    'contexts' : [
-                                            'link','page'
-                                            ],
-                                            'documentUrlPatterns' : ['https://www.imdb.com/*'],
-                                            'targetUrlPatterns' : [
-                                                    'https://www.imdb.com/title/tt*'
-                                                    ],
-                                                    'onclick' : function ( info , tab ) {
-                                                    	 
-                                                            var sUrl =   info.linkUrl || info.pageUrl ;
-                                                      
-                                                           if(typeof sUrl==='undefined') return ;
-
-                                                            var re = new RegExp('.*\\.com\/title\/(tt[\\d]+)\/.*', 'i');
-                                                            var ms = sUrl.match(re);
-
-                                                            if ( ms == null )    return;
-                                                         
-                                                            
-                                                           
-                                                            
-                                                            var re = new RegExp('.*\\.com\/title\/(tt[\\d]+)\/.*', 'i');
-                                                            var ms = sUrl.match(re);
-                                                            if ( ms == null )
-                                                                    return;
-                                                            
-                                                            var title = ms[1];
-                                                            if ( !title )
-                                                                    return;
-                                                            console.log("info", info, sUrl, title);
-                                                            // alert(ms);
-
-                                                            var url = "https://webteizle.vip/filtre.asp?a=" + title;
-                                                            var args = {
-                                                                            url : url,
-                                                                            selected : true
-                                                            };
-                                                            chrome.tabs.create(args, function ( tab ) {
-
-                                                                    movieTab = tab;
-                                                            });
-                                                            return;
-                                                            //
-                                                            // if ( typeof
-															// movieTab!=='undefined'
-															// && movieTab.id
-															// !==
-                                                            // chrome.tabs.TAB_ID_NONE)
-															// {
-                                                            //
-                                                            // chrome.tabs.update(movieTab.id,
-															// args,
-															// function(tab)
-                                                            // {
-                                                            //
-                                                            // });
-                                                            // }
-                                                            // else {
-                                                            // chrome.tabs.create(args,
-															// function(tab)
-                                                            // {
-                                                            // movieTab = tab;
-                                                            // });
-                                                            // }
-                                                            // console.log("movieTab",
-															// movieTab);
-                                                    }
+                        'title' : 'Reload ' + mnf.name, 
+                        'contexts' : [
+                                 'page'
+                                ],
+                                'onclick' : function ( info , tab ) {
+  chrome.runtime.reload();
+  chrome.tabs.reload(tab.id);
+                                        }
 
 
-                            }
-            }
+                });
+	
+	
+            for ( var key=0;key< ctxMenu.length;key++ ) {
 
-            for ( var key in ctxMenu ) {
-                    if ( ctxMenu.hasOwnProperty(key) ) {
-                            var mo = ctxMenu[key];
-                            if ( mo.disabled === true )
-                                    continue;
-                            chrome.contextMenus.create(mo);
-                    }
+                      var mo = ctxMenu[key];
+                      if ( mo.disabled === true )
+                              continue;
+                      chrome.contextMenus.create(mo);
             }
 
 
 
-    function setStyle(
-    ){
+    function setStyle(){
 
         var d=document;
         var cssText=`

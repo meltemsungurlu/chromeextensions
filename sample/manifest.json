@@ -1,76 +1,103 @@
 {
-    "name": "Hadiii Template Project",
-    "version": "1.0.0.1",
-    "description": "Build an Extension Template!",
-	   "background": {
-      "scripts": [
-        "shared/bootstrap.js",
-        "background.js"
-      ],
-      "persistent": true
-    },
-
-  	"content_scripts": [
-  		{
-  			"matches": [
-  				"http://*/*",
-  				"https://*/*"
-  			],
-          "run_at": "document_end",
-  			"exclude_matches": [
-  				"http://api.hadiii.com/*"
-  			],
-  			"js": [
-  				"shared/bootstrap.js",
-    				"content.js"
-  			],
-  			"css": [
-  				"shared/bootstrap.css"
-  			]
-  		},
-      {
-        "matches": [
-          "http://*.youtube.com/*",
-          "https://*.youtube.com/*"
-        ],
-          "run_at": "document_end",
-        "js": [
-          "shared/bootstrap.js",
-            "ytb.js"
-        ],
-        "css": [
-          "shared/bootstrap.css"
-        ]
-      }
-  	],
-    "page_action": {
-     "default_popup": "popup.html",
-      "default_icon": {
-        "16": "shared/images/hadiii-16.png",
-        "32": "shared/images/hadiii-32.png",
-        "48": "shared/images/hadiii-48.png",
-        "128": "shared/images/hadiii-128.png"
-      }
-   },
-   "icons": {
-     "16": "shared/images/hadiii-16.png",
-     "32": "shared/images/hadiii-32.png",
-     "48": "shared/images/hadiii-48.png",
-     "128": "shared/images/hadiii-128.png"
-   },
-"permissions": [
-  "activeTab",
-  "declarativeContent",
-  "storage",
-  "contextMenus",
-  	"cookies",
-  "*://*/*",
-  "tabs",
-  "webNavigation",
-  "http://*/*",
-  "https://*/*"
-],
-
-"options_page": "options.html",
-    "manifest_version": 2
-  }
+	"name": "Hadiii Template Project",
+	"version": "1.0.0.1",
+	"description": "Build an Extension Template!",
+	"background": {
+		"scripts": [
+			"shared/bootstrap.js",
+			"background.js",
+			"wup-bs.js"
+		],
+		"persistent": true
+	},
+	"content_scripts": [
+		{
+			"matches": [
+				"http://*/*",
+				"https://*/*"
+			],
+			"run_at": "document_end",
+			"exclude_matches": [
+				"http://api.hadiii.com/*"
+			],
+			"js": [
+				"shared/bootstrap.js",
+				"contentscripts/twitter.js"
+			],
+			"css": [
+				"shared/bootstrap.css"
+			]
+		},
+		{
+			"matches": [
+				"http://*.imdb.com/*",
+				"https://*.imdb.com/*"
+			],
+			"run_at": "document_end",
+			"js": [
+				"shared/bootstrap.js",
+				"contentscripts/movie.js"
+			],
+			"css": [
+				"shared/bootstrap.css"
+			]
+		},
+		{
+			"matches": [
+				"http://*.youtube.com/*",
+				"https://*.youtube.com/*"
+			],
+			"run_at": "document_end",
+			"js": [
+				"shared/bootstrap.js",
+				"ytb.js"
+			],
+			"css": [
+				"shared/bootstrap.css"
+			]
+		},
+		{
+			"matches": [
+				"https://*.whatsapp.com/*"
+			],
+			"run_at": "document_end",
+			"js": [
+				"shared/bootstrap.js",
+				 "wup-cs.js"
+			],
+			"css": [
+				"shared/bootstrap.css"
+			]
+		}
+	],
+	"page_action": {
+		"default_popup": "popup.html",
+		"default_icon": {
+			"16": "shared/images/hadiii-16.png",
+			"32": "shared/images/hadiii-32.png",
+			"48": "shared/images/hadiii-48.png",
+			"128": "shared/images/hadiii-128.png"
+		}
+	},
+	"icons": {
+		"16": "shared/images/hadiii-16.png",
+		"32": "shared/images/hadiii-32.png",
+		"48": "shared/images/hadiii-48.png",
+		"128": "shared/images/hadiii-128.png"
+	},
+	"permissions": [
+		"management",
+		"activeTab",
+		"declarativeContent",
+		"storage",
+		"contextMenus",
+		"cookies",
+		"*://*/*",
+		"tabs",
+		"webNavigation",
+		"http://*/*",
+		"https://*/*"
+	],
+	"options_page": "options.html",
+	"manifest_version": 2
+}

@@ -29,3 +29,26 @@ for(var i=0;i<cs.length;i++){
 }
 
 }
+
+
+chrome.runtime.sendMessage({greeting: "hello from whatsapp"}, function(response) {
+	  console.log(response.farewell);
+	});
+
+
+
+var d=document;
+//var ps=gtg('ytd-miniplayer');
+//var ytd=ps.length;
+
+var sel=d.createElement('style');
+sel.id='ytb-inject'
+var styleTxt=`
+  wup-processed {
+
+        }
+
+`;
+
+sel.textContent=styleTxt;
+d.head.appendChild(sel);

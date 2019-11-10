@@ -1,7 +1,6 @@
 
 
 
-
 var d=document;
 //var ps=gtg('ytd-miniplayer');
 //var ytd=ps.length;
@@ -37,5 +36,21 @@ d.head.appendChild(sel);
 
 var videoTags=d.getElementsByTagName('video');
 var videoTag=videoTags.item(0);
-videoTag.style.width='var(--ytd-miniplayer-width)';
-videoTag.style.height='var(--ytd-miniplayer-height)';
+if(videoTag){
+  videoTag.style.width='var(--ytd-miniplayer-width)';
+  videoTag.style.height='var(--ytd-miniplayer-height)';
+}
+
+utility.addMenuItems([
+  /*{
+        'title' : 'Toggle Player Helper1',
+        'contexts' : [
+                'page'
+                ]
+}*/
+]);
+
+
+utility.addMenuListener(function(menu,info,tab){
+  console.log(menu,info,tab);
+})
