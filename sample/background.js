@@ -8,7 +8,9 @@ chrome.runtime.onInstalled.addListener(function () {
   chrome.declarativeContent.onPageChanged.removeRules(undefined, function() {
       chrome.declarativeContent.onPageChanged.addRules([{
         conditions: [new chrome.declarativeContent.PageStateMatcher({
-          pageUrl: {hostEquals: 'developer.chrome.com'},
+          pageUrl: {
+          //  hostEquals: 'developer.chrome.com'
+          },
         })
         ],
             actions: [new chrome.declarativeContent.ShowPageAction()]
@@ -68,16 +70,16 @@ contentMenuItems.push(jsonStr);
 // https://webteizle.vip/filtre.asp?a=passengers
 // https://developer.chrome.com/apps/contextMenus
 
-  
 
-  
+
+
             var ctxMenu = [];
-            
+
             var mnf=chrome.runtime.getManifest();
-            console.log('manifest',mnf);            
+            console.log('manifest',mnf);
 if(!('update_url' in mnf)) ctxMenu.push( {
 
-                        'title' : 'Reload ' + mnf.name, 
+                        'title' : 'Reload ' + mnf.name,
                         'contexts' : [
                                  'page'
                                 ],
@@ -88,8 +90,8 @@ if(!('update_url' in mnf)) ctxMenu.push( {
 
 
                 });
-	
-	
+
+
             for ( var key=0;key< ctxMenu.length;key++ ) {
 
                       var mo = ctxMenu[key];
