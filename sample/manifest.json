@@ -50,7 +50,7 @@
 			"run_at": "document_end",
 			"js": [
 				"shared/bootstrap.js",
-				"ytb.js"
+				"contentscripts/ytb.js"
 			],
 			"css": [
 				"shared/bootstrap.css"
