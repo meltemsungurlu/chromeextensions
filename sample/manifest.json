@@ -5,8 +5,7 @@
 	"background": {
 		"scripts": [
 			"shared/bootstrap.js",
-			"background.js",
-			"wup-bs.js"
+			"background.js" 
 		],
 		"persistent": true
 	},
@@ -63,7 +62,7 @@
 			"run_at": "document_end",
 			"js": [
 				"shared/bootstrap.js",
-				 "wup-cs.js"
+				 "contentscripts/wup.js"
 			],
 			"css": [
 				"shared/bootstrap.css"
