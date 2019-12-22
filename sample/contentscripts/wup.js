@@ -108,6 +108,13 @@ if(style)
 style=d.createElement('style');
 style.id='wup-inject-style'
 var styleTxt=`
+#wup-templates {
+    position: absolute;
+    top: -37px;
+    right: 6px;
+    background-color: yellow;
+    padding: 10px;
+  }
   #wup-inject-panel {
     position: fixed;
     background-color: rgb(250, 255, 169);
