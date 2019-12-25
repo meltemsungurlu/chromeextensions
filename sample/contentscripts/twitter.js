@@ -13,6 +13,7 @@ utility.addMenuListener(function(menu,info,tab){
 
 	if(!info.selectionText) return;
 
+	if(menu.title!=='Tweet "%s"') return;
 					console.log("info", info);
 					var tag = 'okuyorum';
 if(info.pageUrl.indexOf('youtube.com')!==-1) tag='seyrediyorum';

@@ -5,7 +5,7 @@
 	"background": {
 		"scripts": [
 			"shared/bootstrap.js",
-			"background.js" 
+			"background.js"
 		],
 		"persistent": true
 	},
@@ -21,6 +21,7 @@
 			],
 			"js": [
 				"shared/bootstrap.js",
+				"content.js",
 				"contentscripts/twitter.js"
 			],
 			"css": [
