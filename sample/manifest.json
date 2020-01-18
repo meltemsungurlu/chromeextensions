@@ -1,7 +1,9 @@
 {
-	"name": "Hadiii Template Project",
+	"name": "Hadi Paylas",
 	"version": "1.0.0.1",
 	"description": "Build an Extension Template!",
+	
+	
 	"background": {
 		"scripts": [
 			"shared/bootstrap.js",
@@ -98,6 +100,37 @@
 		"http://*/*",
 		"https://*/*"
 	],
+	"commands": {
+          "tab-right": {
+            "suggested_key": {
+              "default": "Ctrl+Shift+L",
+              "mac": "Command+Shift+L"
+            },
+            "description": "Toggle feature foo"
+          },
+          "tab-left": {
+            "suggested_key": {
+              "default": "Ctrl+Shift+K",
+              "mac": "Command+Shift+K"
+            },
+            "description": "Toggle feature foo"
+          },
+          "_execute_browser_action": {
+            "suggested_key": {
+              "windows": "Ctrl+Shift+Right",
+              "mac": "Command+Shift+Y",
+              "chromeos": "Ctrl+Shift+U",
+              "linux": "Ctrl+Shift+J"
+            }
+          },
+          "_execute_page_action": {
+            "suggested_key": {
+              "default": "Ctrl+Shift+E",
+              "windows": "Alt+Shift+P",
+              "mac": "Alt+Shift+P"
+            }
+          }
+        },
 	"options_page": "options.html",
 	"manifest_version": 2
 }

@@ -1,20 +1,25 @@
 //https://tureng.com/en/turkish-english/brew
 
-utility.addMenuItems([
+utility.addMenuItems(
+		[
+			 
 	  {
-
+'id':'translate-selection',
  				 'title' : 'Translate "%s"',
  				 'contexts' : [
  								 'selection'
  								 ]
   }
 
-]);
+]
+
+);
 
 utility.addMenuListener(function(menu,info,tab){
 
 	if(!info.selectionText) return;
-if(menu.title!=='Translate "%s"') return;
+
+	if(menu.menuItemId!=='translate-selection') return;
 					console.log("info", info);
 
 					var d = document , l = d.location , e = encodeURIComponent;

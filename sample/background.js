@@ -9,7 +9,7 @@ chrome.runtime.onInstalled.addListener(function () {
       chrome.declarativeContent.onPageChanged.addRules([{
         conditions: [new chrome.declarativeContent.PageStateMatcher({
           pageUrl: {
-          //  hostEquals: 'developer.chrome.com'
+          // hostEquals: 'developer.chrome.com'
           },
         })
         ],
@@ -30,6 +30,7 @@ var contentMenuItems=[];
 		    if (request.greeting == "hello")
 		      sendResponse({farewell: "goodbye from background"});
 
+		    
 if(request.contextMenuItems){
   for (var i=0;i<request.contextMenuItems.length;i++) {
     var mo = request.contextMenuItems[i];
@@ -42,6 +43,7 @@ contentMenuItems.push(jsonStr);
 
     if ( mo.disabled === true )
             continue;
+ 
             mo['onclick'] = function ( info , tab ) {
               console.log("item " + info.menuItemId + " was clicked");
                   console.log("info: " +  info );
@@ -59,6 +61,7 @@ contentMenuItems.push(jsonStr);
                       });
                   });
             }
+            
     chrome.contextMenus.create(mo);
   }
     sendResponse({farewell: "Menu items added"});
@@ -135,3 +138,8 @@ if(!('update_url' in mnf)) ctxMenu.push( {
         d.head.appendChild(style);
 
     };
+
+    
+    chrome.commands.onCommand.addListener(function(command) {
+        console.log('Command:', command);
+      });
