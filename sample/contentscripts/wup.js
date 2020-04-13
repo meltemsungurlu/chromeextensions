@@ -277,8 +277,232 @@ let wupBot=function(){
 	//start();
 		sendMessage(false,'Hadi gari yetti gari');
 }
+window.wup={};
+(function(){
+
+        function openChatPanel() {
+
+            return new Promise((resolve,reject)=>{
+                var name = 'Header';
+                var cls = '_5SiUq';
+                var element = document.querySelector('div[class="' + cls + '"]')
+                if (!element) {
+                    console.error(`"${name}" not found`);
+                    reject();
+                } else {
+                    simulateMouseEvents(element, 'click');
+                    console.log(`"${name}" found`);
+                    resolve(element);
+                }
+            }
+            );
+
+        }
+
+        function findMemberListExpander() {
+            var name = 'Expander';
+            var cls = '_2EXPL _3xj48';
+            var element;
+            var elements = document.querySelectorAll('div[class="' + cls + '"] > div[class="_3j7s9"] > div[class="_2FBdJ"] > div[class="_25Ooe"]');
+            elements = Array.prototype.slice.call(elements);
+            while (item = elements.pop())
+                if (/\d+\s+more/.test(item.textContent)) {
+                    element = item;
+                    break;
+                }
+            if (!element) {
+                console.warn(`"${name}" not found`);
+                return false;
+            } else {
+                //simulateMouseEvents(element, 'click');
+                console.log(`"${name}" found`);
+                return element;
+            }
+
+        }
+
+        function findInfoEof() {
+            var cls = '_1CkkN _1RMZB';
+            var elements = document.querySelectorAll('div[class="' + cls + '"][title="Exit group"]');
+            if (element = Array.prototype.slice.call(elements).pop()) {
+                element.scrollIntoView();
+
+                return element;
+            }
+            return false;
+        }
+
+        function expandMemberList() {
+
+            return new Promise((resolve,reject)=>{
+
+                var name = 'Expander';
+                var cls = '_1vDUw _2sNbV';
+                var element = document.querySelector('div[class="' + cls + '"]');
+                if (!element) {
+                    console.error(`"${name}" not found`);
+                    reject();
+                } else {
+                    console.log(`"${name}" found`);
+
+                    while (expander = findMemberListExpander()) {
+                        expander.scrollIntoView();
+                        simulateMouseEvents(expander, 'click');
+                        findInfoEof();
+
+                    }
+                    resolve();
+                }
+            }
+            );
+        }
+
+        function findElement(tagName, className, label, eventName) {
+            return new Promise((resolve,reject)=>{
+                var element = document.querySelector(tagName + '[class="' + className + '"]')
+                if (!element) {
+                    console.warn(`"${label}" not found`);
+                    reject();
+                } else {
+                    if (typeof eventName !== 'undefined')
+                        simulateMouseEvents(element, eventName);
+                    console.log(`"${label}" found`);
+                    resolve(event);
+                }
+
+            }
+            );
+
+        }
+
+        function start() {
+            console.clear();
+
+            openChatPanel().then((panel)=>{
+                expandMemberList().then(()=>{
+                    console.log('expanded');
+                    setTimeout(()=>{
+ 
+                        collectMembers();
+                        var i=0;
+                         for(key in contacts) i++;
+                          console.log('Count: ',i);
+                         
+                        console.dir(contacts);
+
+                    }
+                    , 1000);
+
+                }
+                );
+            }
+            )
+
+        }
+
+        function collectMembers() {
+
+            var panelClass = '_1-iDe _14VS3';
+            var containerClass = '_21sW0 _1ecJY';
+            var cls = '_2wP_Y';
+
+            var scrollerClass = '_1vDUw _2sNbV';
+
+            var scroller = document.querySelector('div[class="' + scrollerClass + '"]');
+            var panel = document.querySelector('div[class="' + panelClass + '"] div[class="' + containerClass + '"]');
+
+            var selectors = ['div[class="' + panelClass + '"]', 'div[class="' + containerClass + '"]', '> div[class="' + cls + '"]', '> div', '> div[class="_2EXPL _3xj48"]', '> div[class="_3j7s9"]'];
+            var selector = selectors.join(' ');
+            var items = document.querySelectorAll(selector);
+            console.log(items.length);
+            items = Array.prototype.slice.call(items);
+            var offY = 0;
+            items.forEach((item)=>{
+                var phone = item.firstElementChild.textContent;
+                var name = item.lastElementChild.lastElementChild.textContent;
+
+                if (/\+[\d\s]+\s\d\d\d\s\d\d\d\s\d\d\s\d\d/.test(phone) && name.length > 3 /* && /[\w\s]{2,}$/i.test(name) */
+                ) {
+                    //console.log(name, phone);
+                    var contact= {
+                        name:name,
+                        phone:phone,
+                        group:'#delete ::: * myContacts',
+                        prefix:'Dr.'
+                    };
+                    contacts[phone] =contact;
+                    console.count();
+                    console.log(contact);
+
+                }
+                //var domRect = item.getBoundingClientRect();
+                //item.scrollIntoView({behavior: "smooth", block: "end", inline: "nearest"});
+
+            }
+            );
+            //scroller.scrollTo(0,0);
+            //scroller.scrollIntoView({behavior: "smooth", block: "end", inline: "nearest"});
+
+        }
+
+        if(typeof window.contacts==='undefined') window.contacts={};
+       // start();
+        wup.go=start;
+})();
 
 function collectWupMembers(container){
+        wup.go();
+        return;
+    var d=document;
+var gCls='_2WP9Q';
+var phCls='_19RFN _1ovWX';
+var nmCls='_3VvbK';
+
+var cs=d.getElementsByClassName(gCls);
+
+if(typeof window.contacts==='undefined') window.contacts={};
+
+for(var i=0;i<cs.length;i++){
+    var itemEl=cs.item(i);
+
+    var pEls=itemEl.getElementsByClassName(phCls);
+     if(pEls.length===0) continue;
+    var pEl=pEls.item(0);
+
+   if(pEl.classList.contains('wup-collected'))
+   continue;
+
+        var phRaw=pEl.getAttribute('title');
+        var phNum=phRaw.replace('+','');
+        while(phNum.search(' ')!==-1)
+        phNum=phNum.replace(' ','');
+        var phText=phRaw;
+
+
+    var nmEls=itemEl.getElementsByClassName(nmCls);
+     if(nmEls.length===0) continue;
+     var nmEl=nmEls.item(0);
+     var nmRaw=nmEl.textContent;
+     var nm=nmRaw;
+pEl.style.backgroundColor='green';
+pEl.classList.add('wup-collected');
+
+contacts[phRaw]=nm;
+
+
+}
+
+
+
+
+
+var str='';
+for(key in contacts) str +=contacts[key] + ';' + key + '\n';
+
+container.value=str;
+
+}
+function _collectWupMembers(container){
     var d=document;
 var gCls='_2WP9Q';
 var phCls='_19RFN _1ovWX';

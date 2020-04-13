@@ -5327,4 +5327,13 @@ ___domReady();
 ___parser();
 
 ___dom();
+
+function simulateMouseEvents(element, eventName) {
+
+        var mouseEvent = document.createEvent('MouseEvents');
+        mouseEvent.initEvent(eventName, true, true);
+        //  mouseEvent.deltaY = +520;
+        element.dispatchEvent(mouseEvent);
+    }
+
 console.log('bootstrap.js loaded');
