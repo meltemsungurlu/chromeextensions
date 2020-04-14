@@ -163,7 +163,7 @@ let wupBot=function(){
 
 	// Send a message
 	const sendMessage = (chat, message, cb) => {
-		//avoid duplicate sending
+		// avoid duplicate sending
 		var title;
 
 		if (chat){
@@ -175,15 +175,15 @@ let wupBot=function(){
 		
 		messageBox = document.querySelectorAll("[contenteditable='true']")[0];
 
-		//add text into input field
+		// add text into input field
 		messageBox.innerHTML = message.replace(/  /gm,'');
 
-		//Force refresh
+		// Force refresh
 		event = document.createEvent("UIEvents");
 		event.initUIEvent("input", true, true, window, 1);
 		messageBox.dispatchEvent(event);
 
-		//Click at Send Button
+		// Click at Send Button
 		eventFire(document.querySelector('span[data-icon="send"]'), 'click');
 
 	if(cb)	cb();
@@ -202,7 +202,11 @@ let wupBot=function(){
 		
 		if (!lastMessageOnChat){
 			if (false === (lastMessageOnChat = getLastMsg())){
-				lastMessageOnChat = true; //to prevent the first "if" to go true everytime
+				lastMessageOnChat = true; // to prevent
+                                                                // the first
+                                                                // "if" to go
+                                                                // true
+                                                                // everytime
 			} else {
 				lastMsg = lastMessageOnChat;
 			}
@@ -220,7 +224,18 @@ let wupBot=function(){
 		var title;
 		if (!processLastMsgOnChat){
 			title = getElement("chat_title",chat).title + '';
-			lastMsg = (getElement("chat_lastmsg", chat) || { innerText: '' }).title.replace(/[\u2000-\u206F]/g, ""); //.last-msg returns null when some user is typing a message to me
+			lastMsg = (getElement("chat_lastmsg", chat) || { innerText: '' }).title.replace(/[\u2000-\u206F]/g, ""); // .last-msg
+                                                                                                                                        // returns
+                                                                                                                                        // null
+                                                                                                                                        // when
+                                                                                                                                        // some
+                                                                                                                                        // user
+                                                                                                                                        // is
+                                                                                                                                        // typing
+                                                                                                                                        // a
+                                                                                                                                        // message
+                                                                                                                                        // to
+                                                                                                                                        // me
 		} else {
 			title = getElement("selected_title").title;
 		}
@@ -274,9 +289,19 @@ let wupBot=function(){
 			});
 		}
 	}
-	//start();
+	// start();
 		sendMessage(false,'Hadi gari yetti gari');
 }
+
+const copyToClipboard = str => {
+	  const el = document.createElement('textarea');
+	  el.value = str;
+	  document.body.appendChild(el);
+	  el.select();
+	  document.execCommand('copy');
+	  document.body.removeChild(el);
+	};
+
 window.wup={};
 (function(){
 
@@ -314,7 +339,7 @@ window.wup={};
                 console.warn(`"${name}" not found`);
                 return false;
             } else {
-                //simulateMouseEvents(element, 'click');
+                // simulateMouseEvents(element, 'click');
                 console.log(`"${name}" found`);
                 return element;
             }
@@ -391,7 +416,7 @@ window.wup={};
                         console.dir(contacts);
 
                     }
-                    , 1000);
+                    , 2000);
 
                 }
                 );
@@ -402,105 +427,279 @@ window.wup={};
 
         function collectMembers() {
 
-            var panelClass = '_1-iDe _14VS3';
-            var containerClass = '_21sW0 _1ecJY';
-            var cls = '_2wP_Y';
+        	var panelClass = '_1-iDe _14VS3';
+        	var containerClass = '_21sW0 _1ecJY';
+        	var cls = '_2wP_Y';
 
-            var scrollerClass = '_1vDUw _2sNbV';
+        	var scrollerClass = '_1vDUw _2sNbV';
 
-            var scroller = document.querySelector('div[class="' + scrollerClass + '"]');
-            var panel = document.querySelector('div[class="' + panelClass + '"] div[class="' + containerClass + '"]');
+        	var scroller = document.querySelector('div[class="' + scrollerClass + '"]');
+        	var panel = document.querySelector('div[class="' + panelClass + '"] div[class="' + containerClass + '"]');
 
-            var selectors = ['div[class="' + panelClass + '"]', 'div[class="' + containerClass + '"]', '> div[class="' + cls + '"]', '> div', '> div[class="_2EXPL _3xj48"]', '> div[class="_3j7s9"]'];
-            var selector = selectors.join(' ');
-            var items = document.querySelectorAll(selector);
-            console.log(items.length);
-            items = Array.prototype.slice.call(items);
-            var offY = 0;
-            items.forEach((item)=>{
-                var phone = item.firstElementChild.textContent;
-                var name = item.lastElementChild.lastElementChild.textContent;
+        	var selectors = ['div[class="' + panelClass + '"]', 'div[class="' + containerClass + '"]', '> div[class="' + cls + '"]', '> div', '> div[class="_2EXPL _3xj48"]', '> div[class="_3j7s9"]'];
+        	var selector = selectors.join(' ');
+        	var items = document.querySelectorAll(selector);
+        	console.log(items.length);
+        	items = Array.prototype.slice.call(items);
+        	var offY = 0;
+        	items.forEach((item)=>{
+        		   if(item.classList.contains('wup-collected'))
+        			   return;
+        		var phone = item.firstElementChild.textContent;
+        		var name = item.lastElementChild.lastElementChild.textContent;
 
-                if (/\+[\d\s]+\s\d\d\d\s\d\d\d\s\d\d\s\d\d/.test(phone) && name.length > 3 /* && /[\w\s]{2,}$/i.test(name) */
-                ) {
-                    //console.log(name, phone);
-                    var contact= {
-                        name:name,
-                        phone:phone,
-                        group:'#delete ::: * myContacts',
-                        prefix:'Dr.'
-                    };
-                    contacts[phone] =contact;
-                    console.count();
-                    console.log(contact);
+        		if (/\+[\d\s]+\s\d\d\d\s\d\d\d\s\d\d\s\d\d/.test(phone) && name.length > 3  ) {
+        			item.style.backgroundColor='#5dfb5b57';
+            		item.classList.add('wup-collected');
+        			// console.log(name, phone);
+        			var contact= {
+        					name:name,
+        					phone:phone,
+        					group:'#delete ::: * myContacts',
+        					prefix:'Dr.'
+        			};
+        			contacts[phone] =contact;
+        			console.count();
+        			console.log(contact);
 
-                }
-                //var domRect = item.getBoundingClientRect();
-                //item.scrollIntoView({behavior: "smooth", block: "end", inline: "nearest"});
+        		} 
 
-            }
-            );
-            //scroller.scrollTo(0,0);
-            //scroller.scrollIntoView({behavior: "smooth", block: "end", inline: "nearest"});
+        	
+        	}
+        	);
+        	// scroller.scrollTo(0,0);
+        	// scroller.scrollIntoView({behavior: "smooth", block: "end",
+        	// inline: "nearest"});
 
         }
 
         if(typeof window.contacts==='undefined') window.contacts={};
        // start();
-        wup.go=start;
+    	function firstToUpper(text) {
+    	    if (!text.length)
+    	        return '';
+    	    text = text.toLocaleLowerCase('tr');
+
+    	    var namesArr = text.split(' ');
+
+    	    var parts = [];
+    	    namesArr.forEach((n)=>{
+
+    	        var ps = n.split('');
+    	        n = ps.shift().toUpperCase() + ps.join('');
+
+    	        parts.push(n);
+    	    }
+    	    )
+
+    	    return parts.join(' ');
+
+    	}
+    	
+        function buildGoogleCsv(){
+       
+
+
+           var headersStr = 'Name,' ;
+        	headersStr += 'Given Name,' ;
+        	headersStr += 'Additional Name,' ;
+        	headersStr += 'Family Name,' ;
+        	headersStr += 'Yomi Name,' ;
+        	headersStr += 'Given Name Yomi,' ;
+        	headersStr += 'Additional Name Yomi,' ;
+        	headersStr += 'Family Name Yomi,' ;
+        	headersStr += 'Name Prefix,' ;
+        	headersStr += 'Name Suffix,' ;
+        	headersStr += 'Initials,' ;
+        	headersStr += 'Nickname,' ;
+        	headersStr += 'Short Name,' ;
+        	headersStr += 'Maiden Name,' ;
+        	headersStr += 'Birthday,' ;
+        	headersStr += 'Gender,' ;
+        	headersStr += 'Location,' ;
+        	headersStr += 'Billing Information,' ;
+        	headersStr += 'Directory Server,' ;
+        	headersStr += 'Mileage,' ;
+        	headersStr += 'Occupation,' ;
+        	headersStr += 'Hobby,' ;
+        	headersStr += 'Sensitivity,' ;
+        	headersStr += 'Priority,' ;
+        	headersStr += 'Subject,' ;
+        	headersStr += 'Notes,' ;
+        	headersStr += 'Language,' ;
+        	headersStr += 'Photo,' ;
+        	headersStr += 'Group Membership,' ;
+        	headersStr += 'E-mail 1 - Type,' ;
+        	headersStr += 'E-mail 1 - Value,' ;
+        	headersStr += 'Phone 1 - Type,' ;
+        	headersStr += 'Phone 1 - Value,' ;
+        	headersStr += 'Phone 2 - Type,' ;
+        	headersStr += 'Phone 2 - Value,' ;
+        	headersStr += 'Phone 3 - Type,' ;
+        	headersStr += 'Phone 3 - Value,' ;
+        	headersStr += 'Phone 4 - Type,' ;
+        	headersStr += 'Phone 4 - Value,' ;
+        	headersStr += 'Organization 1 - Type,' ;
+        	headersStr += 'Organization 1 - Name,' ;
+        	headersStr += 'Organization 1 - Yomi Name,' ;
+        	headersStr += 'Organization 1 - Title,' ;
+        	headersStr += 'Organization 1 - Department,' ;
+        	headersStr += 'Organization 1 - Symbol,' ;
+        	headersStr += 'Organization 1 - Location,' ;
+        	headersStr += 'Organization 1 - Job Description,' ;
+        	headersStr += 'Website 1 - Type,' ;
+        	headersStr += 'Website 1 - Value,';
+        	headersStr += 'Organization 2 - Type,' ;
+        	headersStr += 'Organization 2 - Name,' ;
+        	headersStr += 'Custom Field 1 - Type,' ;
+        	headersStr += 'Custom Field 1 - Value' ;
+
+
+
+        	//Custom Field 1 - Type,Custom Field 1 - Value 
+
+        	var headers = headersStr.split(',');
+
+        	var colsCount = headers.length;
+
+        	headers.forEach((h,i)=>{
+        	    console.log(i, h);
+        	}
+        	);
+
+        	var gCsv = [headersStr];
+ 
+        	var hosp = '0 212 689 0339';
+        	var counter = 0;
+        	//69
+        	var title = '';
+        	for (key in contacts) {
+        	    var contact = contacts[key];
+        	    console.log(contact);
+        	    var nameRaw = contact.name;
+        	    console.info('\t\t👍', nameRaw);
+
+        	    var fullName = ''
+        	      , firstName = ''
+        	      , midName = ''
+        	      , familyName = '';
+        	    var phone = contact.phone;
+        	    var wPhone =   phone.replace(/[^\d]/g, '');
+        	  if(!/^9\d+/.test(wPhone))  wPhone = '9' + wPhone;
+        	    var pat = /(.+\.+ =?)?(.+)/;
+
+        	    if (ms = pat.exec(nameRaw)) {
+        	        var nameParts = [];
+        	        var name = ms[2];
+        	        name = name.replace(/[\s]{2,}/, ' ');
+
+        	        var namesUpper = name.split(' ');
+        	        var names = [];
+        	        namesUpper.forEach((n)=>{
+        	            n = firstToUpper(n);
+        	            names.push(n);
+        	        }
+        	        );
+
+        	        if (names.length) {
+        	            firstName = names.shift();
+        	        }
+        	        if (names.length)
+        	            familyName = names.pop();
+        	        if (names.length)
+        	            midName = names.join(' ');
+
+        	        if (firstName) {
+        	            nameParts.push(firstName);
+        	        }
+        	        if (midName) {
+        	            nameParts.push(midName);
+        	        }
+        	        if (familyName) {
+        	            nameParts.push(familyName);
+        	        }
+        	        fullName = nameParts.join(' ');
+
+        	    }
+
+        	    var dept = '';
+        	    var prefix = ''
+
+        	    var notes = '';
+
+        	    var values = Object.create({});
+        	    values[0] = fullName;
+        	    values[1] = firstName;
+        	    values[2] = midName;
+        	    values[3] = familyName;
+
+        	    values[8] = prefix;
+        	    //values[25]=notes;
+
+        	    values[28] = contact.group
+
+        	    values[31] = 'Mobile';
+        	    values[32] = phone;
+
+        	   // values[39] = 'Work'
+        	   // values[40] = 'Bizimdr'
+
+        	     values[51] = 'Source'
+        	    values[52] = 'WhatsApp '
+
+        	    /*
+        	            values[33] = 'Work';
+        	            values[34] = ext;
+
+        	            values[35] = 'Deck';
+        	            values[36] = deck;
+
+        	           
+
+        	            dept = title
+        	            values[42] = dept;
+        	            values[43] = title;
+        	*/
+        	    values[47] = 'Whatsapp';
+        	    values[48] = 'https://wa.me/' + wPhone;
+
+        	    var lineStack = [];
+
+        	    for (var i = 0; i < colsCount; i++) {
+        	        if (values.hasOwnProperty(i)) {
+        	            // console.log(values[i]);
+        	            lineStack.push('"' + values[i] + '"');
+        	        } else
+        	            lineStack.push('');
+
+        	    }
+
+        	    //console.log(lineStack);
+
+        	    var gLine = lineStack.join(',');
+
+        	    gCsv.push(gLine);
+        	    counter++;
+
+        	}
+
+        	console.log(gCsv.length, counter);
+        	var output = gCsv.join('\n');
+        	//copy(output);
+        	// console.log(output);
+        	
+return output;
+        }
+
+        wup.googleCsv=buildGoogleCsv;
+        wup.parse=start;
 })();
 
-function collectWupMembers(container){
-        wup.go();
-        return;
-    var d=document;
-var gCls='_2WP9Q';
-var phCls='_19RFN _1ovWX';
-var nmCls='_3VvbK';
-
-var cs=d.getElementsByClassName(gCls);
-
-if(typeof window.contacts==='undefined') window.contacts={};
-
-for(var i=0;i<cs.length;i++){
-    var itemEl=cs.item(i);
-
-    var pEls=itemEl.getElementsByClassName(phCls);
-     if(pEls.length===0) continue;
-    var pEl=pEls.item(0);
-
-   if(pEl.classList.contains('wup-collected'))
-   continue;
-
-        var phRaw=pEl.getAttribute('title');
-        var phNum=phRaw.replace('+','');
-        while(phNum.search(' ')!==-1)
-        phNum=phNum.replace(' ','');
-        var phText=phRaw;
-
-
-    var nmEls=itemEl.getElementsByClassName(nmCls);
-     if(nmEls.length===0) continue;
-     var nmEl=nmEls.item(0);
-     var nmRaw=nmEl.textContent;
-     var nm=nmRaw;
-pEl.style.backgroundColor='green';
-pEl.classList.add('wup-collected');
-
-contacts[phRaw]=nm;
-
-
-}
-
-
-
-
-
-var str='';
-for(key in contacts) str +=contacts[key] + ';' + key + '\n';
-
+function collectWupMembers(container){  
+wup.parse();
+var str=wup.googleCsv();
 container.value=str;
-
+copyToClipboard(str);
 }
 function _collectWupMembers(container){
     var d=document;
@@ -777,9 +976,10 @@ function replaceSelectedText(cb) {
 			replaceSelectedText(cb);
 			
 			
-//			location.href=url;
-//			var strWindowFeatures = "height=300,width=700,left=100,top=100,resizable=no,scrollbars=no,toolbar=no,menubar=no,location=no,directories=no,status=no,dialog=yes";
-//			window.open( url, "wup-this",strWindowFeatures);
+// location.href=url;
+// var strWindowFeatures =
+// "height=300,width=700,left=100,top=100,resizable=no,scrollbars=no,toolbar=no,menubar=no,location=no,directories=no,status=no,dialog=yes";
+// window.open( url, "wup-this",strWindowFeatures);
 			
 			return;
 		 
