@@ -46,20 +46,6 @@
 		},
 		{
 			"matches": [
-				"http://*.youtube.com/*",
-				"https://*.youtube.com/*"
-			],
-			"run_at": "document_end",
-			"js": [
-				"shared/bootstrap.js",
-				"contentscripts/ytb.js"
-			],
-			"css": [
-				"shared/bootstrap.css"
-			]
-		},
-		{
-			"matches": [
 				"https://*.whatsapp.com/*"
 			],
 			"run_at": "document_end",

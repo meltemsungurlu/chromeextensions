@@ -5336,4 +5336,877 @@ function simulateMouseEvents(element, eventName) {
         element.dispatchEvent(mouseEvent);
     }
 
+(function() {
+    function firstToUpper(text) {
+        if (!text.length)
+            return '';
+        text = text.toLocaleLowerCase('tr');
+
+        var namesArr = text.split(' ');
+
+        var parts = [];
+        namesArr.forEach((n)=>{
+
+            var ps = n.split('');
+            n = ps.shift().toUpperCase() + ps.join('');
+
+            parts.push(n);
+        }
+        )
+
+        return parts.join(' ');
+
+    }
+    ;let wupLib = Object.create(null);
+    wupLib.workers = Object.create(null)
+
+    wupLib.makeWinShortcut = function(phone, name) {
+        var link = 'api.whatsapp.com/send?phone=' + phone;
+        if (name)
+            link = '*' + name + '* ' + link;
+        return link;
+    }
+    ;
+    wupLib.workers.makeShortcut = function(label) {
+        console.clear();
+        let find = ayanoglu.DOM.findElement;
+        var infoSelector = '#main > header > div._5SiUq';
+        var numSelector = '#app > div > div > div.YD4Yw > div._1-iDe._14VS3 > span > div > span > div > div > div._2vsnU > div:nth-child(4) > div:nth-child(3) > div > div > span > span';
+        var nameSelector = '#app > div > div > div.YD4Yw > div._1-iDe._14VS3 > span > div > span > div > div > div._2vsnU > div._1CRb5._34vig._3XgGT > span > span'
+
+        find(infoSelector, 'Header').then((element)=>{
+            ayanoglu.DOM.simulateMouseEvents(element, 'click');
+
+            find(numSelector, 'Phone').then((phoneElement)=>{
+                var phone = phoneElement.textContent;
+                phone = phone.replace(/[^\d]/g, "");
+                var link = 'api.whatsapp.com/send?phone=' + encodeURIComponent(phone);
+
+                find(nameSelector, 'Name').then((nameElement)=>{
+                    var name = nameElement.textContent;
+
+                    var text = '*' + name + (label ? ' (' + label + ')' : '') + '* ' + link;
+                    console.log(text);
+                    copy(text);
+
+                }
+                )
+
+            }
+            )
+
+        }
+        );
+    }
+    wupLib.workers.collectUnknownSenders = function() {
+
+        console.clear();
+        var textStack = [];
+        var itemsCount = 1;
+        var paneSelector = '#pane-side';
+        var contacts = [];
+        var groups = [];
+
+        if (panel = document.querySelector(paneSelector)) {
+            panel.scrollTo(0, 0);
+            var i = 1;
+
+            var itemSelector = '#pane-side > div:nth-child(1) > div > div > div';
+            var scroller = ()=>{
+
+                var items = Array.prototype.slice.call(document.querySelectorAll(itemSelector));
+
+                // console.log('items length', items.length);
+                items.forEach((item)=>{
+                    // item.style.border = "1px solid blue";
+
+                    var unReadSelector = 'div > div > div._3j7s9 > div._1AwDx > div._3Bxar > span:nth-child(1) > div > span';
+
+                    var nameSelector = 'div > div > div._3j7s9 > div._2FBdJ > div._25Ooe > span > span';
+                    if (nameElement = item.querySelector(nameSelector)) {
+                        var name = nameElement.textContent;
+                        if (/\+\d+\s+[\d]{3}\s+[\d]{3}\s+[\d]{2}\s+[\d]{2}/ig.test(name)) {
+                            //   console.log(name);
+                            if (contacts.indexOf(name) === -1)
+                                contacts.push(name);
+
+                        }
+
+                        if (unReadElement = item.querySelector(unReadSelector)) {//  console.log(name);
+
+                        }
+                        itemsCount++;
+                    }
+
+                }
+                );
+
+                var y = panel.clientHeight * i;
+                //  console.log(panel.scrollTop);
+                panel.scrollTo(0, y);
+                i++;
+
+                if (panel.scrollHeight - panel.scrollTop > panel.clientHeight) {
+                    setTimeout(scroller, 3)
+                } else
+                    finalize();
+            }
+
+            let finalize = ()=>{
+                console.log('contacts: ', contacts.length);
+                console.log('final', 'i: ' + i + ', itemsCount: ' + itemsCount);
+
+                contacts.forEach((contact)=>{
+                    var phone = contact;
+                    var wPhone = phone.replace(/[^\d]/g, '');
+                    var link = 'api.whatsapp.com/send?phone=' + wPhone;
+                    textStack.push(link);
+                    // output.appendLine(wPhone);
+                }
+                );
+                var text = textStack.join('\r\n');
+                ayanoglu.ui.panel(text);
+                panel.scrollTo(0, 0);
+            }
+
+            scroller();
+
+        }
+
+    }
+    function openChatPanel() {
+
+        return new Promise((resolve,reject)=>{
+
+            var selector = '#main > header > div._5SiUq';
+            var name = 'Header';
+
+            var element = document.querySelector(selector)
+            if (!element) {
+                console.error(`"${name}" not found`);
+                reject();
+            } else {
+                ayanoglu.DOM.simulateMouseEvents(element, 'click');
+                console.log(`"${name}" found`);
+                resolve(element);
+            }
+        }
+        );
+
+    }
+    ;wupLib.openChatPanel = openChatPanel;
+
+    wupLib.workers.collectGroupMembers = function(members, group) {
+
+            
+
+        return new Promise((finalResolve,finalReject)=>{
+            if (typeof members === 'undefined')
+                members = {};
+
+            console.clear();
+            var textStack = [];
+            var itemsCount = 1;
+            var paneSelector = '#pane-side';
+            var contacts = [];
+            var groups = [];
+
+            var unReadSelector = 'div > div > div._3j7s9 > div._1AwDx > div._3Bxar > span:nth-child(1) > div > span';
+            var nameSelector = 'div > div > div._3j7s9 > div._1AwDx > div._3Bxar > span._1qP8m > span';
+            var phoneSelector = 'div > div > div._3j7s9 > div._2FBdJ > div._25Ooe > span > span';
+
+            openChatPanel().then(()=>{
+
+
+                var name = 'Info Panel';
+                var selector = '#app > div > div > div.YD4Yw > div._1-iDe._14VS3 > span > div > span > div > div';
+
+                ayanoglu.DOM.findElement(selector, name).then((infoPanelElement)=>{
+                    //infoPanelElement.scrollTo(0,2000000);
+
+                    let continueAfterExpander = ()=>{
+                        var itemSelector = 'div.AfVTG > div:nth-child(5) > div:nth-child(4) > div > div';
+                        var i = 0;
+                        var scroller = ()=>{
+
+                            var items = Array.prototype.slice.call(infoPanelElement.querySelectorAll(itemSelector));
+
+                            // console.log('items length', items.length);
+                            items.forEach((item)=>{
+                                // item.style.border = "1px solid blue";
+
+                                if (phoneElement = item.querySelector(phoneSelector)) {
+                                    var phone = phoneElement.textContent;
+                                    if (/\+\d+\s+[\d]{3}\s+[\d]{3}\s+[\d]{2}\s+[\d]{2}/ig.test(phone)) {
+
+                                        if (nameElement = item.querySelector(nameSelector)) {
+                                            var name = nameElement.textContent;
+                                            // console.log(name, ",", phone);
+                                            if (typeof members[phone] === 'undefined')
+                                                members[phone] = {
+                                                    name: name,
+                                                    phone: phone
+                                                }
+                                            item.style.backgroundColor='yellow';
+                                        }
+
+                                    }
+
+                                    if (unReadElement = item.querySelector(unReadSelector)) {//console.log(unReadElement.textContent);
+
+                                    }
+                                    itemsCount++;
+                                }
+
+                            }
+                            );
+
+                            var y = infoPanelElement.clientHeight * i;
+                            //  console.log(panel.scrollTop);
+                            infoPanelElement.scrollTo(0, y);
+                            i++;
+
+                            if (infoPanelElement.scrollHeight - infoPanelElement.scrollTop > infoPanelElement.clientHeight) {
+                                setTimeout(scroller, 3)
+                            } else {
+                            	  infoPanelElement.scrollTo(0, 0);
+                                  finalResolve(members);
+                            }
+                        }
+
+                        scroller();
+                    }
+                    
+                    
+                    //#app > div > div > div.YD4Yw > div._1-iDe._14VS3 > span > div > span > div > div > div.AfVTG > div:nth-child(5) > div:nth-child(5)
+                    ayanoglu.DOM.findElement('div.AfVTG > div:nth-child(5) > div:nth-child(5)', 'Expander',infoPanelElement).then((expander)=>{
+
+                        ayanoglu.DOM.simulateMouseEvents(expander, 'click');
+                        continueAfterExpander();
+
+                    }
+                    , ()=>{
+                        continueAfterExpander();
+                    }
+                    )
+
+                }
+                )
+
+
+            }
+            );
+
+        }
+        )
+    }
+
+    wupLib.workers.collectUnknownNumbers = function(callBack) {
+        console.clear();
+        var textStack = [];
+        var itemsCount = 1;
+        var paneSelector = '#pane-side';
+        var contacts = [];
+        var groups = [];
+        if (panel = document.querySelector(paneSelector)) {
+            panel.scrollTo(0, 0);
+            var i = 1;
+            var stopped = false;
+            var itemSelector = '#pane-side > div:nth-child(1) > div > div > div';
+
+            var scroller = ()=>{
+
+                var items = Array.prototype.slice.call(document.querySelectorAll(itemSelector));
+
+                // console.log('items length', items.length);
+                items.forEach((item)=>{
+                    // item.style.border = "1px solid blue";
+
+                    var unReadSelector = 'div > div > div._3j7s9 > div._1AwDx > div._3Bxar > span:nth-child(1) > div > span';
+
+                    var nameSelector = 'div > div > div._3j7s9 > div._2FBdJ > div._25Ooe > span > span';
+                    if (nameElement = item.querySelector(nameSelector)) {
+                        var name = nameElement.textContent;
+                        if (/\+\d+\s+[\d]{3}\s+[\d]{3}\s+[\d]{2}\s+[\d]{2}/ig.test(name)) {
+                            //   console.log(name);
+                            if (contacts.indexOf(name) === -1) {
+                                contacts.push(name);
+                                if (typeof callBack === 'function') {
+                                    if (callBack(name))
+                                        stopped = true;
+                                }
+                            }
+                            ;
+
+                        }
+
+                        if (unReadElement = item.querySelector(unReadSelector)) {//  console.log(name);
+
+                        }
+                        itemsCount++;
+                    }
+
+                }
+                );
+
+                var y = panel.clientHeight * i;
+                //  console.log(panel.scrollTop);
+                if (!stopped) {
+                    panel.scrollTo(0, y);
+                    i++;
+
+                    if (panel.scrollHeight - panel.scrollTop > panel.clientHeight) {
+                        setTimeout(scroller, 3)
+                    } else
+                        finalize();
+                } else {
+                    panel.scrollTo(0, 0);
+                }
+
+            }
+
+            let finalize = ()=>{
+                console.log('contacts: ', contacts.length);
+                console.log('final', 'i: ' + i + ', itemsCount: ' + itemsCount);
+
+                contacts.forEach((contact)=>{
+                    var phone = contact;
+                    var wPhone = phone.replace(/[^\d]/g, '');
+                    var link = 'https://wa.me/' + wPhone;
+                    textStack.push(link);
+
+                }
+                );
+                var text = textStack.join('\n\n');
+
+                console.log(text);
+                panel.scrollTo(0, 0);
+            }
+
+            scroller();
+
+        }
+
+    }
+
+    var hadiii = Object.create(null);
+
+    hadiii.collectContactsWupLinks = function() {
+
+        var d = window.document;
+        var nameSelector = '#list-container-inner > div';
+        var lines = [];
+        var rows = d.querySelectorAll(nameSelector);
+        rows.forEach((row)=>{
+            if (nameNode = row.querySelector("div.name")) {
+                console.log(nameNode.textContent);
+                if (phoneNode = row.querySelector("div:nth-child(5) > a")) {
+                    console.log(phoneNode.textContent)
+                    var compNode = row.querySelector('div:nth-child(4)');
+                    if (['Reyaphasta', 'Kolanhasta'].indexOf(compNode.textContent) !== -1)
+                        lines.push(ayanoglu.wup.makeWinShortcut(phoneNode.textContent, nameNode.textContent + ' - ' + compNode.textContent));
+                }
+            }
+        }
+        );
+
+        ayanoglu.ui.panel('*Last Added Unknown Numbers*\n\n' + lines.join('\n'));
+    }
+    ;
+
+    var ui = Object.create(null);
+
+    ui.panel = function(text) {
+
+var cssText=`
+#snippet-working-panel {
+
+    position: fixed;
+    top: 0px;
+    bottom:0px;
+    right: 0px;
+    padding-top: 10px; 
+    background-color: yellow;
+    min-height: 600px;
+    min-width: 500px;
+    z-index: 10000;
+    display: flex;
+    flex-direction: column;
+
+}
+
+#snippet-working-panel textarea::selection, #snippet-working-panel input::selection {
+  background: #ffb7b7 !important; /* WebKit/Blink Browsers */
+}
+#snippet-working-panel textarea::-moz-selection,.#snippet-working-panel input[type=text]::-moz-selection {
+  background: #ffb7b7 !important; /* Gecko Browsers */
+}
+
+`;
+ayanoglu.DOM.style(cssText);
+
+        var textBox;
+
+        var d = window.document;
+        let newDom = (tag)=>{
+            return d.createElement(tag)
+        }
+        ;
+        var panelID = 'snippet-working-panel';
+        var panel = d.getElementById(panelID);
+        if (!panel) {
+            panel = newDom('div');
+            document.body.appendChild(panel);
+            var css = ``;
+            panel.setAttribute('style', css);
+            panel.setAttribute('id', panelID);
+
+            /*var header=newDom('div');
+panel.appendChild(header);
+header.setAttribute('style',`
+ 
+`);*/
+
+            textBox = newDom('textarea');
+            panel.appendChild(textBox);
+            textBox.setAttribute('style', `
+flex-grow: 2;
+margin: 10px;
+margin-top: 0px;
+`);
+
+            var commandRow = newDom('div');
+            panel.appendChild(commandRow);
+            commandRow.setAttribute('style', `
+margin: 10px;
+margin-top: 0px;
+display: flex;
+justify-content: flex-end;
+`);
+            let button = (text,handler)=>{
+                var btn = newDom('input');
+                btn.setAttribute('type', 'button');
+                btn.setAttribute('value', text);
+                commandRow.appendChild(btn);
+                btn.setAttribute('style', `
+    margin-left: 20px;
+    padding: 10px 15px 10px 15px;
+    background-color: blue;
+    color: white;
+    border-radius: 7px;
+    border: 0px;
+`);
+
+                btn.addEventListener('click', handler);
+                return btn;
+            }
+            ;
+
+            var closer = button('Kapat', (e)=>{
+
+                document.body.removeChild(panel);
+
+            }
+            );
+
+            var copier = button('Kopyala', (e)=>{
+
+                textBox.select();
+                document.execCommand('copy');
+
+            }
+            );
+            var cleaner = button('Temizle', (e)=>{
+
+                textBox.innerText = '';
+
+            }
+            );
+
+        } else {
+            textBox = panel.querySelector('#snippet-working-panel > textarea')
+        }
+
+        if (text)
+            textBox.value = text;
+        return {
+            append: (line)=>{
+                textBox.value = textBox.value + line
+            }
+            ,
+            appendLine: function(line) {
+                textBox.value = textBox.value + '\n' + line
+            },
+            clear: ()=>{
+                textBox.value += ''
+            }
+            ,
+        }
+    }
+
+    let DOM = Object.create(null);
+
+    let populate = function(element) {
+        element.add = (child)=>{
+            element.appendChild(child);
+            populate(child);
+            return child;
+        }
+        ;
+        element.addTo = (container)=>{
+            container.appendChild(element);
+            return element;
+        }
+        ;
+        element.css = function(cssText) {
+            element.setAttribute('style', cssText);
+            return element;
+        }
+        ;
+        element.cls = function(className) {
+            element.className = className;
+            return element;
+        }
+        ;
+        element.atts = function(ats) {
+            for (name in ats) {
+                if (ats.hasOwnProperty(name))
+                    element.setAttribute(name, ats[name]);
+            }
+
+            return element;
+        }
+        ;
+        element.text = function(v) {
+            element.textContent = v;
+            return element;
+        }
+        ;
+    }
+    let _$ = function(tagName) {
+        var element = document.createElement(tagName);
+
+        populate(element);
+        return element;
+    }
+
+    DOM._$ = _$;
+
+    DOM.style = function(css) {
+        var style = document.getElementById('snippet-style-sheet');
+        if (!style)
+            style = _$('style').atts({
+                'type': 'text/css',
+                'id': 'snippet-style-sheet'
+            }).addTo(document.head);
+        if (css)
+            style.textContent += '\n' + css;
+    }
+    DOM.findElement = function(selector, name,root) {
+        if (typeof name === 'undefined')
+            name = selector;
+        if(typeof root==='undefined') root=document;
+        return new Promise((resolve,reject)=>{
+            if (element = root.querySelector(selector)) {
+
+                console.log(`"${name}" found`);
+                resolve(element);
+
+            } else {
+                reject();
+                console.error(`"${name}" not found`);
+            }
+        }
+        );
+    }
+    ;
+
+    DOM.simulateMouseEvents = function(element, eventName) {
+
+        var mouseEvent = document.createEvent('MouseEvents');
+        mouseEvent.initEvent(eventName, true, true);
+        //  mouseEvent.deltaY = +520;
+        element.dispatchEvent(mouseEvent);
+    }
+
+    let google = Object.create(null);
+
+    function buildContactRow(contact) {
+        var gHeaders = getGoogleContactCSVFields();
+
+        var headers = gHeaders.array;
+
+        var colsCount = headers.length;
+        var nameRaw = contact.name;
+        console.info('\t\t👍', nameRaw);
+
+        var fullName = ''
+          , firstName = ''
+          , midName = ''
+          , familyName = '';
+        var phone = contact.phone;
+
+        var wPhone = phone.replace(/[^\d]/g, '');
+
+        if (!/^9\d+/.test(wPhone))
+            wPhone = '9' + wPhone;
+        var pat = /(.+\.+ =?)?(.+)/;
+
+        if (ms = pat.exec(nameRaw)) {
+            var nameParts = [];
+            var name = ms[2];
+            name = name.replace(/[\s]{2,}/, ' ');
+
+            var namesUpper = name.split(' ');
+            var names = [];
+            namesUpper.forEach((n)=>{
+                n = firstToUpper(n);
+                names.push(n);
+            }
+            );
+
+            if (names.length) {
+                firstName = names.shift();
+            }
+            if (names.length)
+                familyName = names.pop();
+            if (names.length)
+                midName = names.join(' ');
+
+            if (firstName) {
+                nameParts.push(firstName);
+            }
+            if (midName) {
+                nameParts.push(midName);
+            }
+            if (familyName) {
+                nameParts.push(familyName);
+            }
+            fullName = nameParts.join(' ');
+
+        }
+
+        var dept = '';
+        var prefix = ''
+
+        var notes = '';
+
+        var values = Object.create({});
+        values[0] = fullName;
+        values[1] = firstName;
+        values[2] = midName;
+        values[3] = familyName;
+
+        values[8] = prefix;
+
+        if (contact.notes)
+            values[25] = contact.notes.toString().replace(/\n/g, '\\n');
+ 
+if (contact.group) { 
+            values[28] = contact.group;
+        }
+        values[31] = contact.phoneLabel ? contact.phoneLabel : 'Mobile';
+        values[32] = phone;
+
+        if (contact.company) {
+            values[39] = 'Work'
+            values[40] = contact.company
+        }
+
+        if (contact.customFields) {
+                var fieldCounter=51;
+            contact.customFields.forEach((field,i)=>{
+                    if(i>4) return;
+            values[fieldCounter] = field.name;
+            fieldCounter++;
+            values[fieldCounter] = field.value;
+            fieldCounter++;
+            });    
+           
+        }
+
+        /*
+            values[33] = 'Work';
+            values[34] = ext;
+
+            values[35] = 'Deck';
+            values[36] = deck;
+
+           
+
+            dept = title
+            values[42] = dept;
+            values[43] = title;
+*/
+        values[47] = 'Whatsapp';
+        values[48] = 'https://wa.me/' + wPhone;
+
+        var lineStack = [];
+
+        for (var i = 0; i < colsCount; i++) {
+            if (values.hasOwnProperty(i)) {
+                // console.log(values[i]);
+                lineStack.push('"' + values[i] + '"');
+            } else
+                lineStack.push('');
+
+        }
+
+        //console.log(lineStack);
+
+        var gLine = lineStack.join(',');
+        return gLine;
+    }
+    ;google.buildContactRow = buildContactRow;
+    function getGoogleContactCSVFields() {
+        var headersStr = 'Name,';
+        headersStr += 'Given Name,';
+        headersStr += 'Additional Name,';
+        headersStr += 'Family Name,';
+        headersStr += 'Yomi Name,';
+        headersStr += 'Given Name Yomi,';
+        headersStr += 'Additional Name Yomi,';
+        headersStr += 'Family Name Yomi,';
+        headersStr += 'Name Prefix,';
+        headersStr += 'Name Suffix,';
+        headersStr += 'Initials,';
+        headersStr += 'Nickname,';
+        headersStr += 'Short Name,';
+        headersStr += 'Maiden Name,';
+        headersStr += 'Birthday,';
+        headersStr += 'Gender,';
+        headersStr += 'Location,';
+        headersStr += 'Billing Information,';
+        headersStr += 'Directory Server,';
+        headersStr += 'Mileage,';
+        headersStr += 'Occupation,';
+        headersStr += 'Hobby,';
+        headersStr += 'Sensitivity,';
+        headersStr += 'Priority,';
+        headersStr += 'Subject,';
+        headersStr += 'Notes,';
+        headersStr += 'Language,';
+        headersStr += 'Photo,';
+        headersStr += 'Group Membership,';
+        headersStr += 'E-mail 1 - Type,';
+        headersStr += 'E-mail 1 - Value,';
+        headersStr += 'Phone 1 - Type,';
+        headersStr += 'Phone 1 - Value,';
+        headersStr += 'Phone 2 - Type,';
+        headersStr += 'Phone 2 - Value,';
+        headersStr += 'Phone 3 - Type,';
+        headersStr += 'Phone 3 - Value,';
+        headersStr += 'Phone 4 - Type,';
+        headersStr += 'Phone 4 - Value,';
+        headersStr += 'Organization 1 - Type,';
+        headersStr += 'Organization 1 - Name,';
+        headersStr += 'Organization 1 - Yomi Name,';
+        headersStr += 'Organization 1 - Title,';
+        headersStr += 'Organization 1 - Department,';
+        headersStr += 'Organization 1 - Symbol,';
+        headersStr += 'Organization 1 - Location,';
+        headersStr += 'Organization 1 - Job Description,';
+        headersStr += 'Website 1 - Type,';
+        headersStr += 'Website 1 - Value,';
+        headersStr += 'Organization 2 - Type,';
+        headersStr += 'Organization 2 - Name,';
+        headersStr += 'Custom Field 1 - Type,';
+        headersStr += 'Custom Field 1 - Value,';
+        headersStr += 'Custom Field 2 - Type,';
+        headersStr += 'Custom Field 2 - Value,';
+        headersStr += 'Custom Field 3 - Type,';
+        headersStr += 'Custom Field 3 - Value,';
+        headersStr += 'Custom Field 4 - Type,';
+        headersStr += 'Custom Field 4 - Value,';
+        headersStr += 'Custom Field 5 - Type,';
+        headersStr += 'Custom Field 5 - Value';
+
+        //Custom Field 1 - Type,Custom Field 1 - Value 
+
+        var headers = headersStr.split(',');
+
+        var colsCount = headers.length;
+
+        headers.forEach((h,i)=>{
+            console.log(i, h);
+        }
+        );
+        return {
+            'string': headersStr,
+            'array': headers
+        }
+    }
+    google.buildContactsCSV = function(contacts, groupText) {
+        var gHeaders = getGoogleContactCSVFields();
+         var headersStr = gHeaders.string;
+
+        //Custom Field 1 - Type,Custom Field 1 - Value 
+
+        var headers = gHeaders.array;
+
+        var colsCount = headers.length;
+
+        headers.forEach((h,i)=>{
+            console.log(i, h);
+        }
+        );
+
+        var gCsv = [headersStr];
+
+        // pre aaa bbb ccc,aaa,bbb,ccc,,,,,pre,,,,,,,,,,,,,,,,,,,,* myContacts ::: * starred,Mobile,111111,Main,222 222 ::: 333 333,,Reyap Hastanesi,,title,dept,,,,Whatsapp,http://wup
+
+        var hosp = '0 212 689 0339';
+        var counter = 0;
+        //69
+        var title = '';
+        for (key in contacts) {
+            var contact = contacts[key]; 
+
+            var gLine =buildContactRow(contact);
+
+            gCsv.push(gLine);
+            counter++;
+
+        }
+
+        console.log(gCsv.length, counter);
+        var output = gCsv.join('\n');
+        return output;
+        //ayanoglu.ui.panel(output);
+
+    }
+    let utility = Object.create(null);
+    utility.copy = function(raw) {
+var element=_$('textarea').addTo(document.body);
+element.textContent=raw;
+element.select();
+    document.execCommand('copy'); 
+    document.body.removeChild(element);
+    }
+    utility.upperCase = function(raw) {
+
+        raw = raw.replace(/i/g, 'İ');
+        raw = raw.toUpperCase();
+        raw = raw.trim();
+
+        ayanoglu.ui.panel(raw);
+    }
+
+    window.ayanoglu = {
+        utility: utility,
+        google: google,
+        DOM: DOM,
+        ui: ui,
+        wup: wupLib,
+        hadiii: hadiii
+    };
+
+    console.clear();
+    console.log('Library Loaded');
+    console.dir(ayanoglu);
+
+}
+)();
+
+
 console.log('bootstrap.js loaded');
