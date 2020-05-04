@@ -1,4 +1,19 @@
 
+addEventListener('load',()=>{
+   var pop=ayanoglu.ui.floatMenu();
+   pop.add('Open Group Member Collector',()=>{
+	var panel=ayanoglu.ui.panel();
+	panel.control.style.bottom='10px';
+	panel.control.style.top='10px';
+	panel.control.style.left='10px';
+	panel.control.style.right='400px';
+	panel.button('Gooo',()=>{
+		alert('okeeeee');
+	})
+}); 
+})
+
+
 utility.addMenuItems([{
     'title': 'Tweet "%s"',
     'contexts': ['selection']

@@ -5359,7 +5359,27 @@ function simulateMouseEvents(element, eventName) {
     }
     ;let wupLib = Object.create(null);
     wupLib.workers = Object.create(null)
+    let sendMessage = function(message) {
+    var find = ayanoglu.DOM.findElement;
+    find('#main > footer > div._3pkkz.V42si.copyable-area > div._1Plpp > div > div._2S1VP.copyable-text.selectable-text', 'textArea').then((element)=>{
 
+        element.innerHTML = message;
+
+        //Force refresh
+        event = document.createEvent("UIEvents");
+        event.initUIEvent("input", true, true, window, 1);
+        element.dispatchEvent(event);
+
+        //Click at Send Button
+        ayanoglu.DOM.simulateMouseEvents(document.querySelector('span[data-icon="send"]'), 'click');
+
+    }
+    );
+}
+    wupLib.workers.sendMessage=sendMessage;
+    
+    
+    
     wupLib.makeWinShortcut = function(phone, name) {
         var link = 'api.whatsapp.com/send?phone=' + phone;
         if (name)
@@ -5398,7 +5418,7 @@ function simulateMouseEvents(element, eventName) {
         }
         );
     }
-    wupLib.workers.collectUnknownSenders = function() {
+    let collectUnknownSenders = function() {
 
         console.clear();
         var textStack = [];
@@ -5474,6 +5494,9 @@ function simulateMouseEvents(element, eventName) {
         }
 
     }
+    
+    wupLib.workers.collectUnknownSenders=collectUnknownSenders;
+    
     function openChatPanel() {
 
         return new Promise((resolve,reject)=>{
@@ -5494,9 +5517,10 @@ function simulateMouseEvents(element, eventName) {
         );
 
     }
-    ;wupLib.openChatPanel = openChatPanel;
-
-    wupLib.workers.collectGroupMembers = function(members, group) {
+    
+    wupLib.openChatPanel = openChatPanel;
+    
+    let collectGroupMembers = function(members, group) {
 
             
 
@@ -5525,8 +5549,9 @@ function simulateMouseEvents(element, eventName) {
                     //infoPanelElement.scrollTo(0,2000000);
 
                     let continueAfterExpander = ()=>{
-                        var itemSelector = 'div.AfVTG > div:nth-child(5) > div:nth-child(4) > div > div';
+                        var itemSelector = 'div.AfVTG > div  > div  > div > div._2wP_Y';
                         var i = 0;
+
                         var scroller = ()=>{
 
                             var items = Array.prototype.slice.call(infoPanelElement.querySelectorAll(itemSelector));
@@ -5567,28 +5592,29 @@ function simulateMouseEvents(element, eventName) {
                             i++;
 
                             if (infoPanelElement.scrollHeight - infoPanelElement.scrollTop > infoPanelElement.clientHeight) {
-                                setTimeout(scroller, 3)
+                                setTimeout(scroller, 300)
                             } else {
-                            	  infoPanelElement.scrollTo(0, 0);
-                                  finalResolve(members);
+                            	  //infoPanelElement.scrollTo(0, 0);
+                                 
+                                 finalResolve(members)
                             }
                         }
 
-                        scroller();
+                         setTimeout(scroller, 1)
                     }
                     
+                    var expanderSelector='div.AfVTG > div  > div._2EXPL._3xj48';
+                  
+                    var exps=  Array.prototype.slice.call(infoPanelElement.querySelectorAll(expanderSelector)); 
                     
-                    //#app > div > div > div.YD4Yw > div._1-iDe._14VS3 > span > div > span > div > div > div.AfVTG > div:nth-child(5) > div:nth-child(5)
-                    ayanoglu.DOM.findElement('div.AfVTG > div:nth-child(5) > div:nth-child(5)', 'Expander',infoPanelElement).then((expander)=>{
-
-                        ayanoglu.DOM.simulateMouseEvents(expander, 'click');
-                        continueAfterExpander();
-
-                    }
-                    , ()=>{
-                        continueAfterExpander();
-                    }
-                    )
+                    exps.forEach((exp)=>{
+                    	if(/\d+\s+more/.test(exp.textContent)){
+                    		   ayanoglu.DOM.simulateMouseEvents(exp, 'click');
+                    	}
+                    });
+                    continueAfterExpander();
+                    
+                    
 
                 }
                 )
@@ -5601,7 +5627,9 @@ function simulateMouseEvents(element, eventName) {
         )
     }
 
-    wupLib.workers.collectUnknownNumbers = function(callBack) {
+    wupLib.workers.collectGroupMembers=collectGroupMembers;
+    
+    let collectUnknownNumbers = function(callBack) {
         console.clear();
         var textStack = [];
         var itemsCount = 1;
@@ -5689,6 +5717,10 @@ function simulateMouseEvents(element, eventName) {
 
     }
 
+
+    wupLib.workers.collectUnknownNumbers=collectUnknownNumbers;
+    
+    
     var hadiii = Object.create(null);
 
     hadiii.collectContactsWupLinks = function() {
@@ -5715,99 +5747,558 @@ function simulateMouseEvents(element, eventName) {
     ;
 
     var ui = Object.create(null);
+   
 
-    ui.panel = function(text) {
+    let dialog = function() {
 
-var cssText=`
-#snippet-working-panel {
+        var cssText = `
+    .ayanoglu-dialog {
 
-    position: fixed;
-    top: 0px;
-    bottom:0px;
-    right: 0px;
-    padding-top: 10px; 
-    background-color: yellow;
-    min-height: 600px;
-    min-width: 500px;
-    z-index: 10000;
+        position: fixed;
+         top: 0px;
+        left: 0px;  
+        height:700px;
+        min-height: 600px;
+        min-width: 400px;
+        z-index: 10000;
+        display: flex;
+        flex-direction: column;
+        box-shadow: 0px 0px 4px 3px gainsboro;
+
+        background-color: #ebfde3;
+
+    }
+
+    .ayanoglu-dialog * {
+        font-size:0.9rem;
+        font-family:arial;
+    }
+
+    .ayanoglu-dialog > div.h {
+            height: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom:3px;    
+
+        border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        
+        background-color: rgba(0, 0, 0, 0.03);
+    }
+
+    .ayanoglu-dialog > div.h > div.txt{
+     display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        margin-left:3px;
+    }
+     
+     .ayanoglu-dialog > div.h > div.cmd{
+         display: flex;
+        align-items: center;
+        justify-content: flex-end;
+    }
+
+    .ayanoglu-dialog > div.h > div.cmd >  div.closer {
+    color: #a9a1a1;
+        font-size: 28px;
+        margin-right: 6px;
+        cursor:pointer;
+    }
+    .ayanoglu-dialog > div.h > div.cmd > div.icon-window-close ,
+    .ayanoglu-dialog > div.h > div.cmd > div.icon-window-maximize ,
+    .ayanoglu-dialog > div.h > div.cmd > div.icon-window-restore ,
+    .ayanoglu-dialog > div.h > div.cmd > div.icon-right ,
+    .ayanoglu-dialog > div.h > div.cmd > div.icon-left {
+    color: #a9a1a1;
+        font-size: 18px;
+        margin-right: 12px;
+        cursor:pointer;
+    }
+
+    .ayanoglu-dialog > div.h div.closer:before {
+    content: "\\e801";
+        color: inherit;
+        font-size: inherit;
+    }
+
+    .ayanoglu-dialog > div.b {
+    flex-grow: 2;
+    margin: 0px;
+    padding: 7px;
+    overflow-y:auto;
+     
+    }
+
+    .ayanoglu-dialog > div.b::-webkit-scrollbar {
+        width: 9px !important;    
+        background-color: rgba(0, 0, 0, 0.03);
+    }
+    .ayanoglu-dialog > div.b::-webkit-scrollbar-thumb {  
+        background-color: rgba(0, 0, 0, 0.07);
+    }
+
+    .ayanoglu-dialog textarea::selection, .ayanoglu-dialog input::selection {
+      background: #ffb7b7 !important; /* WebKit/Blink Browsers */
+    }
+    .ayanoglu-dialog textarea::-moz-selection,..ayanoglu-dialog input[type=text]::-moz-selection {
+      background: #ffb7b7 !important; /* Gecko Browsers */
+    }
+
+    .ayanoglu-dialog input[type=button] {
+        background-color: rgba(0, 0, 0, 0.35);
+        box-shadow: inset 0px 0px 1px 2px rgba(255, 255, 255, 0.60); 
+        color: rgba(255, 255, 255, 0.95);   
+        margin-left: 20px;
+        padding: 12px 15px 12px 15px; 
+        border-radius: 6px;
+        border: 0px; 
+        outline: unset;
+        -webkit-font-smoothing: antialiased;
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        -khtml-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+
+    }
+
+    .ayanoglu-dialog input[type=button]:hover {
+        
+    }
+
+    .ayanoglu-dialog input[type=button]:active {    
+
+        background-color: rgba(0, 0, 0, 0.38);
+         box-shadow: inset 0px 0px 1px 2px rgba(255, 255, 255, 0.50); 
+
+    }
+
+    .ayanoglu-dialog > div.f {
+        margin:0px;
+        padding: 7px;
+        padding-bottom: 0px;
     display: flex;
-    flex-direction: column;
+    justify-content: flex-end;
+    flex-wrap: wrap;
 
-}
+        background-color: rgba(0, 0, 0, 0.02);
+    }
 
-#snippet-working-panel textarea::selection, #snippet-working-panel input::selection {
-  background: #ffb7b7 !important; /* WebKit/Blink Browsers */
-}
-#snippet-working-panel textarea::-moz-selection,.#snippet-working-panel input[type=text]::-moz-selection {
-  background: #ffb7b7 !important; /* Gecko Browsers */
-}
+    .ayanoglu-dialog > div.f input[type=button] {
+            margin-bottom:10px;
+    }
 
-`;
-ayanoglu.DOM.style(cssText);
 
-        var textBox;
-
+    `;
+        ayanoglu.DOM.style(cssText);
+        let _$ = ayanoglu.DOM._$;
         var d = window.document;
-        let newDom = (tag)=>{
-            return d.createElement(tag)
+
+        var panelID = 'dialog-raw-panel';
+        var panel = d.getElementById(panelID);
+        var footer, body;
+
+        let button = (text,handler)=>{
+            var btn = _$('input').att('type', 'button').att('value', text).addTo(footer);
+            btn.addEventListener('click', handler);
+            return btn;
         }
         ;
-        var panelID = 'snippet-working-panel';
-        var panel = d.getElementById(panelID);
+
         if (!panel) {
-            panel = newDom('div');
-            document.body.appendChild(panel);
-            var css = ``;
-            panel.setAttribute('style', css);
-            panel.setAttribute('id', panelID);
+            panel = _$('div').cls('ayanoglu-dialog').addTo(document.body);
 
-            /*var header=newDom('div');
-panel.appendChild(header);
-header.setAttribute('style',`
- 
-`);*/
+            panel.att('id', panelID);
 
-            textBox = newDom('textarea');
-            panel.appendChild(textBox);
-            textBox.setAttribute('style', `
-flex-grow: 2;
-margin: 10px;
-margin-top: 0px;
-`);
+            var header = _$('div').cls('h').addTo(panel);
 
-            var commandRow = newDom('div');
-            panel.appendChild(commandRow);
-            commandRow.setAttribute('style', `
-margin: 10px;
-margin-top: 0px;
-display: flex;
-justify-content: flex-end;
-`);
-            let button = (text,handler)=>{
-                var btn = newDom('input');
-                btn.setAttribute('type', 'button');
-                btn.setAttribute('value', text);
-                commandRow.appendChild(btn);
-                btn.setAttribute('style', `
-    margin-left: 20px;
-    padding: 10px 15px 10px 15px;
-    background-color: blue;
-    color: white;
-    border-radius: 7px;
-    border: 0px;
-`);
+            var headerTxt = _$('div').cls('txt').text('Untitled').addTo(header);
+            var headerCmd = _$('div').cls('cmd').addTo(header);
 
-                btn.addEventListener('click', handler);
-                return btn;
+            var pWidth = panel.offsetWidth;
+            var pLeft = panel.style.left;
+            var pRight = panel.style.right;
+            var resStyle = false;
+            var arrLeft = _$('div').cls('icon-left').addTo(headerCmd);
+            var arrRight = _$('div').cls('icon-right').addTo(headerCmd);
+            var maxBtn = _$('div').cls('icon-window-maximize').addTo(headerCmd);
+            var resBtn = _$('div').cls('icon-window-restore').css('display:none;').addTo(headerCmd);
+
+            maxBtn.addEventListener('click', (e)=>{
+                if (!resStyle)
+                    resStyle = panel.getAttribute('style');
+                panel.style.width = 'auto';
+                panel.style.left = '0px';
+                panel.style.right = '0px';
+                maxBtn.style.display = 'none';
+                resBtn.style.display = 'block';
+
             }
-            ;
+            );
 
-            var closer = button('Kapat', (e)=>{
+            resBtn.addEventListener('click', (e)=>{
+                panel.setAttribute('style', resStyle);
+                /* panel.style.width=  pWidth +  'px';
+                	 panel.style.left=pLeft;
+                	 panel.style.right=pRight;*/
+                resBtn.style.display = 'none';
+                maxBtn.style.display = 'block';
 
+            }
+            );
+
+            arrLeft.addEventListener('click', (e)=>{
+                panel.style.width = pWidth + 'px';
+                panel.style.left = '0px';
+                panel.style.right = 'auto';
+
+            }
+            );
+
+            arrRight.addEventListener('click', (e)=>{
+                panel.style.width = pWidth + 'px';
+                panel.style.right = '0px';
+                panel.style.left = 'auto';
+            }
+            );
+
+            var closerBox = _$('div').cls('closer fnt-before').addTo(headerCmd);
+            closerBox.addEventListener('click', (e)=>{
+                //	ca.event.raise('will-close',{},panel,true);
                 document.body.removeChild(panel);
 
             }
             );
+
+            body = _$('div').cls('b').addTo(panel);
+
+            footer = _$('div').cls('f').addTo(panel);
+            /*
+                var closer = button('Kapat', (e)=>{
+                    //ca.event.raise('will-close',{},panel,true);
+                    document.body.removeChild(panel);
+
+                }
+                );*/
+
+        } else {
+            body = panel.querySelector('div.b');
+            footer = panel.querySelector('div.f');
+        }
+
+        var panelObj = {
+            control: panel,
+            button: button,
+            add: (child)=>{
+                body.add(child);
+            }
+        }
+        Object.defineProperty(panelObj, 'container', {
+            get: function() {
+                return body;
+            },
+            set: function(v) {
+            },
+
+            configurable: false,
+            enumerable: true
+        })
+        Object.defineProperty(panelObj, 'footer', {
+            get: function() {
+                return footer.style.display !== 'none';
+            },
+            set: function(v) {
+                footer.style.display = v ? 'flex' : 'none';
+            },
+
+            configurable: false,
+            enumerable: true
+        })
+
+        Object.defineProperty(panelObj, 'title', {
+            get: function() {
+                return headerTxt.textContent;
+            },
+            set: function(v) {
+                headerTxt.textContent = v;
+            },
+
+            configurable: false,
+            enumerable: true
+        })
+
+        return panelObj;
+    };
+    ui.dialog = dialog;
+    
+    let  floatMenu=function(){
+    	var d = document;
+    	 
+    	 
+    	let _$ = ayanoglu.DOM._$;
+    	var d = document;
+    	var popId = 'pop-command-win';
+
+    	ayanoglu.DOM.style(`
+    	#${popId} {
+    	position:fixed;
+    	top:50px;
+    	left:450px;
+    	z-index:1000000;
+    	height:30px;
+    	background-color:rgb(255,255,150);
+    	border-radius:5px;
+    	width: 30px;
+    font-size: 24px; 
+    align-items: center;
+    	display:flex;
+    	}
+
+
+    	#${popId} > div  {
+    	position:absolute;
+    	left:30px;
+        height: inherit;
+    	background-color:inherit;
+    	border-radius:5px;
+    	display:flex; 
+    	transform-style: flat;
+    	transform-origin: left 0px;
+    	transition: transform transform 0.3s ease-out,opacity 0.5s ease-out;
+    	transform: scale(0,1);
+    	opacity: 0;
+    	}
+#${popId}:hover  {
+    		 
+    		border-radius: 5px 0px 0px 5px;
+    	} 
+    	#${popId}:hover > div {
+    		transform: scale(1,1);
+    		opacity: 1;
+    		border-radius: 0px 5px 5px 0px;
+    	} 
+
+    	#${popId} > div  > div  
+    	{
+    	    display: flex;
+    	    justify-content: center;
+    	    align-items: center; 
+    	    font-size: 19px;
+    	    width: 30px;
+    	    color: black; 
+            border-left: 1px groove rgba(226, 221, 221, 0.25);
+    	}
+    	#${popId} > div  > div:last-child {
+    	        
+    	    border-radius:0px 0px 5px 5px;
+    	}
+
+#${popId} > div  > div + div {
+
+    	    border-left: 1px solid gray;
+}
+
+
+#${popId}:before,
+    	#${popId} > div > div:before {
+    		color:inherit; 
+    		font-size: inherit;
+	font-style: normal !important;
+	font-weight: normal !important;
+	box-sizing: border-box;
+	text-rendering: auto;
+	-webkit-font-smoothing: antialiased;
+    		/*content: "\\f0c9";*/
+    	}
+
+    	`);
+
+    	var popCommand = d.getElementById(popId);
+    	if (popCommand) {
+    		// test mode
+    	    d.body.removeChild(popCommand);
+    	    popCommand = undefined;
+    	}
+    	 var container;
+    	if (!popCommand) {
+    	    popCommand = _$('div').atts({
+    	        'id': popId
+    	    }).cls('icon-ellipsis').addTo(d.body);
+    	    
+    	      container=_$('div').addTo(popCommand);
+    	      var offSetX = 0
+			  , offSetY = 0;
+    	    var dragging=false;
+    	    let moveH=(e)=>{
+    	    	if(dragging){
+    	    		//popCommand.style.cursor = "move";
+  					document.body.style.cursor = "move";
+    				// e.preventDefault();
+    				var x = e.clientX
+    				  , y = e.clientY;
+    			
+    				x  -=offSetX;
+    				y -=offSetY;
+    				
+    				// console.info('move target',d.id,x,y);
+    				popCommand.style.left = x + 'px';
+    				popCommand.style.top = y + 'px';
+    				return false;
+    	    	}
+    	    }
+    	    
+    	    let clickHnd= (e)=> {
+
+				e.preventDefault();
+				e.stopPropagation();
+				return false;
+			}
+    	    let unHook=()=>{
+    	    	document.body.style.cursor = "default";
+				  dragging=false;
+  	    	  document.body.removeEventListener('mousemove',moveH);
+  	    	  document.body.removeEventListener('mouseup',bMouseUp);
+  	    	  document.body.removeEventListener('click',clickHnd);
+    	    }
+    	    
+    	    let bMouseUp=(e)=>{ 
+    	    	e.preventDefault();
+				e.stopPropagation();
+				e.stopImmediatePropagation();
+				//popCommand.style.cursor = "default";
+				unHook();
+    	    }
+    	
+    	   
+    	      popCommand.addEventListener('mousedown',(e)=>{
+    	    	  dragging=true;
+    	    		 
+    	    	  offSetX   = (e.clientX - parseInt(getComputedStyle(popCommand).left));
+    	    	  offSetY  =(e.clientY - parseInt(getComputedStyle(popCommand).top));
+  					
+    	    	  document.body.addEventListener('mousemove',moveH);
+    	    	  document.body.addEventListener('mouseup',bMouseUp);
+    	    	  document.body.addEventListener('click',clickHnd);
+    	      });
+    	 
+    	      popCommand.addEventListener('mouseup',(e)=>{
+    	    	  dragging=false;
+    	    	  unHook(); 
+    	      });
+    	      
+    	      
+    	}
+    	else {
+    		container=popCommand.firstElementChild;
+    	}
+
+    	return {
+    		add:(title,handle,className)=>{
+    			var btn  =	_$('div').cls(className?className:'icon-menu').atts({title:title}).addTo(container);
+    		if(typeof handle==='function')	btn.addEventListener('click',(e)=>{
+    				handle(e);
+        	    })
+    		}
+    	}
+    }
+   
+    let uiPanel= function(text) {
+
+var cssText=`
+`;
+//ayanoglu.DOM.style(cssText);
+let _$=ayanoglu.DOM._$;
+        var textBox;
+
+        var d = window.document;
+         
+        var panelID = 'snippet-working-panel';
+        var panel = d.getElementById(panelID);
+        var commandRow;
+        
+        let button = (text,handler)=>{
+            var btn = _$('input').att('type', 'button').att('value', text).addTo(commandRow); 
+            btn.addEventListener('click', handler);
+            return btn;
+        }
+        ;
+        
+        if (!panel) {
+            panel = _$('div').addTo( document.body); 
+             
+            panel.att('id', panelID);
+
+             var header=_$('div').cls('header').addTo(panel);
+
+            var pWidth = panel.offsetWidth;
+            var pLeft=panel.style.left;
+            var pRight=panel.style.right;
+            var resStyle=false;
+ var arrLeft =_$('div').cls('icon-left').addTo(header);
+  var arrRight =_$('div').cls('icon-right').addTo(header);
+  var maxBtn =_$('div').cls('icon-window-maximize').addTo(header);
+  var resBtn =_$('div').cls('icon-window-restore').css('display:none;').addTo(header); 
+
+ maxBtn.addEventListener('click',  (e)=>{
+         if(!resStyle) resStyle=panel.getAttribute('style');
+            	 panel.style.width=   'auto';
+            	 panel.style.left='0px';
+            	 panel.style.right='0px';
+            	maxBtn.style.display='none'; 
+            	resBtn.style.display='block'; 
+
+            });
+
+             resBtn.addEventListener('click',  (e)=>{
+                    panel.setAttribute('style',resStyle);
+            	/* panel.style.width=  pWidth +  'px';
+            	 panel.style.left=pLeft;
+            	 panel.style.right=pRight;*/
+            	resBtn.style.display='none'; 
+            	maxBtn.style.display='block'; 
+
+            });
+
+    arrLeft.addEventListener('click',  (e)=>{
+            	 panel.style.width= pWidth +  'px';
+            	 panel.style.left='0px';
+            	 panel.style.right='auto';
+
+            });
+
+             arrRight.addEventListener('click',  (e)=>{
+            	 panel.style.width= pWidth +  'px';
+            	 panel.style.right='0px';
+            	 panel.style.left='auto';
+            });
+
+             var closerBox=_$('div').cls('closer fnt-before').addTo(header);
+             closerBox.addEventListener('click',  (e)=>{
+            	ca.event.raise('will-close',{},panel,true);
+                document.body.removeChild(panel);
+
+            });
+
+
+           
+
+            textBox = _$('textarea');
+            panel.appendChild(textBox); 
+
+              commandRow = _$('div').cls('command-box').addTo(panel);;
+           
+         
+
+            var closer = button('Kapat', (e)=>{
+            	ca.event.raise('will-close',{},panel,true);
+                document.body.removeChild(panel);
+
+            }
+            );
+
+ 
 
             var copier = button('Kopyala', (e)=>{
 
@@ -5818,18 +6309,140 @@ justify-content: flex-end;
             );
             var cleaner = button('Temizle', (e)=>{
 
-                textBox.innerText = '';
+                textBox.value = '';
 
             }
             );
 
-        } else {
-            textBox = panel.querySelector('#snippet-working-panel > textarea')
+
+ var label=_$('div').cls('label').addTo(panel);
+var labelTmo;
+
+let editContact=(e)=>{
+console.log(e.type);
+ 
+                var sel = window.getSelection();
+var text=textBox.value;
+var lines=text.split('\n');
+var sPos=textBox.selectionStart;
+var counter=0;
+var line=false;
+var lineNum=0;
+for(var i=0;i<lines.length;i++){
+         if(sPos>=counter && sPos < counter + lines[i].length){
+                 line=lines[i];
+                 lineNum=i;
+                 break;
+         }
+        counter+=lines[i].length + 1;
+       
+}
+
+if(line){
+        if(e.type==='dblclick'){
+
+let contactEditor=function(raw){
+        let _$=ayanoglu.DOM._$; 
+        var d = window.document;
+
+var cssText=`
+`;
+//ayanoglu.DOM.style(cssText);
+
+var cId='contact-editor-panel'
+var control=_$('div').att('id',cId).addTo(d.body);
+var header=_$('div').cls('h').addTo(control);
+var body=_$('div').cls('b').addTo(control);
+
+
+
+var table=_$('div').cls('t').addTo(body);
+
+this.data=raw;
+
+var values=raw.split(',');
+var headers = getGoogleContactCSVFields().array; 
+
+headers.forEach((header,i)=>{
+        var value=values[i];
+        value=value.replace(/^"(.*)"$/,'$1');
+        var row=_$('div').addTo(table);
+        var nameCell=_$('div').addTo(row).text(header);
+        var valueCell=_$('div').addTo(row);
+        var editor=_$('input').att('type','text').att('value',value).addTo(valueCell);
+        editor.addEventListener('change',function (i,ev){
+             var ed=ev.target;  
+             values[i]='"' + ed.value + '"' ; 
+        }.bind(editor,i));
+
+});
+
+var footer=_$('div').cls('f').addTo(control);
+
+
+var submit=_$('input').att('type','button').att('value','Kaydet').addTo(footer);
+
+submit.onclick=(e)=>{
+  this.data=values.join(',');   
+  if(typeof this.onSubmit==='function') this.onSubmit(this.data);
+  d.body.removeChild(control);  
+}
+
+var closer=_$('input').att('type','button').att('value','Kapat').addTo(footer);
+
+closer.onclick=(e)=>{
+      d.body.removeChild(control);  
+}
+
+
+};
+
+var editor=new contactEditor(line);
+editor.onSubmit=(data)=>{
+        lines[lineNum]=data;
+        textBox.value=lines.join('\n');
+ console.log(data);
+        
+};
+                return;
         }
+        textBox.selectionStart=counter;
+        textBox.selectionEnd=sPos;
+
+        var fields=document.getSelection().toString().split(',');
+         var gHeaders = getGoogleContactCSVFields();
+textBox.selectionStart=sPos;
+        var headers = gHeaders.array;
+
+        var title=headers[fields.length-1];
+       
+        label.textContent=title; 
+        label.style.display='flex';
+        label.style.left=e.clientX + 'px';
+        label.style.top=e.clientY + 'px';
+        clearTimeout(labelTmo);
+       labelTmo= setTimeout(()=>{label.style.display='none';},5000)
+
+
+}
+ 
+
+};
+
+textBox.addEventListener('dblclick',editContact);
+textBox.addEventListener('mouseup',editContact);
+
+        } else {
+            textBox = panel.querySelector('textarea');
+            commandRow = panel.querySelector('div.command-box');
+        }
+
 
         if (text)
             textBox.value = text;
-        return {
+        var panelObj= {
+        	control:panel,
+        	button:button, 
             append: (line)=>{
                 textBox.value = textBox.value + line
             }
@@ -5838,12 +6451,226 @@ justify-content: flex-end;
                 textBox.value = textBox.value + '\n' + line
             },
             clear: ()=>{
-                textBox.value += ''
+                textBox.value  = ''
             }
             ,
         }
-    }
+        
+        Object.defineProperty(panelObj,'text',{
+        	get: function() {
 
+				return textBox.value
+			},
+			set: function(v) {
+				textBox.value =v
+			},
+
+			configurable: false,
+			enumerable: true
+        })
+        
+        return panelObj;
+    }
+    
+
+let selectionPop= function (handle,reset) {
+
+        console.clear();
+
+        let _$ = ayanoglu.DOM._$;
+        var sId = 'selector-pop';
+
+        ayanoglu.DOM.style(`
+
+#${sId} {
+
+position:fixed;
+top:0px;
+left:0px;
+z-index:1000000;
+background-color:#8bf4a1;
+border-radius:5px;
+font-size:21px;
+display:none;
+flex-direction:column;    
+
+}
+#${sId} > div {
+font-size: 14px;
+    font-family: sans-serif;
+    cursor: pointer;
+    border-top: 1px solid #0000001c;
+    display:flex;
+     justify-content: space-between;
+     align-items: center;
+}
+#${sId} > div.new { 
+ padding: 12px;
+background-color:rgba(0, 0, 0, 0.15);
+}
+#${sId} > div > div.t { 
+    padding: 12px;
+}
+#${sId} > div > div.icon-edit {
+ margin-left:8px;
+ margin-right:8px;
+}
+
+        `);
+        var selectedText;
+        var selPop = document.getElementById(sId);
+        if(selPop && reset===true) {
+        document.body.removeChild(selPop);
+selPop=undefined;
+}
+        let loadMenu=(reset)=>{
+        	if(reset===true){
+        		  var items = Array.prototype.slice.call(selPop.children );
+             	   items.forEach((item)=>{
+             		   if(item.className!=='new') selPop.removeChild(item);
+             	   });
+        	}
+        	 chrome.storage.sync.get( storageKey ,  (result) =>{
+                 var values=result[storageKey];
+                 if(!values) values=[];
+             values.forEach(addMenu)
+
+               });
+        	
+        }
+        let addMenu=(text)=>{
+        	 var mnu=_$('div').addTo(selPop);
+        	 var textElement=_$('div').text(text).cls('t').addTo(mnu);
+        	 var editor=_$('div').cls('icon-edit').addTo(mnu);
+        	 editor.addEventListener('click',(e)=>{
+        		 
+        	       chrome.storage.sync.get( storageKey ,  (result) =>{
+		                 var values=result[storageKey];
+		                 if(!values) values=[];
+		             	var dlg= new ayanoglu.ui.dialog();
+		             	
+		                var frm=_$('div').addTo(dlg.container);
+		                
+		                var row=_$('div').addTo(frm);
+		                var inputCell=_$('div').addTo(row);
+		                 var txtElement=_$('textarea').css('width: -webkit-fill-available;height:100px;').addTo(inputCell);
+		                txtElement.value=JSON.stringify(values);
+
+		                var input2Cell=_$('div').addTo(row);
+		                var valueElement=_$('input').css('width: -webkit-fill-available;').addTo(input2Cell);
+		                valueElement.value=text;
+		               });
+        	
+        		 return;
+        		 
+		            var textNew= prompt('Yeni içerik',text);
+		            
+		            chrome.storage.sync.get( storageKey ,  (result) =>{
+		                 var values=result[storageKey];
+		                 if(!values) values=[];
+		             
+		                 values.splice(values.indexOf(text),1,textNew)
+
+		                 var data={};
+		                 data[storageKey]=values;
+
+		                 chrome.storage.sync.set(data,  ()=> { 
+		                	 loadMenu(true);  
+		                         });
+		                 
+
+		               });
+		             
+		      })
+ 		    if(handle)  textElement.addEventListener('click',(e)=>{
+ 		             handle(textElement.textContent);
+ 		      })
+        }
+        if (!selPop) {
+            selPop = _$('div')
+            .cls('')
+            .atts({
+                id: sId
+            })
+            .addTo(document.body);
+            var storageKey='wup-message-replies';
+            var item=_$('div').text('Yeni Ekle').cls('new').addTo(selPop); 
+            item.addEventListener('click',(e)=>{
+            	 var text=selectedText; 
+            	 
+            	 
+            	   
+                 
+                 chrome.storage.sync.get( storageKey ,  (result) =>{
+                   var values=result[storageKey];
+                   if(!values) values=[];
+               if(values.indexOf(text)===-1)    values.push(text);
+               var data={};
+               data[storageKey]=values;
+
+               chrome.storage.sync.set(data,  ()=> {
+            	   loadMenu(true);
+                         
+                       });
+
+                 });
+         
+            	 
+            	 
+	      })
+	      
+         loadMenu();
+	      
+            /*
+      ayanoglu.utility.getHttpData('wup-replies').then((response)=>{
+	for(key in response){
+	   // console.log(response[key])
+	   var text=response[key];
+	      var item=_$('div').text(text).addTo(selPop);
+	    if(handle)  item.addEventListener('click',(e)=>{
+	             handle(e.target.textContent);
+	      })
+	}
+}
+, (status)=>{
+	console.log(status)
+}
+);
+    */        
+
+
+        }
+
+         
+
+        let upHandler = (e)=>{
+            if (e.target === selPop) {
+                selPop.style.display = 'flex';
+                return;
+            }
+
+            var sel = document.getSelection().toString();
+
+            if (sel.length) {
+                console.log(document.getSelection().toString());
+                selPop.style.display = 'block';
+                selPop.style.left = (e.clientX ) + 'px';
+                selPop.style.top = (e.clientY  ) + 'px';
+                selectedText=sel;
+            } else{ 
+                selPop.style.display = 'none';
+                }
+
+        }
+      
+ 
+        document.addEventListener('mouseup', upHandler);
+
+    }
+ui.selectionPop=selectionPop;
+    ui.floatMenu=floatMenu;
+    ui.panel =uiPanel;
+    
     let DOM = Object.create(null);
 
     let populate = function(element) {
@@ -5868,6 +6695,11 @@ justify-content: flex-end;
             return element;
         }
         ;
+        element.att = function(name,value) {
+        	  element.setAttribute(name, value);
+
+            return element;
+        }
         element.atts = function(ats) {
             for (name in ats) {
                 if (ats.hasOwnProperty(name))
@@ -6058,84 +6890,95 @@ if (contact.group) {
         return gLine;
     }
     ;google.buildContactRow = buildContactRow;
+
     function getGoogleContactCSVFields() {
-        var headersStr = 'Name,';
-        headersStr += 'Given Name,';
-        headersStr += 'Additional Name,';
-        headersStr += 'Family Name,';
-        headersStr += 'Yomi Name,';
-        headersStr += 'Given Name Yomi,';
-        headersStr += 'Additional Name Yomi,';
-        headersStr += 'Family Name Yomi,';
-        headersStr += 'Name Prefix,';
-        headersStr += 'Name Suffix,';
-        headersStr += 'Initials,';
-        headersStr += 'Nickname,';
-        headersStr += 'Short Name,';
-        headersStr += 'Maiden Name,';
-        headersStr += 'Birthday,';
-        headersStr += 'Gender,';
-        headersStr += 'Location,';
-        headersStr += 'Billing Information,';
-        headersStr += 'Directory Server,';
-        headersStr += 'Mileage,';
-        headersStr += 'Occupation,';
-        headersStr += 'Hobby,';
-        headersStr += 'Sensitivity,';
-        headersStr += 'Priority,';
-        headersStr += 'Subject,';
-        headersStr += 'Notes,';
-        headersStr += 'Language,';
-        headersStr += 'Photo,';
-        headersStr += 'Group Membership,';
-        headersStr += 'E-mail 1 - Type,';
-        headersStr += 'E-mail 1 - Value,';
-        headersStr += 'Phone 1 - Type,';
-        headersStr += 'Phone 1 - Value,';
-        headersStr += 'Phone 2 - Type,';
-        headersStr += 'Phone 2 - Value,';
-        headersStr += 'Phone 3 - Type,';
-        headersStr += 'Phone 3 - Value,';
-        headersStr += 'Phone 4 - Type,';
-        headersStr += 'Phone 4 - Value,';
-        headersStr += 'Organization 1 - Type,';
-        headersStr += 'Organization 1 - Name,';
-        headersStr += 'Organization 1 - Yomi Name,';
-        headersStr += 'Organization 1 - Title,';
-        headersStr += 'Organization 1 - Department,';
-        headersStr += 'Organization 1 - Symbol,';
-        headersStr += 'Organization 1 - Location,';
-        headersStr += 'Organization 1 - Job Description,';
-        headersStr += 'Website 1 - Type,';
-        headersStr += 'Website 1 - Value,';
-        headersStr += 'Organization 2 - Type,';
-        headersStr += 'Organization 2 - Name,';
-        headersStr += 'Custom Field 1 - Type,';
-        headersStr += 'Custom Field 1 - Value,';
-        headersStr += 'Custom Field 2 - Type,';
-        headersStr += 'Custom Field 2 - Value,';
-        headersStr += 'Custom Field 3 - Type,';
-        headersStr += 'Custom Field 3 - Value,';
-        headersStr += 'Custom Field 4 - Type,';
-        headersStr += 'Custom Field 4 - Value,';
-        headersStr += 'Custom Field 5 - Type,';
-        headersStr += 'Custom Field 5 - Value';
+    	var headersStr='';
+    	headersStr += 'Name,'; //0
+    	 headersStr += 'Given Name,'; //1
+    	 headersStr += 'Additional Name,'; //2
+    	 headersStr += 'Family Name,'; //3
+    	 headersStr += 'Yomi Name,'; //4
+    	 headersStr += 'Given Name Yomi,'; //5
+    	 headersStr += 'Additional Name Yomi,'; //6
+    	 headersStr += 'Family Name Yomi,'; //7
+    	 headersStr += 'Name Prefix,'; //8
+    	 headersStr += 'Name Suffix,'; //9
+    	 headersStr += 'Initials,'; //10
+    	 headersStr += 'Nickname,'; //11
+    	 headersStr += 'Short Name,'; //12
+    	 headersStr += 'Maiden Name,'; //13
+    	 headersStr += 'Birthday,'; //14
+    	 headersStr += 'Gender,'; //15
+    	 headersStr += 'Location,'; //16
+    	 headersStr += 'Billing Information,'; //17
+    	 headersStr += 'Directory Server,'; //18
+    	 headersStr += 'Mileage,'; //19
+    	 headersStr += 'Occupation,'; //20
+    	 headersStr += 'Hobby,'; //21
+    	 headersStr += 'Sensitivity,'; //22
+    	 headersStr += 'Priority,'; //23
+    	 headersStr += 'Subject,'; //24
+    	 headersStr += 'Notes,'; //25
+    	 headersStr += 'Language,'; //26
+    	 headersStr += 'Photo,'; //27
+    	 headersStr += 'Group Membership,'; //28
+    	 headersStr += 'E-mail 1 - Type,'; //29
+    	 headersStr += 'E-mail 1 - Value,'; //30
+    	 headersStr += 'Phone 1 - Type,'; //31
+    	 headersStr += 'Phone 1 - Value,'; //32
+    	 headersStr += 'Phone 2 - Type,'; //33
+    	 headersStr += 'Phone 2 - Value,'; //34
+    	 headersStr += 'Phone 3 - Type,'; //35
+    	 headersStr += 'Phone 3 - Value,'; //36
+    	 headersStr += 'Phone 4 - Type,'; //37
+    	 headersStr += 'Phone 4 - Value,'; //38
+    	 headersStr += 'Organization 1 - Type,'; //39
+    	 headersStr += 'Organization 1 - Name,'; //40
+    	 headersStr += 'Organization 1 - Yomi Name,'; //41
+    	 headersStr += 'Organization 1 - Title,'; //42
+    	 headersStr += 'Organization 1 - Department,'; //43
+    	 headersStr += 'Organization 1 - Symbol,'; //44
+    	 headersStr += 'Organization 1 - Location,'; //45
+    	 headersStr += 'Organization 1 - Job Description,'; //46
+    	 headersStr += 'Website 1 - Type,'; //47
+    	 headersStr += 'Website 1 - Value,'; //48
+    	 headersStr += 'Organization 2 - Type,'; //49
+    	 headersStr += 'Organization 2 - Name,'; //50
+    	 headersStr += 'Custom Field 1 - Type,'; //51
+    	 headersStr += 'Custom Field 1 - Value,'; //52
+    	 headersStr += 'Custom Field 2 - Type,'; //53
+    	 headersStr += 'Custom Field 2 - Value,'; //54
+    	 headersStr += 'Custom Field 3 - Type,'; //55
+    	 headersStr += 'Custom Field 3 - Value,'; //56
+    	 headersStr += 'Custom Field 4 - Type,'; //57
+    	 headersStr += 'Custom Field 4 - Value,'; //58
+    	 headersStr += 'Custom Field 5 - Type,'; //59
+    	 headersStr += 'Custom Field 5 - Value'; //60
 
         //Custom Field 1 - Type,Custom Field 1 - Value 
 
         var headers = headersStr.split(',');
 
         var colsCount = headers.length;
-
+/*
+      var textStr='';
         headers.forEach((h,i)=>{
-            console.log(i, h);
+            //console.log(i, h);
+
+textStr += " headersStr += '" + h + "'; \/\/" + i + '\n';
+            
         }
-        );
+        ); 
+
+console.log(textStr);
+        );*/
         return {
             'string': headersStr,
             'array': headers
         }
     }
+
+    google.getGoogleContactCSVFields=getGoogleContactCSVFields;
     google.buildContactsCSV = function(contacts, groupText) {
         var gHeaders = getGoogleContactCSVFields();
          var headersStr = gHeaders.string;
@@ -6176,6 +7019,7 @@ if (contact.group) {
 
     }
     let utility = Object.create(null);
+    
     utility.copy = function(raw) {
 var element=_$('textarea').addTo(document.body);
 element.textContent=raw;
@@ -6183,6 +7027,7 @@ element.select();
     document.execCommand('copy'); 
     document.body.removeChild(element);
     }
+    
     utility.upperCase = function(raw) {
 
         raw = raw.replace(/i/g, 'İ');
@@ -6191,6 +7036,37 @@ element.select();
 
         ayanoglu.ui.panel(raw);
     }
+
+utility.getHttpData=function(name,serviceUrl){
+
+    return new Promise((resolve,reject)=>{
+
+
+console.log("%cSending request", 'color:red;font-size:25px;');
+    var req = new XMLHttpRequest();
+
+    var url = serviceUrl ? serviceUrl :'https://script.google.com/macros/s/AKfycby5_PQTxNRMUcDueYj_buZqzRyo0AnW6Kfzkwy0vKfRzwNbqSo/exec';
+        url +='?name=' + name ;
+    req.open("GET", url, true);
+     
+    req.onreadystatechange = function() {
+        if (req.readyState == 4) {
+            if (req.status == 200) { 
+                resolve(JSON.parse(req.responseText))
+
+            }
+            else {
+                    reject(req.status);
+            }
+        }
+    }
+    ;
+    
+    req.send();
+
+    });
+
+}
 
     window.ayanoglu = {
         utility: utility,

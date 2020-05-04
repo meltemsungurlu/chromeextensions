@@ -58,6 +58,7 @@
 			]
 		}
 	],
+	"content_security_policy": "script-src 'self' 'unsafe-eval'; connect-src http://*.whatsapp.com 'self'; object-src 'self'; font-src 'self' data:*;",
 	"page_action": {
 		"default_popup": "popup.html",
 		"default_icon": {
@@ -84,7 +85,10 @@
 		"tabs",
 		"webNavigation",
 		"http://*/*",
-		"https://*/*"
+		"https://*/*",
+		"http://192.168.1.93/*",
+		"https://web.whatsapp.com",
+		"https://web.whatsapp.com/*"
 	],
 	"commands": {
           "tab-right": {

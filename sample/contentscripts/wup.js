@@ -1,102 +1,267 @@
 var d = document;
- 
- 
-let _$ = ayanoglu.DOM._$;
-var d = document;
-var popId = 'pop-command-win';
 
-ayanoglu.DOM.style(`
-#${popId} {
-position:fixed;
-top:50px;
-left:450px;
-z-index:1000000;
-height:40px;
-background-color:#b49cfb;
-border-radius:5px;
-display:flex;
-width: 33px;
+addEventListener('load', ()=>{
+    var pop = ayanoglu.ui.floatMenu();
+    pop.add('Open Group Member Collector', ()=>{
+        collectWupMembers()
+    }
+    , 'icon-doc-text');
+
+    pop.add('Parse Member Info', ()=>{
+        parseContactInfo().then((contact)=>{
+            console.dir(contact);
+
+            var dlg = ayanoglu.ui.dialog();
+            var frm = contactForm(dlg.container)
+
+        }
+        );
+    }
+    , 'icon-phone');
+
+}
+)
+ 
+
+ayanoglu.ui.selectionPop((text)=>{
+    console.log(text);
+    ayanoglu.wup.workers.sendMessage(text);
+}
+, true);
+
+
+let contactForm = function(container) {
+    ayanoglu.DOM.style(`
+.ayanoglu {
+--panel-bg-color:rgb(255,255,195);
+--button-face-color: rgb(58,109,150) ;
+--button-text-color : rgb(250,250,250);
+--button-face-color-hover: rgb(107,155,195);
+}
+.ayanoglu * {
+font-family: Roboto, Helvetica, Calibri, Arial, sans-serif;
+font-size: 15px !important;
+}
+
+.ayanoglu input { 
+    border-radius: 4px; 
+     
+    
+    padding-left: 8px;
+    padding-right: 8px;
+    padding-top: 8px;
+    padding-bottom: 8px; 
+    border: 1px solid var(--button-face-color); 
+    border-radius: 5px; 
+    outline: unset;
+    -webkit-font-smoothing: antialiased;
 }
 
 
-#${popId} > div  {
 
-background-color:inherit;
-border-radius:5px;
-display:flex; 
-transform-style: flat;
-transform-origin: left 0px;
-transition: transform 0.3s ease-out;
-transform: scale(0,1);
-opacity: 0;
+.ayanoglu input[type=button] { 
+    border-radius: 4px; 
+      box-shadow: inset -1px -1px 1px rgba(202, 202, 202, 0.1), 0px 0px 1px rgba(202, 202, 202, 0.2); 
+   
+    
+    padding-left: 16px;
+    padding-right: 16px;
+    padding-top: 9px;
+    padding-bottom: 9px;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    background-color: var(--button-face-color);
+    color: var(--button-text-color);
+    border: 1px solid var(--button-face-color);
+    border-radius: 5px; 
+    outline: unset;
+    -webkit-font-smoothing: antialiased;
+}
+.ayanoglu input[type=button]:hover {
+	background-color: var(--button-face-color-hover);
 }
 
-#${popId}:hover > div {
-	transform: scale(1,1);
-opacity: 1;
-} 
+.ayanoglu textarea, .ayanoglu input[type=text]  {
+    width: -webkit-fill-available;
+    box-sizing: content-box;
+}
+.ayanoglu textarea   {
+   min-height:100px;
+}
 
-#${popId} > div  > div  
-{
+.ayanoglu textarea::selection, .ayanoglu input::selection {
+  background: #ffb7b7 !important; /* WebKit/Blink Browsers */
+}
+.ayanoglu textarea::-moz-selection,.ayanoglu input[type=text]::-moz-selection {
+  background: #ffb7b7 !important; /* Gecko Browsers */
+}
+
+.flex-form {  
     display: flex;
-    justify-content: center;
-    align-items: center; 
-    border-right: 1px solid gray;
-    font-size: 32px;
-    width: 32px;
-    color: black;
+    flex-direction: column; 
+
 }
 
-#${popId} > div > div:after {
-	color:inherit;
+.flex-form > div {
+    display:flex;
+    flex-direction:column;
+    margin:15px auto;
+}
+
+
+
+.flex-form > div > div {
+    margin:5px;
+}
+
+.flex-form > div > div > div:first-child {
+     color:gray;
 }
 
 `);
+    let _$ = ayanoglu.DOM._$;
+    var table = _$('div').cls('ayanoglu flex-form').addTo(container);
+    let addField = (label,name,tag)=>{
+        var row = _$('div').addTo(table);
+        var labelCell = _$('div').text(label).addTo(row);
 
-var popCommand = d.getElementById(popId);
-if (popCommand) {
-    d.body.removeChild(popCommand);
-    popCommand = undefined;
+        var inputCell = _$('div').addTo(row);
+        var input = _$(tag ? tag : 'input').addTo(inputCell);
+        return input;
+    }
+    ;
+
+    var fields = ayanoglu.google.getGoogleContactCSVFields().array;
+
+    fields.forEach((field,i)=>{
+        if (/.+\s+Yomi/i.test(field) || /Yomi\s+.+/i.test(field))
+            return;
+        var input = addField(field, 'field' + i);
+    }
+    )
+
 }
-if (!popCommand) {
-    popCommand = _$('div').atts({
-        'id': popId
-    }).addTo(d.body);
-    var container=_$('div').addTo(popCommand);
-    var btnCollector = _$('div').cls('fnt-after').atts({title:'Load Group Contacts'}).addTo(container);
-    var btnSome = _$('div').cls('fnt-after').addTo(container);
-    btnCollector.addEventListener('click',(e)=>{
-    	collectNumbers();
-    })
+
+ayanoglu.ui.contactForm = contactForm;
+
+let parseContactInfo = function() {
+    return new Promise((resolve,reject)=>{
+        ayanoglu.wup.openChatPanel().then((element)=>{
+            var find = ayanoglu.DOM.findElement;
+
+            var numSelector = '#app > div > div > div.YD4Yw > div._1-iDe._14VS3 > span > div > span > div > div > div._2vsnU > div._1CRb5._34vig._3XgGT > span > span';
+            find(numSelector, 'Phone').then((numElement)=>{
+                // console.log(numElement.textContent);
+
+                var phone = numElement.textContent;
+                var num = phone.replace(/[^\d]/g, '');
+                if (!/[\d]{10,}/.test(num)) {
+                    reject();
+                    return;
+                }
+                var nameSelector = '#app > div > div > div.YD4Yw > div._1-iDe._14VS3 > span > div > span > div > div > div._2vsnU > div._1CRb5._34vig._3XgGT > div:nth-child(3) > span > span';
+                ayanoglu.DOM.findElement(nameSelector, 'Name').then((nameElement)=>{
+                    //  console.log(nameElement.textContent);
+                    var name = nameElement.textContent
+                    resolve({
+                        name: name,
+                        phone: phone
+                    });
+
+                }
+                , ()=>{
+
+                    resolve({
+                        phone: phone
+                    });
+                }
+                )
+
+            }
+            , reject)
+        }
+        , reject);
+
+    }
+    )
+
 }
 
+function download(filename, text) {
+    var element = document.createElement('a');
+    element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+    element.setAttribute('download', filename);
 
+    element.style.display = 'none';
+    document.body.appendChild(element);
 
- 
+    element.click();
+
+    document.body.removeChild(element);
+}
+
 if (typeof window.contacts === 'undefined')
     window.contacts = {};
+var panel;
+let collectWupMembers = function(container) {
 
-let collectWupMembers=function (container) {
+    console.clear();
+    if (typeof panel === 'undefined') {
+        panel = ayanoglu.ui.panel();
+        ca.event.listen('will-close', ()=>{
+            panel = undefined;
+        }
+        , panel.control);
+        let writeToPanel = ()=>{
+            var str = ayanoglu.google.buildContactsCSV(contacts);
 
-  console.clear();
+            ayanoglu.utility.copy(str);
+            setTimeout(()=>{
+                panel.text = str;
+            }
+            , 1);
 
+        }
+        writeToPanel();
+        panel.button('Collect Members', ()=>{
 
-          	ayanoglu.wup.workers.collectGroupMembers(contacts).then((members)=>{
-          		contacts=members;
-          		console.dir(contacts); 
+            ayanoglu.wup.workers.collectGroupMembers(contacts).then((members)=>{
+                contacts = members;
+                console.dir(contacts);
 
+                writeToPanel();
 
-    	 var str = ayanoglu.google.buildContactsCSV(members);
-    	    container.value = str;
-    	    ayanoglu.utility.copy(str);
-          		
-          	},()=>{});
+            }
+            , ()=>{}
+            );
+        }
+        );
 
-    
-   
+        panel.button('Reset Members', ()=>{
+            window.contacts = {};
+            panel.text = '';
+        }
+        );
+
+        panel.button('Save', ()=>{
+            download("wup-contacts.csv", panel.text);
+        }
+        );
+    }
+
+    panel.control.style.bottom = '10px';
+    panel.control.style.top = '10px';
+    panel.control.style.left = '0px';
+    panel.control.style.width = '300px';
+    panel.control.style.right = 'auto';
+
 }
 
-let formatNames=function (container) {
+let formatNames = function(container) {
     var fmtArr = [];
     var text = container.value;
     var lines = text.split('\n');
@@ -141,8 +306,6 @@ let formatNames=function (container) {
     }
 
 }
-
-
 
 var style = d.getElementById('wup-inject-style');
 if (style)
@@ -343,10 +506,10 @@ utility.addMenuItems([{
     'id': 'entity',
     'title': 'Collect Entity',
     'contexts': ['link']
-}, {
+}/*, {
     'id': 'phones',
     'title': 'Collect phones',
     'contexts': ['page']
-}
+}*/
 ]);
 utility.addMenuListener(menuHandler);
