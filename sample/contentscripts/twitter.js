@@ -1,7 +1,8 @@
 
 addEventListener('load',()=>{
    var pop=ayanoglu.ui.floatMenu();
-   pop.add('Open Group Member Collector',()=>{
+/*
+  pop.add('Open Group Member Collector',()=>{
 	var panel=ayanoglu.ui.panel();
 	panel.control.style.bottom='10px';
 	panel.control.style.top='10px';
@@ -11,6 +12,7 @@ addEventListener('load',()=>{
 		alert('okeeeee');
 	})
 }); 
+*/
 })
 
 

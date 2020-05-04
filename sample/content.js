@@ -1,11 +1,5 @@
 //https://tureng.com/en/turkish-english/brew
- 
-    console.clear();
-    ayanoglu.ui.selectionPop((text)=>{
-        console.log(text);
-        //ayanoglu.wup.workers.sendMessage(text);
-    }
-    , true);
+
 
 utility.addMenuItems([{
     'id': 'translate-selection',

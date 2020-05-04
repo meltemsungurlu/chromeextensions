@@ -6051,8 +6051,8 @@ function simulateMouseEvents(element, eventName) {
     	background-color:rgb(255,255,150);
     	border-radius:5px;
     	width: 30px;
-    font-size: 24px; 
-    align-items: center;
+        font-size: 24px; 
+        align-items: center;
     	display:flex;
     	}
 
@@ -6125,7 +6125,7 @@ function simulateMouseEvents(element, eventName) {
     	if (!popCommand) {
     	    popCommand = _$('div').atts({
     	        'id': popId
-    	    }).cls('icon-ellipsis').addTo(d.body);
+    	    }).cls('icon-ellipsis').css('display:none;').addTo(d.body);
     	    
     	      container=_$('div').addTo(popCommand);
     	      var offSetX = 0
@@ -6196,6 +6196,7 @@ function simulateMouseEvents(element, eventName) {
 
     	return {
     		add:(title,handle,className)=>{
+    		        if(popCommand.style.display==='none') popCommand.style.display='flex';
     			var btn  =	_$('div').cls(className?className:'icon-menu').atts({title:title}).addTo(container);
     		if(typeof handle==='function')	btn.addEventListener('click',(e)=>{
     				handle(e);
@@ -6488,13 +6489,26 @@ position:fixed;
 top:0px;
 left:0px;
 z-index:1000000;
-background-color:#8bf4a1;
+background-color:rgb(215, 251, 253);
 border-radius:5px;
 font-size:21px;
-display:none;
+display:flex;
 flex-direction:column;    
+transform-origin: 0 0 ;
+transform : scale(0);
+opacity:0;
+transition: transform 0.5s;
+transition: opacity 0.9s;
+}
+
+
+#${sId}[class='pop'] {
+    
+transform : scale(1);
+opacity:1;
 
 }
+
 #${sId} > div {
 font-size: 14px;
     font-family: sans-serif;
@@ -6588,7 +6602,6 @@ selPop=undefined;
         }
         if (!selPop) {
             selPop = _$('div')
-            .cls('')
             .atts({
                 id: sId
             })
@@ -6643,6 +6656,7 @@ selPop=undefined;
 
          
 
+ 
         let upHandler = (e)=>{
             if (e.target === selPop) {
                 selPop.style.display = 'flex';
@@ -6651,23 +6665,35 @@ selPop=undefined;
 
             var sel = document.getSelection().toString();
 
-            if (sel.length) {
+            if (sel.length || ( e.type==="dblclick" && e.target.contentEditable=="true")) {
                 console.log(document.getSelection().toString());
-                selPop.style.display = 'block';
-                selPop.style.left = (e.clientX ) + 'px';
-                selPop.style.top = (e.clientY  ) + 'px';
+               
                 selectedText=sel;
+                 selPop.cls('pop');
+
+                selPop.style.left = (e.clientX ) + 'px'; 
+                selPop.style.top = (e.clientY  ) + 'px';
+                if(rects=selPop.getClientRects()){
+                        if(rect=rects[0]){
+                             console.dir(rect); 
+
+                     if(rect.bottom > document.body.clientHeight)
+                        selPop.style.top = (document.body.clientHeight - rect.height  ) + 'px';
+                   
+                        }
+                        }
             } else{ 
-                selPop.style.display = 'none';
+                 selPop.cls('');
                 }
 
         }
       
- 
-        document.addEventListener('mouseup', upHandler);
+        document.body.addEventListener('dblclick', upHandler);
+        document.body.addEventListener('mouseup', upHandler);
 
     }
 ui.selectionPop=selectionPop;
+
     ui.floatMenu=floatMenu;
     ui.panel =uiPanel;
     
@@ -6936,7 +6962,7 @@ if (contact.group) {
     	 headersStr += 'Organization 1 - Name,'; //40
     	 headersStr += 'Organization 1 - Yomi Name,'; //41
     	 headersStr += 'Organization 1 - Title,'; //42
-    	 headersStr += 'Organization 1 - Department,'; //43
+    	 headersStr += 'Organization  1 - Department,'; //43
     	 headersStr += 'Organization 1 - Symbol,'; //44
     	 headersStr += 'Organization 1 - Location,'; //45
     	 headersStr += 'Organization 1 - Job Description,'; //46
