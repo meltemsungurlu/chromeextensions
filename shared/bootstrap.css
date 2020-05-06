@@ -1298,9 +1298,44 @@ font-size: 15px !important;
 	background-color: var(--button-face-color-hover);
 }
 
+ 
+
+.ayanoglu textarea, .ayanoglu input[type=text]  {
+    width: -webkit-fill-available;
+    box-sizing: content-box;
+}
+.ayanoglu textarea   {
+   min-height:100px;
+}
+
+.ayanoglu textarea::selection, .ayanoglu input::selection {
+  background: #ffb7b7 !important; /* WebKit/Blink Browsers */
+}
+.ayanoglu textarea::-moz-selection,.ayanoglu input[type=text]::-moz-selection {
+  background: #ffb7b7 !important; /* Gecko Browsers */
+}
+
+.flex-form {  
+    display: flex;
+    flex-direction: column; 
+
+}
+
+.flex-form > div {
+    display:flex;
+    flex-direction:column;
+    margin:0px;
+}
 
 
 
+.flex-form > div > div {
+    margin:5px;
+}
+
+.flex-form > div > div > div:first-child {
+     color:gray;
+}
 
 
 
@@ -1397,8 +1432,157 @@ border: 0px;
 
 
 
+/* dialog */
+
+    .ayanoglu-dialog {
+
+        position: fixed;
+         top: 0px;
+        left: 0px;  
+        height:700px;
+        min-height: 600px;
+        min-width: 400px;
+        z-index: 10000;
+        display: flex;
+        flex-direction: column;
+        box-shadow: 0px 0px 4px 3px gainsboro;
+
+        background-color: rgb(240, 239, 253);
+
+    }
+
+    .ayanoglu-dialog * {
+        font-size:0.9rem;
+        font-family:arial;
+    }
+
+    .ayanoglu-dialog > div.h {
+            height: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom:3px;    
+
+        border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        
+        background-color: rgba(0, 0, 0, 0.03);
+    }
+
+    .ayanoglu-dialog > div.h > div.txt{
+     display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        margin-left:3px;
+    }
+     
+     .ayanoglu-dialog > div.h > div.cmd{
+         display: flex;
+        align-items: center;
+        justify-content: flex-end;
+    }
+
+    .ayanoglu-dialog > div.h > div.cmd >  div.closer {
+    color: #a9a1a1;
+        font-size: 28px;
+        margin-right: 6px;
+        cursor:pointer;
+    }
+    .ayanoglu-dialog > div.h > div.cmd > div.icon-window-close ,
+    .ayanoglu-dialog > div.h > div.cmd > div.icon-window-maximize ,
+    .ayanoglu-dialog > div.h > div.cmd > div.icon-window-restore ,
+    .ayanoglu-dialog > div.h > div.cmd > div.icon-right ,
+    .ayanoglu-dialog > div.h > div.cmd > div.icon-left {
+    color: #a9a1a1;
+        font-size: 18px;
+        margin-right: 12px;
+        cursor:pointer;
+    }
+
+    .ayanoglu-dialog > div.h div.closer:before {
+    content: "\\e801";
+        color: inherit;
+        font-size: inherit;
+    }
+
+    .ayanoglu-dialog > div.b {
+    flex-grow: 2;
+    margin: 0px;
+    padding: 7px;
+    overflow-y:auto;
+     
+    }
+
+    .ayanoglu-dialog > div.b::-webkit-scrollbar {
+        width: 9px !important;    
+        background-color: rgba(0, 0, 0, 0.03);
+    }
+    .ayanoglu-dialog > div.b::-webkit-scrollbar-thumb {  
+        background-color: rgba(0, 0, 0, 0.07);
+    }
+
+    .ayanoglu-dialog textarea::selection, .ayanoglu-dialog input::selection {
+      background: #ffb7b7 !important; /* WebKit/Blink Browsers */
+    }
+    .ayanoglu-dialog textarea::-moz-selection,..ayanoglu-dialog input[type=text]::-moz-selection {
+      background: #ffb7b7 !important; /* Gecko Browsers */
+    }
+
+    .ayanoglu-dialog input[type=button] {
+        background-color: rgba(0, 0, 0, 0.35);
+        box-shadow: inset 0px 0px 1px 2px rgba(255, 255, 255, 0.60); 
+        color: rgba(255, 255, 255, 0.95);   
+        margin-left: 20px;
+        padding: 12px 15px 12px 15px; 
+        border-radius: 6px;
+        border: 0px; 
+        outline: unset;
+        -webkit-font-smoothing: antialiased;
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        -khtml-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+
+    }
+
+    .ayanoglu-dialog input[type=button]:hover {
+        
+    }
+
+    .ayanoglu-dialog input[type=button]:active {    
+
+        background-color: rgba(0, 0, 0, 0.38);
+         box-shadow: inset 0px 0px 1px 2px rgba(255, 255, 255, 0.50); 
+
+    }
+ .ayanoglu-dialog > div.t {
+      display: flex;
+    justify-content: flex-end;
+ }
+
+ .ayanoglu-dialog > div.t > div {
+       padding:5px;color:blue;cursor:pointer;
+ }
+
+    .ayanoglu-dialog > div.f {
+        margin:0px;
+        padding: 7px;
+        padding-bottom: 0px;
+    display: flex;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+
+        background-color: rgba(0, 0, 0, 0.02);
+    }
+
+    .ayanoglu-dialog > div.f input[type=button] {
+            margin-bottom:10px;
+    }
 
 
+    
+/* end dialog */    
 
 
 
@@ -1494,3 +1678,6 @@ color: white;
 border-radius: 7px;
 border: 0px;
 }
+
+
+

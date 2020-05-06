@@ -5304,7 +5304,7 @@ ___dom();
     }
     ;
     wupLib.workers.makeShortcut = function(label) {
-        console.clear();
+       // console.clear();
         let find = ayanoglu.DOM.findElement;
         var infoSelector = '#main > header > div._5SiUq';
         var numSelector = '#app > div > div > div.YD4Yw > div._1-iDe._14VS3 > span > div > span > div > div > div._2vsnU > div:nth-child(4) > div:nth-child(3) > div > div > span > span';
@@ -5336,7 +5336,7 @@ ___dom();
     }
     let collectUnknownSenders = function() {
 
-        console.clear();
+      //  console.clear();
         var textStack = [];
         var itemsCount = 1;
         var paneSelector = '#pane-side';
@@ -5442,7 +5442,7 @@ ___dom();
             if (typeof members === 'undefined')
                 members = {};
 
-            console.clear();
+           // console.clear();
             var textStack = [];
             var itemsCount = 1;
             var paneSelector = '#pane-side';
@@ -5544,7 +5544,7 @@ ___dom();
 return new Promise((resolve,reject)=>{
 
 
-        console.clear();
+       // console.clear();
         var textStack = [];
         var itemsCount = 1;
         var paneSelector = '#pane-side';
@@ -5665,7 +5665,7 @@ resolve(contacts);
         flex-direction: column;
         box-shadow: 0px 0px 4px 3px gainsboro;
 
-        background-color: #ebfde3;
+        background-color:rgb(244, 247, 255);
 
     }
 
@@ -5722,6 +5722,22 @@ resolve(contacts);
         font-size: inherit;
     }
 
+ .ayanoglu-dialog > div.t {
+    flex-grow: 2;
+    margin: 0px; 
+         display: flex;
+        align-items: center;
+        justify-content: flex-end;
+     
+    }
+
+
+     .ayanoglu-dialog > div.t > div {
+         padding:5px;
+         color:blue;
+         cursor:pointer;
+     }
+
     .ayanoglu-dialog > div.b {
     flex-grow: 2;
     margin: 0px;
@@ -5731,7 +5747,7 @@ resolve(contacts);
     }
 
     .ayanoglu-dialog > div.b::-webkit-scrollbar {
-        width: 9px !important;    
+        width: 5px !important;    
         background-color: rgba(0, 0, 0, 0.03);
     }
     .ayanoglu-dialog > div.b::-webkit-scrollbar-thumb {  
@@ -5798,10 +5814,16 @@ resolve(contacts);
 
         var panelID = 'dialog-raw-panel';
         var panel = d.getElementById(panelID);
-        var footer, body;
+        var footer, body,toolBar;
 
         let button = (text,handler)=>{
             var btn = _$('input').att('type', 'button').att('value', text).addTo(footer);
+            btn.addEventListener('click', handler);
+            return btn;
+        }
+        ;
+         let addMenu = (text,handler)=>{
+            var btn = _$('div').text( text).addTo(toolBar);
             btn.addEventListener('click', handler);
             return btn;
         }
@@ -5872,6 +5894,7 @@ resolve(contacts);
             }
             );
 
+            toolBar = _$('div').cls('t').addTo(panel);
             body = _$('div').cls('b').addTo(panel);
 
             footer = _$('div').cls('f').addTo(panel);
@@ -5886,11 +5909,13 @@ resolve(contacts);
         } else {
             body = panel.querySelector('div.b');
             footer = panel.querySelector('div.f');
+            toolBar = panel.querySelector('div.t');
         }
 
         var panelObj = {
             control: panel,
             button: button,
+            menu: addMenu,
             add: (child)=>{
                 body.add(child);
             }
@@ -5960,7 +5985,6 @@ resolve(contacts);
     	left:30px;
         height: inherit;
     	background-color:inherit;
-    	border-radius:5px;
     	display:flex; 
     	transform-style: flat;
     	transform-origin: left 0px;
@@ -5969,13 +5993,12 @@ resolve(contacts);
     	opacity: 0;
     	}
 #${popId}:hover  {
-    		 
-    		border-radius: 5px 0px 0px 5px;
+    		border-radius:5px 0px 0px 5px; 
+    		
     	} 
     	#${popId}:hover > div {
     		transform: scale(1,1);
     		opacity: 1;
-    		border-radius: 0px 5px 5px 0px;
     	} 
 
     	#${popId} > div  > div  
@@ -5986,16 +6009,16 @@ resolve(contacts);
     	    font-size: 19px;
     	    width: 30px;
     	    color: black; 
-            border-left: 1px groove rgba(226, 221, 221, 0.25);
+           
     	}
     	#${popId} > div  > div:last-child {
     	        
-    	    border-radius:0px 0px 5px 5px;
+    	    border-radius:0px 5px 5px 0px;
     	}
 
 #${popId} > div  > div + div {
 
-    	    border-left: 1px solid gray;
+    	    border-left: 1px groove rgba(226, 221, 221, 0.25);
 }
 
 
@@ -6376,7 +6399,7 @@ resolve(contacts);
 
     let selectionPop = function(handle, reset) {
 
-        console.clear();
+      //  console.clear();
 
         let _$ = ayanoglu.DOM._$;
         var sId = 'selector-pop';
@@ -6692,7 +6715,7 @@ background-color:rgba(0, 0, 0, 0.15);
             return element;
         }
         ;
-        element.text = function(v) {
+        element['text'] = function(v) {
             element.textContent = v;
             return element;
         }
@@ -7123,7 +7146,7 @@ console.log(textStr);
         hadiii: hadiii
     };
 
-    console.clear();
+    //console.clear();
     console.log('Ayanoglu Library Loaded');
     console.dir(ayanoglu);
 

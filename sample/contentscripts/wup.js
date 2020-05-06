@@ -1,6 +1,7 @@
 var d = document;
 
 addEventListener('load', ()=>{
+
     var pop = ayanoglu.ui.floatMenu();
     pop.add('Open Group Member Collector', ()=>{
         collectWupMembers()
@@ -12,7 +13,9 @@ addEventListener('load', ()=>{
             console.dir(contact);
 
             var dlg = ayanoglu.ui.dialog();
-            var frm = contactForm(dlg.container)
+
+            dlg.title = contact.name;
+            var frm = contactForm(dlg, dlg.container, contact)
 
         }
         );
@@ -21,7 +24,8 @@ addEventListener('load', ()=>{
 
 }
 )
- 
+
+
 
 ayanoglu.ui.selectionPop((text)=>{
     console.log(text);
@@ -29,120 +33,100 @@ ayanoglu.ui.selectionPop((text)=>{
 }
 , true);
 
+let contactForm = function(dlg, container, contact) {
+    //ayanoglu.DOM.style(``);
 
-let contactForm = function(container) {
-    ayanoglu.DOM.style(`
-.ayanoglu {
---panel-bg-color:rgb(255,255,195);
---button-face-color: rgb(58,109,150) ;
---button-text-color : rgb(250,250,250);
---button-face-color-hover: rgb(107,155,195);
-}
-.ayanoglu * {
-font-family: Roboto, Helvetica, Calibri, Arial, sans-serif;
-font-size: 15px !important;
-}
-
-.ayanoglu input { 
-    border-radius: 4px; 
-     
-    
-    padding-left: 8px;
-    padding-right: 8px;
-    padding-top: 8px;
-    padding-bottom: 8px; 
-    border: 1px solid var(--button-face-color); 
-    border-radius: 5px; 
-    outline: unset;
-    -webkit-font-smoothing: antialiased;
-}
-
-
-
-.ayanoglu input[type=button] { 
-    border-radius: 4px; 
-      box-shadow: inset -1px -1px 1px rgba(202, 202, 202, 0.1), 0px 0px 1px rgba(202, 202, 202, 0.2); 
-   
-    
-    padding-left: 16px;
-    padding-right: 16px;
-    padding-top: 9px;
-    padding-bottom: 9px;
-    -webkit-touch-callout: none;
-    -webkit-user-select: none;
-    -khtml-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-    background-color: var(--button-face-color);
-    color: var(--button-text-color);
-    border: 1px solid var(--button-face-color);
-    border-radius: 5px; 
-    outline: unset;
-    -webkit-font-smoothing: antialiased;
-}
-.ayanoglu input[type=button]:hover {
-	background-color: var(--button-face-color-hover);
-}
-
-.ayanoglu textarea, .ayanoglu input[type=text]  {
-    width: -webkit-fill-available;
-    box-sizing: content-box;
-}
-.ayanoglu textarea   {
-   min-height:100px;
-}
-
-.ayanoglu textarea::selection, .ayanoglu input::selection {
-  background: #ffb7b7 !important; /* WebKit/Blink Browsers */
-}
-.ayanoglu textarea::-moz-selection,.ayanoglu input[type=text]::-moz-selection {
-  background: #ffb7b7 !important; /* Gecko Browsers */
-}
-
-.flex-form {  
-    display: flex;
-    flex-direction: column; 
-
-}
-
-.flex-form > div {
-    display:flex;
-    flex-direction:column;
-    margin:15px auto;
-}
-
-
-
-.flex-form > div > div {
-    margin:5px;
-}
-
-.flex-form > div > div > div:first-child {
-     color:gray;
-}
-
-`);
     let _$ = ayanoglu.DOM._$;
+
     var table = _$('div').cls('ayanoglu flex-form').addTo(container);
-    let addField = (label,name,tag)=>{
-        var row = _$('div').addTo(table);
-        var labelCell = _$('div').text(label).addTo(row);
+
+    var fields = ayanoglu.google.getGoogleContactCSVFields().array;
+
+    let addField = (label,name,tag,index,value)=>{
+        var row = _$('div').att('id', 'field-' + index).addTo(table);
+        if (sumMap.split(',').indexOf(index.toString()) === -1)
+            row.style.display = 'none';
+        var labelCell = _$('div').text(label + ` (${index})`).addTo(row);
 
         var inputCell = _$('div').addTo(row);
-        var input = _$(tag ? tag : 'input').addTo(inputCell);
+        var input = _$(tag ? tag : 'input').att('name', name).addTo(inputCell);
+        if (value)
+            input.value = value;
+        input.addEventListener('change', (e)=>{
+            var value = e.target.value
+        }
+        )
         return input;
     }
     ;
 
-    var fields = ayanoglu.google.getGoogleContactCSVFields().array;
+    var contactMap = {
+        "0": "name",
+        "31":  {
+            value: "mobile"
+        }
+        ,
+        "32": "phone",
+        "39":   {
+            value:"work"
+        },
+        "40":   {
+            options:['Reyaphasta','Kolanhasta']
+        },
+    }
+    var sumMap = '0,8,25,31,32,39,40,42,43';
 
     fields.forEach((field,i)=>{
         if (/.+\s+Yomi/i.test(field) || /Yomi\s+.+/i.test(field))
             return;
-        var input = addField(field, 'field' + i);
+
+        var tag;
+        if (field === "Notes")
+            tag = "textarea";
+        var value;
+        var map=contactMap[i];
+        if (map) {
+            if (typeof map === 'string') {
+                value = contact[map];
+            } else  {
+                if(map.value)
+                value =  map.value;
+                if(map.options) tag="select";
+            }
+        }
+        var input = addField(field, 'field-' + i, tag, i, value);
+        if(tag==="select"){
+            map.options.forEach((option)=>{
+                 _$('option').att('value',option).addTo(input).textContent=option;
+            })
+        }
     }
     )
+    let toggleField = (on)=>{
+        fields.forEach((field,i)=>{
+            if (row = table.querySelector('div#field-' + i)) {
+                if (on)
+                    row.style.display = 'unset';
+                else if (sumMap.split(',').indexOf(i.toString()) === -1)
+                    row.style.display = 'none';
+            }
+        }
+        )
+
+    }
+
+    dlg.menu('Summary', ()=>{
+        toggleField(false);
+    }
+    );
+    dlg.menu('Full', ()=>{
+        toggleField(true);
+    }
+    );
+
+    dlg.button('Kaydet', ()=>{
+    }
+    );
 
 }
 
@@ -191,7 +175,7 @@ let parseContactInfo = function() {
 
 }
 
-let download=ayanoglu.utility.download;
+let download = ayanoglu.utility.download;
 
 if (typeof window.contacts === 'undefined')
     window.contacts = {};
