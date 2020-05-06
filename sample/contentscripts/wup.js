@@ -34,7 +34,21 @@ ayanoglu.ui.selectionPop((text)=>{
 , true);
 
 let contactForm = function(dlg, container, contact) {
-    //ayanoglu.DOM.style(``);
+     ayanoglu.DOM.style(`
+     .flex-form select {
+         padding:8px;
+         }
+.flex-form > div {
+   padding-bottom: 15px;
+    margin-top: 15px;
+    margin-bottom: 0px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+}
+
+.flex-form > div > div:first-child {
+    margin-bottom:7px;
+}
+     `);
 
     let _$ = ayanoglu.DOM._$;
 
@@ -52,10 +66,9 @@ let contactForm = function(dlg, container, contact) {
         var input = _$(tag ? tag : 'input').att('name', name).addTo(inputCell);
         if (value)
             input.value = value;
-        input.addEventListener('change', (e)=>{
-            var value = e.target.value
+        row.getValue=()=>{
+            return input.value;
         }
-        )
         return input;
     }
     ;
@@ -125,6 +138,24 @@ let contactForm = function(dlg, container, contact) {
     );
 
     dlg.button('Kaydet', ()=>{
+
+var formValues=[];
+
+    fields.forEach((field,i)=>{
+       var value;
+        if (row = table.querySelector('div#field-' + i)){
+        value=row.getValue();
+        }
+        else value="";
+
+        formValues.push(value);
+
+     
+    }
+    )
+
+
+
     }
     );
 

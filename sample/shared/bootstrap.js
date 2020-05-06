@@ -5722,9 +5722,7 @@ resolve(contacts);
         font-size: inherit;
     }
 
- .ayanoglu-dialog > div.t {
-    flex-grow: 2;
-    margin: 0px; 
+ .ayanoglu-dialog > div.t { 
          display: flex;
         align-items: center;
         justify-content: flex-end;
@@ -6441,10 +6439,14 @@ font-size: 14px;
      justify-content: space-between;
      align-items: center;
 }
-#${sId} > div.new { 
- padding: 12px;
+#${sId} > div.new {  
 background-color:rgba(0, 0, 0, 0.15);
 }
+
+#${sId} > div.new > div { 
+ padding: 12px; 
+}
+
 #${sId} > div > div.t { 
     padding: 12px;
 }
@@ -6460,30 +6462,8 @@ background-color:rgba(0, 0, 0, 0.15);
             document.body.removeChild(selPop);
             selPop = undefined;
         }
-        let loadMenu = (reset)=>{
-            if (reset === true) {
-                var items = Array.prototype.slice.call(selPop.children);
-                items.forEach((item)=>{
-                    if (item.className !== 'new')
-                        selPop.removeChild(item);
-                }
-                );
-            }
-            chrome.storage.sync.get(storageKey, (result)=>{
-                var values = result[storageKey];
-                if (!values)
-                    values = [];
-                values.forEach(addMenu)
+          let openEditor=()=>{
 
-            }
-            );
-
-        }
-        let addMenu = (text)=>{
-            var mnu = _$('div').addTo(selPop);
-            var textElement = _$('div').text(text).cls('t').addTo(mnu);
-            var editor = _$('div').cls('icon-edit').addTo(mnu);
-            editor.addEventListener('click', (e)=>{
 
                 chrome.storage.sync.get(storageKey, (result)=>{
                     var values = result[storageKey];
@@ -6497,7 +6477,7 @@ background-color:rgba(0, 0, 0, 0.15);
                         var row = _$('div').css('margin-bottom:10px;').addTo(frm);
                         var inputCell = _$('div').css(`display: flex;align-items: center;justify-content: space-between;`).addTo(row);
                         var valueElement = _$('textarea').css('width: -webkit-fill-available;').addTo(inputCell);
-                        var delBtn = _$('div').css(`margin-left: 10px;`).cls(i===-1?'icon-plus':'icon-eraser').addTo(inputCell);
+                        var delBtn = _$('div').att('title',(i===-1)?'Ekle':'Sil'  ).css(`margin-left: 10px;`).cls(i===-1?'icon-plus':'icon-eraser').addTo(inputCell);
 
                         valueElement.value = value?value:'';
 
@@ -6518,7 +6498,17 @@ background-color:rgba(0, 0, 0, 0.15);
                         );
 
    delBtn.addEventListener('click', (e)=>{
-                        
+
+                        if( i!==-1 && !confirm('Mesaj silinecek !'))
+                         return;
+
+                          if( i===-1 && valueElement.value.trim().length===0 )
+  {      
+      
+       alert('Mesaj girmediniz !') ; 
+       return;
+  }
+ 
                         if(i===-1)    
                         values.push(valueElement.value);                        
                        else  values.splice(i, 1)
@@ -6547,52 +6537,89 @@ background-color:rgba(0, 0, 0, 0.15);
                     addEditor(false,-1);
                     values.forEach(addEditor);
 
-                    /*
-		                var inputCell=_$('div').addTo(row);
-		                 var txtElement=_$('textarea').css('width: -webkit-fill-available;height:100px;').addTo(inputCell);
-		                txtElement.value=JSON.stringify(values);
-*/
+                    dlg.menu('Data',()=>{
+                        frm.style.display='none';
+    var bulkRow= _$('div').css('margin-bottom:20px;');
+    dlg.container.insertBefore(bulkRow,frm);
+       var inputCell=_$('div').addTo(bulkRow);
+        var txtElement=_$('textarea').css('width: -webkit-fill-available;height:200px;margin-bottom:10px;').addTo(inputCell);
+		txtElement.value=JSON.stringify(values);
+		
+		var saveBtn=_$('input').att('type','button').css('margin-left:0px;').att('value','Kaydet').addTo(inputCell);
+		 saveBtn.addEventListener('click', (e)=>{
+  frm.style.display='unset';
+  dlg.container.removeChild(bulkRow);
+  
+		 })
+
+var clsBtn=_$('input').att('type','button').att('value','Kapat').addTo(inputCell);
+		 clsBtn.addEventListener('click', (e)=>{
+  frm.style.display='unset';
+  dlg.container.removeChild(bulkRow);
+		 })
+
+		 saveBtn.disabled=true;
+		  txtElement.addEventListener('change', (e)=>{
+		     saveBtn.disabled=false;
+		 })
+});
+
+       
 
                 }
                 );
 
                 return;
 
-                var textNew = prompt('Yeni içerik', text);
+          
 
-                chrome.storage.sync.get(storageKey, (result)=>{
-                    var values = result[storageKey];
-                    if (!values)
-                        values = [];
-
-                    values.splice(values.indexOf(text), 1, textNew)
-
-                    var data = {};
-                    data[storageKey] = values;
-
-                    chrome.storage.sync.set(data, ()=>{
-                        loadMenu(true);
-                    }
-                    );
-
+            
+            }
+        let loadMenu = (reset)=>{
+            if (reset === true) {
+                var items = Array.prototype.slice.call(selPop.children);
+                items.forEach((item)=>{
+                    if (item.className !== 'new')
+                        selPop.removeChild(item);
                 }
                 );
+            }
+            chrome.storage.sync.get(storageKey, (result)=>{
+                var values = result[storageKey];
+                if (!values)
+                    values = [];
+                values.forEach(addMenu)
 
             }
-            )
+            );
+
+        }
+        let addMenu = (text)=>{
+            var mnu = _$('div').addTo(selPop);
+            var textElement = _$('div').text(text).cls('t').addTo(mnu);
+          //  var editor = _$('div').cls('icon-edit').addTo(mnu);
+           
+
+
             if (handle)
                 textElement.addEventListener('click', (e)=>{
                     handle(textElement.textContent);
                 }
                 )
         }
+
+
         if (!selPop) {
             selPop = _$('div').atts({
                 id: sId
             }).addTo(document.body);
             var storageKey = 'wup-message-replies';
-            var item = _$('div').text('Yeni Ekle').cls('new').addTo(selPop);
-            item.addEventListener('click', (e)=>{
+             var editRow = _$('div').cls('new').addTo(selPop);
+            var addBtn = _$('div').text('Seçimi Ekle').cls('newx').addTo(editRow);
+
+            var editBtn = _$('div').text('Düzenle').cls('newx').addTo(editRow);
+
+            addBtn.addEventListener('click', (e)=>{
                 var text = selectedText;
 
                 chrome.storage.sync.get(storageKey, (result)=>{
@@ -6614,7 +6641,11 @@ background-color:rgba(0, 0, 0, 0.15);
                 );
 
             }
-            )
+            );
+
+          editBtn.addEventListener('click', (e)=>{  openEditor()});
+
+          
 
             loadMenu();
 
@@ -6637,6 +6668,7 @@ background-color:rgba(0, 0, 0, 0.15);
 
         }
 
+var selecting=false;
         let upHandler = (e)=>{
             if (e.target === selPop) {
                 selPop.style.display = 'flex';
@@ -6645,9 +6677,9 @@ background-color:rgba(0, 0, 0, 0.15);
 
             var sel = document.getSelection().toString();
 
-            if (sel.length || (e.type === "dblclick" && e.target.contentEditable == "true")) {
+            if ((sel.length>0 && selecting===true) || (e.type === "dblclick" && e.target.contentEditable == "true")) {
                 console.log(document.getSelection().toString());
-
+selecting=false;
                 selectedText = sel;
                 selPop.cls('pop');
 
@@ -6666,9 +6698,15 @@ background-color:rgba(0, 0, 0, 0.15);
                 selPop.cls('');
             }
 
-        }
 
+        }
+ 
         document.body.addEventListener('dblclick', upHandler);
+        //document.addEventListener('selectionchange', upHandler);
+
+        document.addEventListener('selectstart', (e)=>{
+selecting=true;
+});
         document.body.addEventListener('mouseup', upHandler);
 
     }

@@ -88,7 +88,11 @@ if(!('update_url' in mnf)) ctxMenu.push( {
                                 ],
                                 'onclick' : function ( info , tab ) {
   chrome.runtime.reload();
-  chrome.tabs.reload(tab.id);
+  chrome.tabs.reload(tab.id,{
+  	bypassCache:true
+  },()=>{
+  	console.log('reloaded');
+  });
                                         }
 
 
