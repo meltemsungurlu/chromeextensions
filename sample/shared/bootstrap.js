@@ -4303,8 +4303,7 @@ function ___parser() {
                 }
             }
         },
-        form: {
-        },
+        form: {},
         assist: {
             text: function(v, n) {
                 var fn = v.toObject(this);
@@ -5304,7 +5303,7 @@ ___dom();
     }
     ;
     wupLib.workers.makeShortcut = function(label) {
-       // console.clear();
+        // console.clear();
         let find = ayanoglu.DOM.findElement;
         var infoSelector = '#main > header > div._5SiUq';
         var numSelector = '#app > div > div > div.YD4Yw > div._1-iDe._14VS3 > span > div > span > div > div > div._2vsnU > div:nth-child(4) > div:nth-child(3) > div > div > span > span';
@@ -5336,7 +5335,7 @@ ___dom();
     }
     let collectUnknownSenders = function() {
 
-      //  console.clear();
+        //  console.clear();
         var textStack = [];
         var itemsCount = 1;
         var paneSelector = '#pane-side';
@@ -5442,7 +5441,7 @@ ___dom();
             if (typeof members === 'undefined')
                 members = {};
 
-           // console.clear();
+            // console.clear();
             var textStack = [];
             var itemsCount = 1;
             var paneSelector = '#pane-side';
@@ -5539,53 +5538,85 @@ ___dom();
     }
 
     wupLib.workers.collectGroupMembers = collectGroupMembers;
+    let iterateUsers = function(callBack) {
 
-    let collectUnknownNumbers = function(callBack) {
-return new Promise((resolve,reject)=>{
+        var unique = [];
 
-
-       // console.clear();
+        console.clear();
         var textStack = [];
         var itemsCount = 1;
         var paneSelector = '#pane-side';
         var contacts = [];
         var groups = [];
+        var unReadSelector = 'div > div > div._3j7s9 > div._1AwDx > div._3Bxar > span:nth-child(1) > div > span';
+        //unReadSelector = 'div > div > div._3j7s9 > div._1AwDx > div._3Bxar > span:nth-child(1) > div:nth-child(2) > span.OUeyt';
+       
+        var nameSelector = 'div > div > div._3j7s9 > div._2FBdJ > div._25Ooe > span > span';
+
+        var groupNameSelector = 'div > div > div._3j7s9 > div._2FBdJ > div._25Ooe > div > span'
+
+        var itemSelector = '#pane-side > div:nth-child(1) > div > div > div';
+
         if (panel = document.querySelector(paneSelector)) {
             panel.scrollTo(0, 0);
             var i = 1;
             var stopped = false;
-            var itemSelector = '#pane-side > div:nth-child(1) > div > div > div';
 
             var scroller = ()=>{
 
                 var items = Array.prototype.slice.call(document.querySelectorAll(itemSelector));
 
                 // console.log('items length', items.length);
-                items.forEach((item)=>{
-                    // item.style.border = "1px solid blue";
+                items.forEach((item,itemIndex)=>{
+                    item.style.border = "1px solid blue";
+                    var nameElement = item.querySelector(nameSelector);
+                    var name = false;
+                    var phone = false;
+                    var unread = false;
+var isGroup=false;
+                    if (nameElement) {
 
-                    var unReadSelector = 'div > div > div._3j7s9 > div._1AwDx > div._3Bxar > span:nth-child(1) > div > span';
+                        name = nameElement.textContent;
+                       
 
-                    var nameSelector = 'div > div > div._3j7s9 > div._2FBdJ > div._25Ooe > span > span';
-                    if (nameElement = item.querySelector(nameSelector)) {
-                        var name = nameElement.textContent;
+                       
+
+                    } else if (groupElement = item.querySelector(groupNameSelector)) {
+                        name = groupElement.textContent;
+                        isGroup=true;
+                    }
+
+                    if (name) {
+
+                        itemsCount++;
+                         if (unique.indexOf(name) !== -1)
+                            return false;
+
+                        unique.push(name);
+
                         if (/\+\d+\s+[\d]{3}\s+[\d]{3}\s+[\d]{2}\s+[\d]{2}/ig.test(name)) {
                             //   console.log(name);
-                            if (contacts.indexOf(name) === -1) {
-                                contacts.push(name);
-                                if (typeof callBack === 'function') {
-                                    if (callBack(name))
-                                        stopped = true;
-                                }
-                            }
-                            ;
+                            phone = name;
+                            name = false;
 
                         }
 
-                        if (unReadElement = item.querySelector(unReadSelector)) {//  console.log(name);
-
+                         if (unReadElement = item.querySelector(unReadSelector)) {
+                            unread = parseInt(unReadElement.textContent);
                         }
-                        itemsCount++;
+                        var args = {
+                            name: name,
+                            phone: phone,
+                            unread: unread,
+                            count: itemsCount,
+                            index: itemIndex,
+                            isGroup:isGroup
+                        }
+
+                        if (typeof callBack === 'function') {
+                            if (callBack(args))
+                                stopped = true;
+                        }
                     }
 
                 }
@@ -5598,7 +5629,7 @@ return new Promise((resolve,reject)=>{
                     i++;
 
                     if (panel.scrollHeight - panel.scrollTop > panel.clientHeight) {
-                        setTimeout(scroller, 3)
+                        setTimeout(scroller, 100)
                     } else
                         finalize();
                 } else {
@@ -5608,16 +5639,98 @@ return new Promise((resolve,reject)=>{
             }
 
             let finalize = ()=>{
-              
+                if (typeof callBack === 'function')
+                    callBack(false);
                 panel.scrollTo(0, 0);
-resolve(contacts);
             }
 
             scroller();
 
         }
-        
-})
+
+    }
+
+    
+
+    wupLib.workers.iterateUsers = iterateUsers;
+    let collectUnknownNumbers = function(callBack) {
+        return new Promise((resolve,reject)=>{
+
+            // console.clear();
+            var textStack = [];
+            var itemsCount = 1;
+            var paneSelector = '#pane-side';
+            var contacts = [];
+            var groups = [];
+            if (panel = document.querySelector(paneSelector)) {
+                panel.scrollTo(0, 0);
+                var i = 1;
+                var stopped = false;
+                var itemSelector = '#pane-side > div:nth-child(1) > div > div > div';
+
+                var scroller = ()=>{
+
+                    var items = Array.prototype.slice.call(document.querySelectorAll(itemSelector));
+
+                    // console.log('items length', items.length);
+                    items.forEach((item)=>{
+                        // item.style.border = "1px solid blue";
+
+                        var unReadSelector = 'div > div > div._3j7s9 > div._1AwDx > div._3Bxar > span:nth-child(1) > div > span';
+
+                        var nameSelector = 'div > div > div._3j7s9 > div._2FBdJ > div._25Ooe > span > span';
+                        if (nameElement = item.querySelector(nameSelector)) {
+                            var name = nameElement.textContent;
+                            if (/\+\d+\s+[\d]{3}\s+[\d]{3}\s+[\d]{2}\s+[\d]{2}/ig.test(name)) {
+                                //   console.log(name);
+                                if (contacts.indexOf(name) === -1) {
+                                    contacts.push(name);
+                                    if (typeof callBack === 'function') {
+                                        if (callBack(name))
+                                            stopped = true;
+                                    }
+                                }
+                                ;
+
+                            }
+
+                            if (unReadElement = item.querySelector(unReadSelector)) {//  console.log(name);
+
+                            }
+                            itemsCount++;
+                        }
+
+                    }
+                    );
+
+                    var y = panel.clientHeight * i;
+                    //  console.log(panel.scrollTop);
+                    if (!stopped) {
+                        panel.scrollTo(0, y);
+                        i++;
+
+                        if (panel.scrollHeight - panel.scrollTop > panel.clientHeight) {
+                            setTimeout(scroller, 3)
+                        } else
+                            finalize();
+                    } else {
+                        panel.scrollTo(0, 0);
+                    }
+
+                }
+
+                let finalize = ()=>{
+
+                    panel.scrollTo(0, 0);
+                    resolve(contacts);
+                }
+
+                scroller();
+
+            }
+
+        }
+        )
     }
 
     wupLib.workers.collectUnknownNumbers = collectUnknownNumbers;
@@ -5652,167 +5765,12 @@ resolve(contacts);
     let dialog = function() {
 
         var cssText = `
-    .ayanoglu-dialog {
-
-        position: fixed;
-         top: 0px;
-        left: 0px;  
-        height:700px;
-        min-height: 600px;
-        min-width: 400px;
-        z-index: 10000;
-        display: flex;
-        flex-direction: column;
-        box-shadow: 0px 0px 4px 3px gainsboro;
-
-        background-color:rgb(244, 247, 255);
-
-    }
-
-    .ayanoglu-dialog * {
-        font-size:0.9rem;
-        font-family:arial;
-    }
-
-    .ayanoglu-dialog > div.h {
-            height: 30px;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        margin-bottom:3px;    
-
-        border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-        
-        background-color: rgba(0, 0, 0, 0.03);
-    }
-
-    .ayanoglu-dialog > div.h > div.txt{
-     display: flex;
-        align-items: center;
-        justify-content: flex-start;
-        margin-left:3px;
-    }
-     
-     .ayanoglu-dialog > div.h > div.cmd{
-         display: flex;
-        align-items: center;
-        justify-content: flex-end;
-    }
-
-    .ayanoglu-dialog > div.h > div.cmd >  div.closer {
-    color: #a9a1a1;
-        font-size: 28px;
-        margin-right: 6px;
-        cursor:pointer;
-    }
-    .ayanoglu-dialog > div.h > div.cmd > div.icon-window-close ,
-    .ayanoglu-dialog > div.h > div.cmd > div.icon-window-maximize ,
-    .ayanoglu-dialog > div.h > div.cmd > div.icon-window-restore ,
-    .ayanoglu-dialog > div.h > div.cmd > div.icon-right ,
-    .ayanoglu-dialog > div.h > div.cmd > div.icon-left {
-    color: #a9a1a1;
-        font-size: 18px;
-        margin-right: 12px;
-        cursor:pointer;
-    }
-
-    .ayanoglu-dialog > div.h div.closer:before {
-    content: "\\e801";
-        color: inherit;
-        font-size: inherit;
-    }
-
- .ayanoglu-dialog > div.t { 
-         display: flex;
-        align-items: center;
-        justify-content: flex-end;
-     
-    }
-
-
-     .ayanoglu-dialog > div.t > div {
-         padding:5px;
-         color:blue;
-         cursor:pointer;
-     }
-
-    .ayanoglu-dialog > div.b {
-    flex-grow: 2;
-    margin: 0px;
-    padding: 7px;
-    overflow-y:auto;
-     
-    }
-
-    .ayanoglu-dialog > div.b::-webkit-scrollbar {
-        width: 5px !important;    
-        background-color: rgba(0, 0, 0, 0.03);
-    }
-    .ayanoglu-dialog > div.b::-webkit-scrollbar-thumb {  
-        background-color: rgba(0, 0, 0, 0.07);
-    }
-
-    .ayanoglu-dialog textarea::selection, .ayanoglu-dialog input::selection {
-      background: #ffb7b7 !important; /* WebKit/Blink Browsers */
-    }
-    .ayanoglu-dialog textarea::-moz-selection,..ayanoglu-dialog input[type=text]::-moz-selection {
-      background: #ffb7b7 !important; /* Gecko Browsers */
-    }
-
-    .ayanoglu-dialog input[type=button] {
-        background-color: rgba(0, 0, 0, 0.35);
-        box-shadow: inset 0px 0px 1px 2px rgba(255, 255, 255, 0.60); 
-        color: rgba(255, 255, 255, 0.95);   
-        margin-left: 20px;
-        padding: 12px 15px 12px 15px; 
-        border-radius: 6px;
-        border: 0px; 
-        outline: unset;
-        -webkit-font-smoothing: antialiased;
-        -webkit-touch-callout: none;
-        -webkit-user-select: none;
-        -khtml-user-select: none;
-        -moz-user-select: none;
-        -ms-user-select: none;
-        user-select: none;
-
-    }
-
-    .ayanoglu-dialog input[type=button]:hover {
-        
-    }
-
-    .ayanoglu-dialog input[type=button]:active {    
-
-        background-color: rgba(0, 0, 0, 0.38);
-         box-shadow: inset 0px 0px 1px 2px rgba(255, 255, 255, 0.50); 
-
-    }
-
-    .ayanoglu-dialog > div.f {
-        margin:0px;
-        padding: 7px;
-        padding-bottom: 0px;
-    display: flex;
-    justify-content: flex-end;
-    flex-wrap: wrap;
-
-        background-color: rgba(0, 0, 0, 0.02);
-    }
-
-    .ayanoglu-dialog > div.f input[type=button] {
-            margin-bottom:10px;
-    }
-
-
     `;
-        ayanoglu.DOM.style(cssText);
+      //  ayanoglu.DOM.style(cssText);
         let _$ = ayanoglu.DOM._$;
         var d = window.document;
 
-        var panelID = 'dialog-raw-panel';
-        var panel = d.getElementById(panelID);
-        var footer, body,toolBar;
+       
 
         let button = (text,handler)=>{
             var btn = _$('input').att('type', 'button').att('value', text).addTo(footer);
@@ -5820,95 +5778,82 @@ resolve(contacts);
             return btn;
         }
         ;
-         let addMenu = (text,handler)=>{
-            var btn = _$('div').text( text).addTo(toolBar);
+        let addMenu = (text,handler)=>{
+            var btn = _$('div').text(text).addTo(toolBar);
             btn.addEventListener('click', handler);
             return btn;
         }
         ;
 
-        if (!panel) {
-            panel = _$('div').cls('ayanoglu-dialog').addTo(document.body);
 
-            panel.att('id', panelID);
+        var panel = _$('div').cls('ayanoglu-dialog').addTo(document.body);
+ 
 
-            var header = _$('div').cls('h').addTo(panel);
+        var header = _$('div').cls('h').addTo(panel);
 
-            var headerTxt = _$('div').cls('txt').text('Untitled').addTo(header);
-            var headerCmd = _$('div').cls('cmd').addTo(header);
+         var  headerTxt = _$('div').cls('txt').text('Untitled').addTo(header);
+        var headerCmd = _$('div').cls('cmd').addTo(header);
 
-            var pWidth = panel.offsetWidth;
-            var pLeft = panel.style.left;
-            var pRight = panel.style.right;
-            var resStyle = false;
-            var arrLeft = _$('div').cls('icon-left').addTo(headerCmd);
-            var arrRight = _$('div').cls('icon-right').addTo(headerCmd);
-            var maxBtn = _$('div').cls('icon-window-maximize').addTo(headerCmd);
-            var resBtn = _$('div').cls('icon-window-restore').css('display:none;').addTo(headerCmd);
+        var pWidth = panel.offsetWidth;
+        var pLeft = panel.style.left;
+        var pRight = panel.style.right;
+        var resStyle = false;
+        var arrLeft = _$('div').cls('icon-left').addTo(headerCmd);
+        var arrRight = _$('div').cls('icon-right').addTo(headerCmd);
+        var maxBtn = _$('div').cls('icon-window-maximize').addTo(headerCmd);
+        var resBtn = _$('div').cls('icon-window-restore').css('display:none;').addTo(headerCmd);
 
-            maxBtn.addEventListener('click', (e)=>{
-                if (!resStyle)
-                    resStyle = panel.getAttribute('style');
-                panel.style.width = 'auto';
-                panel.style.left = '0px';
-                panel.style.right = '0px';
-                maxBtn.style.display = 'none';
-                resBtn.style.display = 'block';
+        maxBtn.addEventListener('click', (e)=>{
+            if (!resStyle)
+                resStyle = panel.getAttribute('style');
+            panel.style.width = 'auto';
+            panel.style.left = '0px';
+            panel.style.right = '0px';
+            maxBtn.style.display = 'none';
+            resBtn.style.display = 'block';
 
-            }
-            );
-
-            resBtn.addEventListener('click', (e)=>{
-                panel.setAttribute('style', resStyle);
-                /* panel.style.width=  pWidth +  'px';
-                	 panel.style.left=pLeft;
-                	 panel.style.right=pRight;*/
-                resBtn.style.display = 'none';
-                maxBtn.style.display = 'block';
-
-            }
-            );
-
-            arrLeft.addEventListener('click', (e)=>{
-                panel.style.width = pWidth + 'px';
-                panel.style.left = '0px';
-                panel.style.right = 'auto';
-
-            }
-            );
-
-            arrRight.addEventListener('click', (e)=>{
-                panel.style.width = pWidth + 'px';
-                panel.style.right = '0px';
-                panel.style.left = 'auto';
-            }
-            );
-
-            var closerBox = _$('div').cls('closer fnt-before').addTo(headerCmd);
-            closerBox.addEventListener('click', (e)=>{
-                //	ca.event.raise('will-close',{},panel,true);
-                document.body.removeChild(panel);
-
-            }
-            );
-
-            toolBar = _$('div').cls('t').addTo(panel);
-            body = _$('div').cls('b').addTo(panel);
-
-            footer = _$('div').cls('f').addTo(panel);
-            /*
-                var closer = button('Kapat', (e)=>{
-                    //ca.event.raise('will-close',{},panel,true);
-                    document.body.removeChild(panel);
-
-                }
-                );*/
-
-        } else {
-            body = panel.querySelector('div.b');
-            footer = panel.querySelector('div.f');
-            toolBar = panel.querySelector('div.t');
         }
+        );
+
+        resBtn.addEventListener('click', (e)=>{
+            panel.setAttribute('style', resStyle);
+            /* panel.style.width=  pWidth +  'px';
+            	 panel.style.left=pLeft;
+            	 panel.style.right=pRight;*/
+            resBtn.style.display = 'none';
+            maxBtn.style.display = 'block';
+
+        }
+        );
+
+        arrLeft.addEventListener('click', (e)=>{
+            panel.style.width = pWidth + 'px';
+            panel.style.left = '0px';
+            panel.style.right = 'auto';
+
+        }
+        );
+
+        arrRight.addEventListener('click', (e)=>{
+            panel.style.width = pWidth + 'px';
+            panel.style.right = '0px';
+            panel.style.left = 'auto';
+        }
+        );
+
+        var closerBox = _$('div').cls('closer fnt-before').addTo(headerCmd);
+        closerBox.addEventListener('click', (e)=>{
+            //	ca.event.raise('will-close',{},panel,true);
+            document.body.removeChild(panel);
+
+        }
+        );
+
+       var  toolBar = _$('div').cls('t').addTo(panel);
+       var  body = _$('div').cls('b').addTo(panel);
+
+       var footer = _$('div').cls('f').addTo(panel);
+      
 
         var panelObj = {
             control: panel,
@@ -5917,7 +5862,8 @@ resolve(contacts);
             add: (child)=>{
                 body.add(child);
             }
-        }
+        }  
+      
         Object.defineProperty(panelObj, 'container', {
             get: function() {
                 return body;
@@ -6215,8 +6161,7 @@ resolve(contacts);
             panel.appendChild(textBox);
 
             commandRow = _$('div').cls('command-box').addTo(panel);
-            ;
-            var closer = button('Kapat', (e)=>{
+            ;var closer = button('Kapat', (e)=>{
                 ca.event.raise('will-close', {}, panel, true);
                 document.body.removeChild(panel);
 
@@ -6397,7 +6342,7 @@ resolve(contacts);
 
     let selectionPop = function(handle, reset) {
 
-      //  console.clear();
+        //  console.clear();
 
         let _$ = ayanoglu.DOM._$;
         var sId = 'selector-pop';
@@ -6462,119 +6407,114 @@ background-color:rgba(0, 0, 0, 0.15);
             document.body.removeChild(selPop);
             selPop = undefined;
         }
-          let openEditor=()=>{
+        let openEditor = ()=>{
 
+            chrome.storage.sync.get(storageKey, (result)=>{
+                var values = result[storageKey];
+                if (!values)
+                    values = [];
+                var dlg = new ayanoglu.ui.dialog();
+                dlg.title = 'Replies';
+                var frm = _$('div').cls('ayanoglu').addTo(dlg.container);
 
-                chrome.storage.sync.get(storageKey, (result)=>{
-                    var values = result[storageKey];
-                    if (!values)
-                        values = [];
-                    var dlg = new ayanoglu.ui.dialog();
-                    dlg.title = 'Replies';
-                    var frm = _$('div').cls('ayanoglu').addTo(dlg.container);
+                let addEditor = (value,i)=>{
+                    var row = _$('div').css('margin-bottom:10px;').addTo(frm);
+                    var inputCell = _$('div').css(`display: flex;align-items: center;justify-content: space-between;`).addTo(row);
+                    var valueElement = _$('textarea').css('width: -webkit-fill-available;').addTo(inputCell);
+                    var delBtn = _$('div').att('title', (i === -1) ? 'Ekle' : 'Sil').css(`margin-left: 10px;`).cls(i === -1 ? 'icon-plus' : 'icon-eraser').addTo(inputCell);
 
-                    let addEditor = (value,i)=>{
-                        var row = _$('div').css('margin-bottom:10px;').addTo(frm);
-                        var inputCell = _$('div').css(`display: flex;align-items: center;justify-content: space-between;`).addTo(row);
-                        var valueElement = _$('textarea').css('width: -webkit-fill-available;').addTo(inputCell);
-                        var delBtn = _$('div').att('title',(i===-1)?'Ekle':'Sil'  ).css(`margin-left: 10px;`).cls(i===-1?'icon-plus':'icon-eraser').addTo(inputCell);
+                    valueElement.value = value ? value : '';
 
-                        valueElement.value = value?value:'';
+                    valueElement.addEventListener('change', (e)=>{
+                        if (i === -1)
+                            return false;
 
-                        valueElement.addEventListener('change', (e)=>{
-                             if(i===-1)  return false;
-                             
                         values[i] = e.target.value;
 
-                            var data = {};
-                            data[storageKey] = values;
+                        var data = {};
+                        data[storageKey] = values;
 
-                            chrome.storage.sync.set(data, ()=>{
-                                loadMenu(true); 
+                        chrome.storage.sync.set(data, ()=>{
+                            loadMenu(true);
 
-                            }
-                            );
                         }
                         );
+                    }
+                    );
 
-   delBtn.addEventListener('click', (e)=>{
+                    delBtn.addEventListener('click', (e)=>{
 
-                        if( i!==-1 && !confirm('Mesaj silinecek !'))
-                         return;
+                        if (i !== -1 && !confirm('Mesaj silinecek !'))
+                            return;
 
-                          if( i===-1 && valueElement.value.trim().length===0 )
-  {      
-      
-       alert('Mesaj girmediniz !') ; 
-       return;
-  }
- 
-                        if(i===-1)    
-                        values.push(valueElement.value);                        
-                       else  values.splice(i, 1)
+                        if (i === -1 && valueElement.value.trim().length === 0) {
 
-                            var data = {};
-                            data[storageKey] = values;
+                            alert('Mesaj girmediniz !');
+                            return;
+                        }
 
-                            chrome.storage.sync.set(data, ()=>{
-                                loadMenu(true);
- 
-    frm.innerText='';
-     addEditor(false,-1);
-     values.forEach(addEditor);
- 
+                        if (i === -1)
+                            values.push(valueElement.value);
+                        else
+                            values.splice(i, 1)
 
+                        var data = {};
+                        data[storageKey] = values;
 
-                            }
-                            );
+                        chrome.storage.sync.set(data, ()=>{
+                            loadMenu(true);
+
+                            frm.innerText = '';
+                            addEditor(false, -1);
+                            values.forEach(addEditor);
+
                         }
                         );
+                    }
+                    );
 
+                }
 
+                addEditor(false, -1);
+                values.forEach(addEditor);
+
+                dlg.menu('Data', ()=>{
+                    frm.style.display = 'none';
+                    var bulkRow = _$('div').css('margin-bottom:20px;');
+                    dlg.container.insertBefore(bulkRow, frm);
+                    var inputCell = _$('div').addTo(bulkRow);
+                    var txtElement = _$('textarea').css('width: -webkit-fill-available;height:200px;margin-bottom:10px;').addTo(inputCell);
+                    txtElement.value = JSON.stringify(values);
+
+                    var saveBtn = _$('input').att('type', 'button').css('margin-left:0px;').att('value', 'Kaydet').addTo(inputCell);
+                    saveBtn.addEventListener('click', (e)=>{
+                        frm.style.display = 'unset';
+                        dlg.container.removeChild(bulkRow);
 
                     }
-                    
-                    addEditor(false,-1);
-                    values.forEach(addEditor);
+                    )
 
-                    dlg.menu('Data',()=>{
-                        frm.style.display='none';
-    var bulkRow= _$('div').css('margin-bottom:20px;');
-    dlg.container.insertBefore(bulkRow,frm);
-       var inputCell=_$('div').addTo(bulkRow);
-        var txtElement=_$('textarea').css('width: -webkit-fill-available;height:200px;margin-bottom:10px;').addTo(inputCell);
-		txtElement.value=JSON.stringify(values);
-		
-		var saveBtn=_$('input').att('type','button').css('margin-left:0px;').att('value','Kaydet').addTo(inputCell);
-		 saveBtn.addEventListener('click', (e)=>{
-  frm.style.display='unset';
-  dlg.container.removeChild(bulkRow);
-  
-		 })
+                    var clsBtn = _$('input').att('type', 'button').att('value', 'Kapat').addTo(inputCell);
+                    clsBtn.addEventListener('click', (e)=>{
+                        frm.style.display = 'unset';
+                        dlg.container.removeChild(bulkRow);
+                    }
+                    )
 
-var clsBtn=_$('input').att('type','button').att('value','Kapat').addTo(inputCell);
-		 clsBtn.addEventListener('click', (e)=>{
-  frm.style.display='unset';
-  dlg.container.removeChild(bulkRow);
-		 })
-
-		 saveBtn.disabled=true;
-		  txtElement.addEventListener('change', (e)=>{
-		     saveBtn.disabled=false;
-		 })
-});
-
-       
-
+                    saveBtn.disabled = true;
+                    txtElement.addEventListener('change', (e)=>{
+                        saveBtn.disabled = false;
+                    }
+                    )
                 }
                 );
 
-                return;
-
-          
-
-            
             }
+            );
+
+            return;
+
+        }
         let loadMenu = (reset)=>{
             if (reset === true) {
                 var items = Array.prototype.slice.call(selPop.children);
@@ -6597,9 +6537,7 @@ var clsBtn=_$('input').att('type','button').att('value','Kapat').addTo(inputCell
         let addMenu = (text)=>{
             var mnu = _$('div').addTo(selPop);
             var textElement = _$('div').text(text).cls('t').addTo(mnu);
-          //  var editor = _$('div').cls('icon-edit').addTo(mnu);
-           
-
+            //  var editor = _$('div').cls('icon-edit').addTo(mnu);
 
             if (handle)
                 textElement.addEventListener('click', (e)=>{
@@ -6608,13 +6546,12 @@ var clsBtn=_$('input').att('type','button').att('value','Kapat').addTo(inputCell
                 )
         }
 
-
         if (!selPop) {
             selPop = _$('div').atts({
                 id: sId
             }).addTo(document.body);
             var storageKey = 'wup-message-replies';
-             var editRow = _$('div').cls('new').addTo(selPop);
+            var editRow = _$('div').cls('new').addTo(selPop);
             var addBtn = _$('div').text('Seçimi Ekle').cls('newx').addTo(editRow);
 
             var editBtn = _$('div').text('Düzenle').cls('newx').addTo(editRow);
@@ -6643,9 +6580,10 @@ var clsBtn=_$('input').att('type','button').att('value','Kapat').addTo(inputCell
             }
             );
 
-          editBtn.addEventListener('click', (e)=>{  openEditor()});
-
-          
+            editBtn.addEventListener('click', (e)=>{
+                openEditor()
+            }
+            );
 
             loadMenu();
 
@@ -6668,7 +6606,7 @@ var clsBtn=_$('input').att('type','button').att('value','Kapat').addTo(inputCell
 
         }
 
-var selecting=false;
+        var selecting = false;
         let upHandler = (e)=>{
             if (e.target === selPop) {
                 selPop.style.display = 'flex';
@@ -6677,9 +6615,9 @@ var selecting=false;
 
             var sel = document.getSelection().toString();
 
-            if ((sel.length>0 && selecting===true) || (e.type === "dblclick" && e.target.contentEditable == "true")) {
+            if ((sel.length > 0 && selecting === true) || (e.type === "dblclick" && e.target.contentEditable == "true")) {
                 console.log(document.getSelection().toString());
-selecting=false;
+                selecting = false;
                 selectedText = sel;
                 selPop.cls('pop');
 
@@ -6698,15 +6636,15 @@ selecting=false;
                 selPop.cls('');
             }
 
-
         }
- 
+
         document.body.addEventListener('dblclick', upHandler);
         //document.addEventListener('selectionchange', upHandler);
 
         document.addEventListener('selectstart', (e)=>{
-selecting=true;
-});
+            selecting = true;
+        }
+        );
         document.body.addEventListener('mouseup', upHandler);
 
     }
@@ -7127,7 +7065,72 @@ console.log(textStr);
 
     }
     let utilities = Object.create(null);
+    
+    
+    utilities.download = function(filename, text) {
+        var element = document.createElement('a');
+        element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+        element.setAttribute('download', filename);
 
+        element.style.display = 'none';
+        document.body.appendChild(element);
+
+        element.click();
+
+        document.body.removeChild(element);
+    }
+    
+    utilities.formatName=(nameRaw)=>{
+      
+        var fullName = ''
+          , firstName = ''
+          , midName = ''
+          , familyName = '';
+    
+        var pat = /(.+\.+ =?)?(.+)/;
+
+        if (ms = pat.exec(nameRaw)) {
+            var nameParts = [];
+            var name = ms[2];
+            name = name.replace(/[\s]{2,}/, ' ');
+
+            var namesUpper = name.split(' ');
+            var names = [];
+            namesUpper.forEach((n)=>{
+                n = firstToUpper(n);
+                names.push(n);
+            }
+            );
+
+            if (names.length) {
+                firstName = names.shift();
+            }
+            if (names.length)
+                familyName = names.pop();
+            if (names.length)
+                midName = names.join(' ');
+
+            if (firstName) {
+                nameParts.push(firstName);
+            }
+            if (midName) {
+                nameParts.push(midName);
+            }
+            if (familyName) {
+                nameParts.push(familyName);
+            }
+            fullName = nameParts.join(' ');
+
+        }
+        
+        return {
+        	fullName : fullName
+                , firstName : firstName
+                , midName : midName
+                , familyName: familyName
+        }
+    }
+    
     utilities.copy = function(raw) {
         var element = _$('textarea').addTo(document.body);
         element.textContent = raw;

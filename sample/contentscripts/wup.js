@@ -22,10 +22,36 @@ addEventListener('load', ()=>{
     }
     , 'icon-phone');
 
+    pop.add('Test', ()=>{
+        ayanoglu.utility.getHttpData('wup-replies').then((response)=>{
+            console.log(response);
+        }
+        );
+    }
+    , 'icon-doc-text');
+
 }
 )
 
+function getFileNameStamp() {
+    var d = new Date(),
+        month = '' + (d.getMonth() + 1),
+        day = '' + d.getDate(),
+        year = d.getFullYear(),
+        hour = d.getHours(),
+        min = d.getMinutes();
 
+    if (month.length < 2) 
+        month = '0' + month;
+    if (day.length < 2) 
+        day = '0' + day;
+    if (hour.length < 2) 
+        hour = '0' + hour;
+    if (min.length < 2) 
+        min = '0' + min;
+
+    return [year, month, day,hour,min].join('-');
+}
 
 ayanoglu.ui.selectionPop((text)=>{
     console.log(text);
@@ -33,8 +59,18 @@ ayanoglu.ui.selectionPop((text)=>{
 }
 , true);
 
+
+
+
+
+
+
+
+
+
+var csvStack={};
 let contactForm = function(dlg, container, contact) {
-     ayanoglu.DOM.style(`
+    ayanoglu.DOM.style(`
      .flex-form select {
          padding:8px;
          }
@@ -66,7 +102,7 @@ let contactForm = function(dlg, container, contact) {
         var input = _$(tag ? tag : 'input').att('name', name).addTo(inputCell);
         if (value)
             input.value = value;
-        row.getValue=()=>{
+        row.getValue = ()=>{
             return input.value;
         }
         return input;
@@ -75,19 +111,18 @@ let contactForm = function(dlg, container, contact) {
 
     var contactMap = {
         "0": "name",
-        "31":  {
+        "31": {
             value: "mobile"
-        }
-        ,
-        "32": "phone",
-        "39":   {
-            value:"work"
         },
-        "40":   {
-            options:['Reyaphasta','Kolanhasta']
+        "32": "phone",
+        "39": {
+            value: "work"
+        },
+        "40": {
+            options: ['Reyaphasta', 'Kolanhasta']
         },
     }
-    var sumMap = '0,8,25,31,32,39,40,42,43';
+    var sumMap = '0,8,25,28,31,32,39,40,42,43';
 
     fields.forEach((field,i)=>{
         if (/.+\s+Yomi/i.test(field) || /Yomi\s+.+/i.test(field))
@@ -97,21 +132,23 @@ let contactForm = function(dlg, container, contact) {
         if (field === "Notes")
             tag = "textarea";
         var value;
-        var map=contactMap[i];
+        var map = contactMap[i];
         if (map) {
             if (typeof map === 'string') {
                 value = contact[map];
-            } else  {
-                if(map.value)
-                value =  map.value;
-                if(map.options) tag="select";
+            } else {
+                if (map.value)
+                    value = map.value;
+                if (map.options)
+                    tag = "select";
             }
         }
         var input = addField(field, 'field-' + i, tag, i, value);
-        if(tag==="select"){
+        if (tag === "select") {
             map.options.forEach((option)=>{
-                 _$('option').att('value',option).addTo(input).textContent=option;
-            })
+                _$('option').att('value', option).addTo(input).textContent = option;
+            }
+            )
         }
     }
     )
@@ -137,27 +174,97 @@ let contactForm = function(dlg, container, contact) {
     }
     );
 
-    dlg.button('Kaydet', ()=>{
+let buildContactText=()=>{
+      var formValues = [];
 
-var formValues=[];
+        fields.forEach((field,i)=>{
+            var value;
+            if (row = table.querySelector('div#field-' + i)) {
+                value = row.getValue();
+            } else
+                value = "";
 
-    fields.forEach((field,i)=>{
-       var value;
-        if (row = table.querySelector('div#field-' + i)){
-        value=row.getValue();
+            formValues.push(value);
+
         }
-        else value="";
+        )
 
-        formValues.push(value);
+        var name = formValues[0];
+        var nameObj = ayanoglu.utility.formatName(name);
+        formValues[0]=nameObj.fullName;
+        formValues[1]=nameObj.firstName;
+        formValues[2]=nameObj.midName;
+        formValues[3]=nameObj.familyName;
+        
+        var phone=formValues[32]
+        var wPhone = phone.replace(/[^\d]/g, '');
+        if (!/^9\d+/.test(wPhone))
+            wPhone = '9' + wPhone;
+        formValues[47] = 'Whatsapp';
+        formValues[48] = 'https://wa.me/' + wPhone;
+        
+        
+        var values=formValues.map((item)=>{
+        	return '"' + item + '"';
+        });
+        
+       
 
-     
-    }
-    )
+        var output = values.join(',');  
+
+        csvStack[phone]=output;
+}
+let getCSVText=()=>{
+
+buildContactText();
+
+        var gHeaders = ayanoglu.google.getGoogleContactCSVFields();
+        var headersStr = gHeaders.string;
+
+        var gCsv = [headersStr];
+        for(key in csvStack){
+            gCsv.push(csvStack[key])
+        }
+         var output = gCsv.join('\n');  
+         return output;
+
+}
+
+let saveAsCSV= ()=>{
+
+       var output =getCSVText();  
 
 
+        ayanoglu.utility.download("contacts-" + getFileNameStamp() + ".csv", output);
 
-    }
-    );
+    };
+
+let addToStack=()=>{
+ buildContactText();
+}
+
+let resetStack=()=>{
+csvStack={}
+}
+
+let showCSV=()=>{
+ var dlg = ayanoglu.ui.dialog();
+
+            dlg.title = 'CSV Text';
+              var output =getCSVText(); 
+dlg.control.style.width='700px';
+dlg.control.style.right='0px';
+dlg.control.style.left='auto';
+              var textElement=_$('textarea').css('margin: 0px; height: 100%; width: -webkit-fill-available;white-space: nowrap;').addTo(dlg.container);
+              textElement.value=output;
+
+
+}
+
+    dlg.button('Ekle', addToStack    );
+    dlg.button('Temizle', resetStack    );
+    dlg.button('Kayıtlar', showCSV    );
+    dlg.button('Kaydet', saveAsCSV    );
 
 }
 
@@ -211,7 +318,7 @@ let download = ayanoglu.utility.download;
 if (typeof window.contacts === 'undefined')
     window.contacts = {};
 var panel;
-let collectWupMembers = function(container) {
+let collectWupMembers = function() {
 
     console.clear();
     if (typeof panel === 'undefined') {
@@ -294,165 +401,12 @@ let formatNames = function(container) {
         fmtArr.push(str + ';' + items[1]);
     }
     container.value = fmtArr.join('\n');
-    return;
-
-    for (key in contacts) {
-        var str = contacts[key];
-        var names = str.split(' ');
-
-        for (var i = 0; i < names.length; i++) {
-            var item = names[i];
-            item = item[0].toLocaleUpperCase() + item.slice(1).toLocaleLowerCase();
-            names[i] = item;
-        }
-        str = names.join(' ');
-        contacts[key] = str;
-    }
+ 
 
 }
 
-var style = d.getElementById('wup-inject-style');
-if (style)
-    d.head.removeChild(style);
-
-style = d.createElement('style');
-style.id = 'wup-inject-style'
-var styleTxt = `
-#wup-templates {
-    position: absolute;
-    top: -37px;
-    right: 6px;
-    background-color: yellow;
-    padding: 10px;
-  }
-  #wup-inject-panel {
-    position: fixed;
-    background-color: rgb(250, 255, 169);
-    border: 1px solid gainsboro;
-    padding: 10px;
-    min-width: 400px;
-    min-height: 400px;
-    height: 400px;
-    z-index: 10000;
-    border-radius: 3px;
-    left:0px;
-    right: 300px;
-    display: flex;
-    flex-direction: column;
-        }
-
-#wup-inject-panel > div {
-  /* border: 1px solid red; */
-}
-
-#wup-inject-panel > .h{
-
-        min-height: 30px;
-    display: contents;
-}
-
-#wup-inject-panel > .b{
-
-       flex-grow: 2;
-    display: contents;
-}
-
-#wup-inject-panel > .b textarea{
-
-    width: 100%;
-    padding: 3px;
-    border-radius: 3px;
-    box-sizing: border-box;
-    height: -webkit-fill-available;
-}
 
 
-#wup-inject-panel > .f{
-   display: flex;
-   justify-content: space-between;
-}
-
-#wup-inject-panel input[type=button]
-{
-    padding: 10px 15px 10px 15px;
-    margin: 5px;
-    margin-right: 0px;
-    margin-left: 0px;
-}
-
-#wup-inject-panel input[type=button] + input
-{
-    margin-left:10px;
-}
-
-`;
-
-style.textContent = styleTxt;
-d.head.appendChild(style);
-
-function collectNumbers(menu, info, tab) {
-    var panel = d.getElementById('wup-inject-panel');
-    if (panel) {
-        d.body.removeChild(panel);
-        panel = null;
-    }
-    if (!panel) {
-        panel = _$('div');
-        panel.id = 'wup-inject-panel';
-        d.body.appendChild(panel);
-
-        var header = _$('div');
-        panel.appendChild(header);
-        header.className = 'h';
-
-        var body = _$('div');
-        panel.appendChild(body);
-        body.className = 'b';
-
-        var footer = _$('div');
-        panel.appendChild(footer);
-        footer.className = 'f';
-
-        var text = _$('textarea');
-        body.appendChild(text);
-
-        var go = _$('input');
-        go.setAttribute('type', 'button');
-        go.setAttribute('value', 'Collect');
-        footer.appendChild(go);
-        go.onclick = function(e) {
-            collectWupMembers(text);
-        }
-
-        var fmt = _$('input');
-        fmt.setAttribute('type', 'button');
-        fmt.setAttribute('value', 'Format');
-        footer.appendChild(fmt);
-        fmt.onclick = function(e) {
-            formatNames(text);
-        }
-
-        var reset = _$('input');
-        reset.setAttribute('type', 'button');
-        reset.setAttribute('value', 'Reset');
-        footer.appendChild(reset);
-        reset.onclick = function(e) {
-            window.contacts = {};
-            text.value = '';
-        }
-
-        var close = _$('input');
-        close.setAttribute('type', 'button');
-        close.setAttribute('value', 'Close');
-        footer.appendChild(close);
-        close.onclick = function(e) {
-            if (panel) {
-                d.body.removeChild(panel);
-                panel = null;
-            }
-        }
-    }
-}
 function replaceSelectedText(cb) {
     var sel, range;
 
@@ -495,10 +449,7 @@ function menuHandler(menu, info, tab) {
         return;
 
     }
-
-    if (info.menuItemId === 'phones') {
-        collectNumbers(menu, info, tab)
-    }
+ 
 
 }
 

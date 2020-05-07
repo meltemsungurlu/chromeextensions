@@ -1499,7 +1499,7 @@ border: 0px;
     }
 
     .ayanoglu-dialog > div.h div.closer:before {
-    content: "\\e801";
+    content: "\e801";
         color: inherit;
         font-size: inherit;
     }
