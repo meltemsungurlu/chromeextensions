@@ -22,16 +22,46 @@ addEventListener('load', ()=>{
     }
     , 'icon-phone');
 
-    pop.add('Test', ()=>{
-        ayanoglu.utility.getHttpData('wup-replies').then((response)=>{
+    pop.add('Collect Numbers', ()=>{
+        collectUnknownNumbers()
+      /*  ayanoglu.utility.getHttpData('wup-replies').then((response)=>{
             console.log(response);
         }
-        );
+        );*/
     }
-    , 'icon-doc-text');
+    , 'icon-export');
 
 }
 )
+
+
+function collectUnknownNumbers(){
+
+ var dlg = ayanoglu.ui.dialog();
+
+            dlg.title = 'Unknown Numbers';
+                         // var output =stack.join('\n');; 
+dlg.control.style.width='800px';
+dlg.control.style.right='0px';
+dlg.control.style.left='auto';
+var textElement=_$('textarea').css('margin: 0px; height: 100%; width: -webkit-fill-available;white-space: nowrap;').addTo(dlg.container);
+           
+
+var stack=[];
+ayanoglu.wup.workers.iterateUsers((contact)=>{
+    if(contact===false){
+
+        return;
+    }
+   if(contact.name===false) {
+     var link=  ayanoglu.wup.makeWinShortcut(contact.phone);
+        textElement.value += link + '\n';
+       console.log(link);
+       stack.push(link);
+       }
+});
+
+}
 
 function getFileNameStamp() {
     var d = new Date(),
