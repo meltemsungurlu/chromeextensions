@@ -13,7 +13,7 @@ addEventListener('load', ()=>{
             console.dir(contact);
 
             var dlg = ayanoglu.ui.dialog();
-
+dlg.control.style.height='100%'
             dlg.title = contact.name;
             var frm = contactForm(dlg, dlg.container, contact)
 
@@ -48,6 +48,7 @@ var textElement=_$('textarea').css('margin: 0px; height: 100%; width: -webkit-fi
            
 
 var stack=[];
+ 
 ayanoglu.wup.workers.iterateUsers((contact)=>{
     if(contact===false){
 
@@ -55,9 +56,13 @@ ayanoglu.wup.workers.iterateUsers((contact)=>{
     }
    if(contact.name===false) {
      var link=  ayanoglu.wup.makeWinShortcut(contact.phone);
+     if(stack.length % 10===0){
+            textElement.value +=   '\n\n\n*Group ' + (stack.length/10) + '*\n\n';
+     }
         textElement.value += link + '\n';
        console.log(link);
        stack.push(link);
+        
        }
 });
 
@@ -99,6 +104,7 @@ ayanoglu.ui.selectionPop((text)=>{
 
 
 var csvStack={};
+
 let contactForm = function(dlg, container, contact) {
     ayanoglu.DOM.style(`
      .flex-form select {
@@ -141,6 +147,9 @@ let contactForm = function(dlg, container, contact) {
 
     var contactMap = {
         "0": "name",
+        "28": {
+            value: "WUP ::: * myContacts"
+        },
         "31": {
             value: "mobile"
         },
@@ -149,7 +158,7 @@ let contactForm = function(dlg, container, contact) {
             value: "work"
         },
         "40": {
-            options: ['Reyaphasta', 'Kolanhasta']
+            options: ['Reyaphasta', 'Kolanhasta', 'Verahasta']
         },
     }
     var sumMap = '0,8,25,28,31,32,39,40,42,43';
@@ -266,7 +275,7 @@ let saveAsCSV= ()=>{
 
 
         ayanoglu.utility.download("contacts-" + getFileNameStamp() + ".csv", output);
-
+csvStack={}
     };
 
 let addToStack=()=>{
