@@ -12,15 +12,54 @@ addEventListener('load', ()=>{
         parseContactInfo().then((contact)=>{
             console.dir(contact);
 
-            var dlg = ayanoglu.ui.dialog();
-dlg.control.style.height='100%'
+           
+            if(contact.saved){
+
+ var dlg = ayanoglu.ui.modalDialog();
+ dlg.control.style.height='300px';
+  let _$ = ayanoglu.DOM._$;
+
+    var table = _$('div').cls('ayanoglu flex-form').addTo(dlg.container);
+ 
+    let addField = (label,name,tag,index,value)=>{
+        var row = _$('div').att('id', 'field-' + index).addTo(table);
+         
+        var labelCell = _$('div').text(label + (index > -1 ?` (${index})`:'')).addTo(row);
+
+        var inputCell = _$('div').addTo(row);
+        var input = _$(tag ? tag : 'input').att('name', name).addTo(inputCell);
+        if (value)
+            input.value = value;
+        row.getValue = ()=>{
+            return input.value;
+        }
+        return input;
+    }
+ var nameElement= addField('Etiket','label',false,-1,contact.name);
+ var txtElement= addField('Etiket','text','textarea',-1);
+
+ dlg.button('Oluştur',()=>{
+     var link=ayanoglu.wup.makeWinShortcut(contact.phone,nameElement.value);
+     txtElement.value=link;
+     ayanoglu.utility.copy(link);
+ });
+
+            }
+            else
+            {
+             var dlg = ayanoglu.ui.dialog();    
+            dlg.control.style.height='100%'
             dlg.title = contact.name;
             var frm = contactForm(dlg, dlg.container, contact)
+            }
+           
 
         }
         );
     }
     , 'icon-phone');
+
+    
 
     pop.add('Collect Numbers', ()=>{
         collectUnknownNumbers()
@@ -30,6 +69,21 @@ dlg.control.style.height='100%'
         );*/
     }
     , 'icon-export');
+ 
+    pop.add('Translate', ()=>{
+         var dlg = ayanoglu.ui.modalDialog();
+            dlg.control.style.height='500px'
+            dlg.title = 'Translate';
+            let _$ = ayanoglu.DOM._$;
+            var txtArea=_$('textarea').css(`width: -webkit-fill-available;
+    height: 100%;`).addTo(dlg.container);
+
+dlg.button('Convert',()=>{ 
+    txtArea.value=ayanoglu.utility.upperCase(txtArea.value);
+})
+
+    }
+    , 'icon-up-hand');
 
 }
 )
@@ -313,34 +367,60 @@ let parseContactInfo = function() {
     return new Promise((resolve,reject)=>{
         ayanoglu.wup.openChatPanel().then((element)=>{
             var find = ayanoglu.DOM.findElement;
-
+             
+var saved=false,name,phone;
             var numSelector = '#app > div > div > div.YD4Yw > div._1-iDe._14VS3 > span > div > span > div > div > div._2vsnU > div._1CRb5._34vig._3XgGT > span > span';
             find(numSelector, 'Phone').then((numElement)=>{
                 // console.log(numElement.textContent);
 
-                var phone = numElement.textContent;
+                  phone = numElement.textContent;
                 var num = phone.replace(/[^\d]/g, '');
                 if (!/[\d]{10,}/.test(num)) {
-                    reject();
-                    return;
-                }
-                var nameSelector = '#app > div > div > div.YD4Yw > div._1-iDe._14VS3 > span > div > span > div > div > div._2vsnU > div._1CRb5._34vig._3XgGT > div:nth-child(3) > span > span';
-                ayanoglu.DOM.findElement(nameSelector, 'Name').then((nameElement)=>{
+                    // saved
+                    name=phone;
+                   numSelector = '#app > div > div > div.YD4Yw > div._1-iDe._14VS3 > span > div > span > div > div > div._2vsnU > div:nth-child(4) > div:nth-child(3) > div > div > span > span'
+                   
+                      find(numSelector, 'Phone').then((phoneElement)=>{
                     //  console.log(nameElement.textContent);
-                    var name = nameElement.textContent
+                    var phone = phoneElement.textContent
                     resolve({
                         name: name,
-                        phone: phone
+                        phone: phone,
+                        saved:true
+                    });
+
+                }
+                , ()=>{
+
+                    reject();
+                }
+                )
+
+                   
+                }
+                 else {
+                         var nameSelector = '#app > div > div > div.YD4Yw > div._1-iDe._14VS3 > span > div > span > div > div > div._2vsnU > div._1CRb5._34vig._3XgGT > div:nth-child(3) > span > span';
+                find(nameSelector, 'Name').then((nameElement)=>{
+                    //  console.log(nameElement.textContent);
+                      name = nameElement.textContent
+                    resolve({
+                        name: name,
+                        phone: phone,
+                        saved:false
+
                     });
 
                 }
                 , ()=>{
 
                     resolve({
-                        phone: phone
+                        phone: phone,
+                        saved:false
                     });
                 }
                 )
+                 }
+            
 
             }
             , reject)

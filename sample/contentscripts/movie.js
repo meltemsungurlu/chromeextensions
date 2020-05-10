@@ -45,7 +45,7 @@ utility.addMenuListener(function(menu,info,tab){
     console.log("info", info, sUrl, title);
     // alert(ms);
 
-    var url = "https://webteizle.vip/filtre.asp?a=" + title;
+    var url = "https://www.fullhdfilmizlesene.com/arama?ara=" + encodeURIComponent(sUrl);
     
     var strWindowFeatures = "height=300,width=700,left=100,top=100,resizable=no,scrollbars=no,toolbar=no,menubar=no,location=no,directories=no,status=no,dialog=yes";
     window.open( url );

@@ -5766,16 +5766,56 @@ var isGroup=false;
     ;
 
     var ui = Object.create(null);
-
-    let dialog = function() {
+    let dialogBase = function() {
 
         var cssText = `
+ 
+ 
+
+.slide-in {
+    transform: translate(100%,-110%);  
+}
+
+.slide-out {
+    animation: slide-out 0.5s forwards;
+    -webkit-animation: slide-out 0.5s forwards;
+}
+    
+@keyframes slide-in {
+    100% { transform: translate(100%,-100%); }
+}
+
+@-webkit-keyframes slide-in {
+    100% { -webkit-transform: translate(100%,-100%); }
+}
+    
+@keyframes slide-out {
+    0% { transform: translate(100%,-110%); }
+    100% { transform: translate(100%,10%); }
+}
+
+@-webkit-keyframes slide-out {
+    0% { -webkit-transform: translate(100%,-110%); }
+    100% { -webkit-transform: translate(100%,10%); }
+}
+
+        .ayanoglu-dialog-container {
+            position: fixed;
+            top: 0px;
+            right: 0px;
+            bottom: 0px;
+            left: 0px;
+            z-index: 101000;
+            background-color: rgba(0, 0, 0, 0.23);
+        }
+        .ayanoglu-dialog > div.f:empty {
+    display: none
+}
+
     `;
-      //  ayanoglu.DOM.style(cssText);
+        ayanoglu.DOM.style(cssText);
         let _$ = ayanoglu.DOM._$;
         var d = window.document;
-
-       
 
         let button = (text,handler)=>{
             var btn = _$('input').att('type', 'button').att('value', text).addTo(footer);
@@ -5790,13 +5830,80 @@ var isGroup=false;
         }
         ;
 
+        let makeDraggable = function(element) {
+            var offSetX = 0
+              , offSetY = 0;
+            var dragging = false;
 
-        var panel = _$('div').cls('ayanoglu-dialog').addTo(document.body);
- 
+            let moveHandle = (e)=>{
+                if (dragging) {
+                    //element.style.cursor = "move";
+                    document.body.style.cursor = "move";
+                    // e.preventDefault();
+                    var x = e.clientX
+                      , y = e.clientY;
 
+                    x -= offSetX;
+                    y -= offSetY;
+
+                    // console.info('move target',d.id,x,y);
+                    element.style.left = x + 'px';
+                    element.style.top = y + 'px';
+                    return false;
+                }
+            }
+
+            let clickHnd = (e)=>{
+
+                e.preventDefault();
+                e.stopPropagation();
+                return false;
+            }
+            let unHook = ()=>{
+                document.body.style.cursor = "default";
+                dragging = false;
+                document.body.removeEventListener('mousemove', moveHandle);
+                document.body.removeEventListener('mouseup', bodyMouseUp);
+                document.body.removeEventListener('click', clickHnd);
+            }
+
+            let bodyMouseUp = (e)=>{
+                e.preventDefault();
+                e.stopPropagation();
+                e.stopImmediatePropagation();
+                //element.style.cursor = "default";
+                unHook();
+            }
+
+            element.addEventListener('mousedown', (e)=>{
+            	 if('TEXTAREA,INPUT'.split(',').indexOf(e.target.tagName)!==-1) return false;
+                 
+                dragging = true;
+
+                offSetX = (e.clientX - parseInt(getComputedStyle(element).left));
+                offSetY = (e.clientY - parseInt(getComputedStyle(element).top));
+
+                document.body.addEventListener('mousemove', moveHandle);
+                document.body.addEventListener('mouseup', bodyMouseUp);
+                document.body.addEventListener('click', clickHnd);
+            }
+            );
+
+            element.addEventListener('mouseup', (e)=>{
+                dragging = false;
+                unHook();
+            }
+            );
+        }
+        var panelContainer = _$('div').cls('ayanoglu-dialog-container').addTo(document.body);
+        var panel = _$('div').cls('ayanoglu-dialog').addTo(panelContainer);
+        makeDraggable(panel);
+        
+
+      //  panel.classList.add('slide-in');
         var header = _$('div').cls('h').addTo(panel);
 
-         var  headerTxt = _$('div').cls('txt').text('Untitled').addTo(header);
+        var headerTxt = _$('div').cls('txt').text('Untitled').addTo(header);
         var headerCmd = _$('div').cls('cmd').addTo(header);
 
         var pWidth = panel.offsetWidth;
@@ -5849,16 +5956,15 @@ var isGroup=false;
         var closerBox = _$('div').cls('closer fnt-before').addTo(headerCmd);
         closerBox.addEventListener('click', (e)=>{
             //	ca.event.raise('will-close',{},panel,true);
-            document.body.removeChild(panel);
+            document.body.removeChild(panelContainer);
 
         }
         );
 
-       var  toolBar = _$('div').cls('t').addTo(panel);
-       var  body = _$('div').cls('b').addTo(panel);
+        var toolBar = _$('div').cls('t').addTo(panel);
+        var body = _$('div').cls('b').addTo(panel);
 
-       var footer = _$('div').cls('f').addTo(panel);
-      
+        var footer = _$('div').cls('f').addTo(panel);
 
         var panelObj = {
             control: panel,
@@ -5867,8 +5973,8 @@ var isGroup=false;
             add: (child)=>{
                 body.add(child);
             }
-        }  
-      
+        }
+
         Object.defineProperty(panelObj, 'container', {
             get: function() {
                 return body;
@@ -5904,7 +6010,19 @@ var isGroup=false;
 
         return panelObj;
     };
-    ui.dialog = dialog;
+
+
+function modalDialog(){
+var dlg=dialogBase();
+dlg.control.classList.add('slide-in');
+dlg.control.classList.add('slide-out');
+return dlg;
+}
+
+ 
+
+    ui.modalDialog = modalDialog;
+    ui.dialog = dialogBase;
 
     let floatMenu = function() {
         var d = document;
@@ -5958,7 +6076,7 @@ var isGroup=false;
     	    font-size: 19px;
     	    width: 30px;
     	    color: black; 
-           
+           cursor:pointer;
     	}
     	#${popId} > div  > div:last-child {
     	        
@@ -6370,6 +6488,8 @@ transform : scale(0);
 opacity:0;
 transition: transform 0.5s;
 transition: opacity 0.9s;
+height:600px;
+overflow-y:auto;
 }
 
 
@@ -6483,34 +6603,42 @@ background-color:rgba(0, 0, 0, 0.15);
                 addEditor(false, -1);
                 values.forEach(addEditor);
 
-                dlg.menu('Data', ()=>{
+                var mnuData=dlg.menu('Data', ()=>{
                     frm.style.display = 'none';
-                    var bulkRow = _$('div').css('margin-bottom:20px;');
-                    dlg.container.insertBefore(bulkRow, frm);
-                    var inputCell = _$('div').addTo(bulkRow);
-                    var txtElement = _$('textarea').css('width: -webkit-fill-available;height:200px;margin-bottom:10px;').addTo(inputCell);
-                    txtElement.value = JSON.stringify(values);
+                    var bulkRow=dlg.container.querySelector('div#bulk-editor');
+                    if(!bulkRow){
+                         bulkRow = _$('div').att('id','bulk-editor').css('margin-bottom:20px;');
+                        dlg.container.insertBefore(bulkRow, frm);
+                        var inputCell = _$('div').addTo(bulkRow);
+                        var txtElement = _$('textarea').css('width: -webkit-fill-available;height:200px;margin-bottom:10px;').addTo(inputCell);
+                        txtElement.value = JSON.stringify(values);
 
-                    var saveBtn = _$('input').att('type', 'button').css('margin-left:0px;').att('value', 'Kaydet').addTo(inputCell);
-                    saveBtn.addEventListener('click', (e)=>{
-                        frm.style.display = 'unset';
-                        dlg.container.removeChild(bulkRow);
+                        var saveBtn = _$('input').att('type', 'button').css('margin-left:0px;').att('value', 'Kaydet').addTo(inputCell);
+                        saveBtn.addEventListener('click', (e)=>{
+                            frm.style.display = 'unset';
+                            dlg.container.removeChild(bulkRow);
 
+                        }
+                        )
+
+                        var clsBtn = _$('input').att('type', 'button').att('value', 'Kapat').addTo(inputCell);
+                        clsBtn.addEventListener('click', (e)=>{
+                            frm.style.display = 'unset';
+                            dlg.container.removeChild(bulkRow);
+                             mnuData.style.display='unset';
+                            bulkRow=undefined;
+                        }
+                        )
+
+                        saveBtn.disabled = true;
+                        txtElement.addEventListener('change', (e)=>{
+                            saveBtn.disabled = false;
+                        }
+                        ) 
                     }
-                    )
+                    
+                    mnuData.style.display='none';
 
-                    var clsBtn = _$('input').att('type', 'button').att('value', 'Kapat').addTo(inputCell);
-                    clsBtn.addEventListener('click', (e)=>{
-                        frm.style.display = 'unset';
-                        dlg.container.removeChild(bulkRow);
-                    }
-                    )
-
-                    saveBtn.disabled = true;
-                    txtElement.addEventListener('change', (e)=>{
-                        saveBtn.disabled = false;
-                    }
-                    )
                 }
                 );
 
@@ -6533,6 +6661,7 @@ background-color:rgba(0, 0, 0, 0.15);
                 var values = result[storageKey];
                 if (!values)
                     values = [];
+                    values.sort((a, b) => a.localeCompare(b));
                 values.forEach(addMenu)
 
             }
@@ -7149,8 +7278,7 @@ console.log(textStr);
         raw = raw.replace(/i/g, 'İ');
         raw = raw.toUpperCase();
         raw = raw.trim();
-
-        ayanoglu.ui.panel(raw);
+ return raw;
     }
 
     utilities.getHttpData = function(name, serviceUrl) {
