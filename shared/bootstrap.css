@@ -1593,10 +1593,14 @@ border: 0px;
         user-select: none;
 
     }
-
+    .ayanoglu-dialog input[type=button]:disabled {
+        background-color: rgba(0, 0, 0, 0.20);
+}
     .ayanoglu-dialog input[type=button]:hover {
-        
-    }
+        background-color: rgba(0, 0, 0, 0.40);
+}
+
+ 
 
     .ayanoglu-dialog input[type=button]:active {    
 

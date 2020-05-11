@@ -436,28 +436,28 @@ let download = ayanoglu.utility.download;
 
 if (typeof window.contacts === 'undefined')
     window.contacts = {};
-var panel;
+var panelControl;
 let collectWupMembers = function() {
-
+ 
     console.clear();
-    if (typeof panel === 'undefined') {
-        panel = ayanoglu.ui.panel();
+    if (typeof panelControl === 'undefined') {
+        panelControl = ayanoglu.ui.panel();
         ca.event.listen('will-close', ()=>{
-            panel = undefined;
+            panelControl = undefined;
         }
-        , panel.control);
+        , panelControl.control);
         let writeToPanel = ()=>{
             var str = ayanoglu.google.buildContactsCSV(contacts);
 
             ayanoglu.utility.copy(str);
             setTimeout(()=>{
-                panel.text = str;
+                panelControl.text = str;
             }
             , 1);
 
         }
         writeToPanel();
-        panel.button('Collect Members', ()=>{
+        panelControl.button('Collect Members', ()=>{
 
             ayanoglu.wup.workers.collectGroupMembers(contacts).then((members)=>{
                 contacts = members;
@@ -471,23 +471,23 @@ let collectWupMembers = function() {
         }
         );
 
-        panel.button('Reset Members', ()=>{
+        panelControl.button('Reset Members', ()=>{
             window.contacts = {};
-            panel.text = '';
+            panelControl.text = '';
         }
         );
 
-        panel.button('Save', ()=>{
-            download("wup-contacts.csv", panel.text);
+        panelControl.button('Save', ()=>{
+            download("wup-contacts.csv", panelControl.text);
         }
         );
     }
 
-    panel.control.style.bottom = '10px';
-    panel.control.style.top = '10px';
-    panel.control.style.left = '0px';
-    panel.control.style.width = '300px';
-    panel.control.style.right = 'auto';
+    panelControl.control.style.bottom = '10px';
+    panelControl.control.style.top = '10px';
+    panelControl.control.style.left = '0px';
+    panelControl.control.style.width = '300px';
+    panelControl.control.style.right = 'auto';
 
 }
 
