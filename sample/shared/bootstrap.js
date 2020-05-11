@@ -6479,8 +6479,7 @@ top:0px;
 left:0px;
 z-index:1000000;
 background-color:rgb(215, 251, 253);
-border-radius:5px;
-font-size:21px;
+border-radius:5px; 
 display:flex;
 flex-direction:column;    
 transform-origin: 0 0 ;
@@ -6489,29 +6488,50 @@ opacity:0;
 transition: transform 0.5s;
 transition: opacity 0.9s;
 height:600px;
-overflow-y:auto;
+}
+#selector-pop * {
+     font-size:14px;
 }
 
-
-#${sId}[class='pop'] {
-    
+#${sId}[class='pop'] {    
 transform : scale(1);
 opacity:1;
 
 }
 
-#${sId} > div {
-font-size: 14px;
+#${sId} > div.new {  
+background-color:rgba(0, 0, 0, 0.15);
+  display: flex;
+   flex-direction: row;
+   justify-content: space-between;
+}
+
+
+#selector-pop > div.new > div ,
+#selector-pop > div.list > div {
+    padding:14px;
+    cursor: pointer;
+}
+ 
+
+
+#${sId} > div.list {   
+display:flex;
+flex-direction:column;  
+    overflow-y:auto;
+    flex-grow:2;
+}
+#${sId} > div.list > div {
+    font-size: 14px;
     font-family: sans-serif;
     cursor: pointer;
     border-top: 1px solid #0000001c;
     display:flex;
      justify-content: space-between;
      align-items: center;
+
 }
-#${sId} > div.new {  
-background-color:rgba(0, 0, 0, 0.15);
-}
+
 
 #${sId} > div.new > div { 
  padding: 12px; 
@@ -6526,7 +6546,7 @@ background-color:rgba(0, 0, 0, 0.15);
 }
 
         `);
-        var selectedText;
+        var selectedText,listRow;
         var selPop = document.getElementById(sId);
         if (selPop && reset === true) {
             document.body.removeChild(selPop);
@@ -6604,7 +6624,10 @@ background-color:rgba(0, 0, 0, 0.15);
                 values.forEach(addEditor);
 
                 var mnuData=dlg.menu('Data', ()=>{
+
                     frm.style.display = 'none';
+                    mnuData.style.display='none';
+
                     var bulkRow=dlg.container.querySelector('div#bulk-editor');
                     if(!bulkRow){
                          bulkRow = _$('div').att('id','bulk-editor').css('margin-bottom:20px;');
@@ -6615,8 +6638,33 @@ background-color:rgba(0, 0, 0, 0.15);
 
                         var saveBtn = _$('input').att('type', 'button').css('margin-left:0px;').att('value', 'Kaydet').addTo(inputCell);
                         saveBtn.addEventListener('click', (e)=>{
+                           
+                            var rawValue=txtElement.value;
+                            var changedValues=JSON.parse(rawValue)
+if(typeof changedValues==='object' && typeof changedValues.push==='function' ){
+    values=changedValues;
+       var data = {};
+                        data[storageKey] = values;
+
+                        chrome.storage.sync.set(data, ()=>{
+                            loadMenu(true);
                             frm.style.display = 'unset';
-                            dlg.container.removeChild(bulkRow);
+                            mnuData.style.display = 'unset';
+                             dlg.container.removeChild(bulkRow);
+                            frm.innerText = '';
+                            addEditor(false, -1);
+                            values.forEach(addEditor);
+
+                        }
+                        );
+}
+else
+{
+    alert('Invalid list format!!!');
+}
+
+
+                           
 
                         }
                         )
@@ -6624,6 +6672,7 @@ background-color:rgba(0, 0, 0, 0.15);
                         var clsBtn = _$('input').att('type', 'button').att('value', 'Kapat').addTo(inputCell);
                         clsBtn.addEventListener('click', (e)=>{
                             frm.style.display = 'unset';
+                            mnuData.style.display = 'unset';
                             dlg.container.removeChild(bulkRow);
                              mnuData.style.display='unset';
                             bulkRow=undefined;
@@ -6637,7 +6686,6 @@ background-color:rgba(0, 0, 0, 0.15);
                         ) 
                     }
                     
-                    mnuData.style.display='none';
 
                 }
                 );
@@ -6650,10 +6698,10 @@ background-color:rgba(0, 0, 0, 0.15);
         }
         let loadMenu = (reset)=>{
             if (reset === true) {
-                var items = Array.prototype.slice.call(selPop.children);
+                var items = Array.prototype.slice.call(listRow.children);
                 items.forEach((item)=>{
                     if (item.className !== 'new')
-                        selPop.removeChild(item);
+                        listRow.removeChild(item);
                 }
                 );
             }
@@ -6669,7 +6717,7 @@ background-color:rgba(0, 0, 0, 0.15);
 
         }
         let addMenu = (text)=>{
-            var mnu = _$('div').addTo(selPop);
+            var mnu = _$('div').addTo(listRow);
             var textElement = _$('div').text(text).cls('t').addTo(mnu);
             //  var editor = _$('div').cls('icon-edit').addTo(mnu);
 
@@ -6686,9 +6734,10 @@ background-color:rgba(0, 0, 0, 0.15);
             }).addTo(document.body);
             var storageKey = 'wup-message-replies';
             var editRow = _$('div').cls('new').addTo(selPop);
-            var addBtn = _$('div').text('Seçimi Ekle').cls('newx').addTo(editRow);
+             var listRow = _$('div').cls('list').addTo(selPop);
+            var addBtn = _$('div').text('Seçimi Ekle').addTo(editRow);
 
-            var editBtn = _$('div').text('Düzenle').cls('newx').addTo(editRow);
+            var editBtn = _$('div').text('Düzenle').addTo(editRow);
 
             addBtn.addEventListener('click', (e)=>{
                 var text = selectedText;
@@ -6721,23 +6770,11 @@ background-color:rgba(0, 0, 0, 0.15);
 
             loadMenu();
 
-            /*
-      ayanoglu.utility.getHttpData('wup-replies').then((response)=>{
-	for(key in response){
-	   // console.log(response[key])
-	   var text=response[key];
-	      var item=_$('div').text(text).addTo(selPop);
-	    if(handle)  item.addEventListener('click',(e)=>{
-	             handle(e.target.textContent);
-	      })
-	}
-}
-, (status)=>{
-	console.log(status)
-}
-);
-    */
+      
 
+        }
+        else {
+            listRow=selPop.querySelector('div.list');
         }
 
         var selecting = false;
@@ -7280,7 +7317,22 @@ console.log(textStr);
         raw = raw.trim();
  return raw;
     }
-
+      /*
+      ayanoglu.utility.getHttpData('wup-replies').then((response)=>{
+	for(key in response){
+	   // console.log(response[key])
+	   var text=response[key];
+	      var item=_$('div').text(text).addTo(selPop);
+	    if(handle)  item.addEventListener('click',(e)=>{
+	             handle(e.target.textContent);
+	      })
+	}
+}
+, (status)=>{
+	console.log(status)
+}
+);
+    */
     utilities.getHttpData = function(name, serviceUrl) {
 
         return new Promise((resolve,reject)=>{
