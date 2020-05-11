@@ -7049,13 +7049,13 @@ else
 
     function getGoogleContactCSVFields() {
         var headersStr = '';
-        headersStr += 'Name,';
+        headersStr += 'Name:name,';
         //0
-        headersStr += 'Given Name,';
+        headersStr += 'Given Name:firstName,';
         //1
-        headersStr += 'Additional Name,';
+        headersStr += 'Additional Name:middleName,';
         //2
-        headersStr += 'Family Name,';
+        headersStr += 'Family Name:familyName,';
         //3
         headersStr += 'Yomi Name,';
         //4
@@ -7065,21 +7065,21 @@ else
         //6
         headersStr += 'Family Name Yomi,';
         //7
-        headersStr += 'Name Prefix,';
+        headersStr += 'Name Prefix:prefix,';
         //8
-        headersStr += 'Name Suffix,';
+        headersStr += 'Name Suffix:suffix,';
         //9
         headersStr += 'Initials,';
         //10
-        headersStr += 'Nickname,';
+        headersStr += 'Nickname:nickName,';
         //11
         headersStr += 'Short Name,';
         //12
         headersStr += 'Maiden Name,';
         //13
-        headersStr += 'Birthday,';
+        headersStr += 'Birthday:birthDay,';
         //14
-        headersStr += 'Gender,';
+        headersStr += 'Gender:gender,';
         //15
         headersStr += 'Location,';
         //16
@@ -7089,7 +7089,7 @@ else
         //18
         headersStr += 'Mileage,';
         //19
-        headersStr += 'Occupation,';
+        headersStr += 'Occupation:occupation,';
         //20
         headersStr += 'Hobby,';
         //21
@@ -7099,43 +7099,43 @@ else
         //23
         headersStr += 'Subject,';
         //24
-        headersStr += 'Notes,';
+        headersStr += 'Notes:notes,';
         //25
         headersStr += 'Language,';
         //26
-        headersStr += 'Photo,';
+        headersStr += 'Photo:photo,';
         //27
         headersStr += 'Group Membership,';
         //28
-        headersStr += 'E-mail 1 - Type,';
+        headersStr += 'E-mail 1 - Type:email1Type,';
         //29
-        headersStr += 'E-mail 1 - Value,';
+        headersStr += 'E-mail 1 - Value:email1Value,';
         //30
-        headersStr += 'Phone 1 - Type,';
+        headersStr += 'Phone 1 - Type:phone1Type,';
         //31
-        headersStr += 'Phone 1 - Value,';
+        headersStr += 'Phone 1 - Value:phone1Value,';
         //32
-        headersStr += 'Phone 2 - Type,';
+        headersStr += 'Phone 2 - Type:phone2Type,';
         //33
-        headersStr += 'Phone 2 - Value,';
+        headersStr += 'Phone 2 - Value:phone2Value,';
         //34
-        headersStr += 'Phone 3 - Type,';
+        headersStr += 'Phone 3 - Type:phone3Type,';
         //35
-        headersStr += 'Phone 3 - Value,';
+        headersStr += 'Phone 3 - Value:phone3Value,';
         //36
-        headersStr += 'Phone 4 - Type,';
+        headersStr += 'Phone 4 - Type:phone4Type,';
         //37
-        headersStr += 'Phone 4 - Value,';
+        headersStr += 'Phone 4 - Value:phone4Value,';
         //38
-        headersStr += 'Organization 1 - Type,';
+        headersStr += 'Organization 1 - Type:company1Type,';
         //39
-        headersStr += 'Organization 1 - Name,';
+        headersStr += 'Organization 1 - Name:company1Name,';
         //40
         headersStr += 'Organization 1 - Yomi Name,';
         //41
-        headersStr += 'Organization 1 - Title,';
+        headersStr += 'Organization 1 - Title:company1Title,';
         //42
-        headersStr += 'Organization  1 - Department,';
+        headersStr += 'Organization  1 - Department:company1Department,';
         //43
         headersStr += 'Organization 1 - Symbol,';
         //44
@@ -7143,58 +7143,57 @@ else
         //45
         headersStr += 'Organization 1 - Job Description,';
         //46
-        headersStr += 'Website 1 - Type,';
+        headersStr += 'Website 1 - Type:webSite1Type,';
         //47
-        headersStr += 'Website 1 - Value,';
+        headersStr += 'Website 1 - Value:webSite1Value,';
         //48
         headersStr += 'Organization 2 - Type,';
         //49
         headersStr += 'Organization 2 - Name,';
         //50
-        headersStr += 'Custom Field 1 - Type,';
+        headersStr += 'Custom Field 1 - Type:customField1Name,';
         //51
-        headersStr += 'Custom Field 1 - Value,';
+        headersStr += 'Custom Field 1 - Value:customField1Value,';
         //52
-        headersStr += 'Custom Field 2 - Type,';
+        headersStr += 'Custom Field 2 - Type:customField2Name,';
         //53
-        headersStr += 'Custom Field 2 - Value,';
+        headersStr += 'Custom Field 2 - Value:customField2Value,';
         //54
-        headersStr += 'Custom Field 3 - Type,';
+        headersStr += 'Custom Field 3 - Type:customField3Name,';
         //55
-        headersStr += 'Custom Field 3 - Value,';
+        headersStr += 'Custom Field 3 - Value:customField3Value,';
         //56
-        headersStr += 'Custom Field 4 - Type,';
+        headersStr += 'Custom Field 4 - Type:customField4Name,';
         //57
-        headersStr += 'Custom Field 4 - Value,';
+        headersStr += 'Custom Field 4 - Value:customField4Value,';
         //58
-        headersStr += 'Custom Field 5 - Type,';
+        headersStr += 'Custom Field 5 - Type:customField5Name,';
         //59
-        headersStr += 'Custom Field 5 - Value';
+        headersStr += 'Custom Field 5 - Value:customField5Value';
         //60
 
         //Custom Field 1 - Type,Custom Field 1 - Value 
 
-        var headers = headersStr.split(',');
+        var headerLines = headersStr.split(',');
 
+var headers=[];
+var properties={};
+headerLines.forEach((line,i)=>{
+    var lineSp=line.split(':');
+    headers.push(lineSp[0]);
+    if(propName=lineSp[1]) properties[i.toString()]=propName;
+    else properties[i.toString()]=false;
+});
         var colsCount = headers.length;
-        /*
-      var textStr='';
-        headers.forEach((h,i)=>{
-            //console.log(i, h);
-
-textStr += " headersStr += '" + h + "'; \/\/" + i + '\n';
-            
-        }
-        ); 
-
-console.log(textStr);
-        );*/
+    
         return {
-            'string': headersStr,
-            'array': headers
+            'string': headers.join(','),
+            'array': headers,
+            "properties":properties
         }
     }
 
+    google.parseContactCSVFields = getGoogleContactCSVFields;
     google.getGoogleContactCSVFields = getGoogleContactCSVFields;
     google.buildContactsCSV = function(contacts, groupText) {
         var gHeaders = getGoogleContactCSVFields();
@@ -7237,6 +7236,13 @@ console.log(textStr);
     }
     let utilities = Object.create(null);
     
+    utilities.saveAsCSV= (text)=>{
+
+       
+
+        ayanoglu.utility.download("contacts-" + getFileNameStamp() + ".csv", text);
+ 
+    };
     
     utilities.download = function(filename, text) {
         var element = document.createElement('a');
@@ -7298,6 +7304,7 @@ console.log(textStr);
         	fullName : fullName
                 , firstName : firstName
                 , midName : midName
+                , middleName : midName
                 , familyName: familyName
         }
     }

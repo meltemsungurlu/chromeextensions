@@ -180,7 +180,7 @@ let contactForm = function(dlg, container, contact) {
 
     var table = _$('div').cls('ayanoglu flex-form').addTo(container);
 
-    var fields = ayanoglu.google.getGoogleContactCSVFields().array;
+    var fields = ayanoglu.google.parseContactCSVHeaders().array;
 
     let addField = (label,name,tag,index,value)=>{
         var row = _$('div').att('id', 'field-' + index).addTo(table);
@@ -311,7 +311,7 @@ let getCSVText=()=>{
 
 buildContactText();
 
-        var gHeaders = ayanoglu.google.getGoogleContactCSVFields();
+        var gHeaders = ayanoglu.google.parseContactCSVHeaders();
         var headersStr = gHeaders.string;
 
         var gCsv = [headersStr];
@@ -436,10 +436,45 @@ let download = ayanoglu.utility.download;
 
 if (typeof window.contacts === 'undefined')
     window.contacts = {};
+
+
+
+let parseContactCSV=function(csv){
+    
+       var contactMap =ayanoglu.google.parseContactCSVFields().properties;
+
+    var values=csv.split(',');
+   values=values.map((item)=>{
+        	return item.replace(/\"*(.+)\"*/,'$1');
+        });
+        var contact={};
+
+values.forEach((value,i)=>{
+    if(propertyName=contactMap[i.toString()]) contact[propertyName]=value;
+});
+
+var name=contact.name;
+var nameObj=ayanoglu.utility.formatName(name);
+
+contact.name=nameObj.fullName;
+contact.firstName=nameObj.firstName;
+contact.middleName=nameObj.midName;
+contact.familyName=nameObj.familyName;
+
+        console.dir(contact);
+
+        console.dir(values);
+
+}
+
+
 var panelControl;
 let collectWupMembers = function() {
  
     console.clear();
+
+
+
    let writeToBox = ()=>{
             var str = ayanoglu.google.buildContactsCSV(contacts);
 
@@ -473,7 +508,16 @@ var textBox = _$('textarea').addTo(dlg.container);
 textBox.style.height='100%';
 textBox.style.width='-webkit-fill-available';
 textBox.style.whiteSpace='nowrap';
-
+ var label = _$('div').css(` background-color:aliceblue;
+        z-index:10000000;
+        position:fixed; 
+    display: none;
+    align-items: center;
+    justify-content: flex-end;
+    padding:7px;
+    border-radius:4px;
+    border: 1px solid lightblue;`).addTo(dlg.container);
+            var labelTmo;
    let editContact = (e)=>{
                 console.log(e.type);
 
@@ -515,7 +559,7 @@ textBox.style.whiteSpace='nowrap';
                             this.data = raw;
 
                             var values = raw.split(',');
-                            var headers = ayanoglu.google.getGoogleContactCSVFields().array;
+                            var headers = ayanoglu.google.parseContactCSVHeaders().array;
 
                             headers.forEach((header,i)=>{
                                 var value = values[i];
@@ -551,6 +595,9 @@ textBox.style.whiteSpace='nowrap';
                             }
 
                         };
+
+                        console.log(line);
+                        parseContactCSV(line);
 /*
                         var editor = new contactEditor(line);
                         editor.onSubmit = (data)=>{
@@ -566,7 +613,7 @@ textBox.style.whiteSpace='nowrap';
                     textBox.selectionEnd = sPos;
 
                     var fields = document.getSelection().toString().split(',');
-                    var gHeaders = getGoogleContactCSVFields();
+                    var gHeaders = ayanoglu.google.parseContactCSVFields();
                     textBox.selectionStart = sPos;
                     var headers = gHeaders.array;
 
