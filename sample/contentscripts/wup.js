@@ -437,7 +437,19 @@ let download = ayanoglu.utility.download;
 if (typeof window.contacts === 'undefined')
     window.contacts = {};
 
-
+let buildContactCSV=function (contact){
+    var contactMap =ayanoglu.google.parseContactCSVFields().properties;
+    var fields =ayanoglu.google.parseContactCSVFields().array;
+var values=[];
+    fields.forEach((field,i)=>{
+        var propertyName=contactMap[i.toString()];
+        var value="";
+        if(propertyName) value=contact[propertyName];
+     if(value.length)   value= '"' + value +  '"';
+        values.push(value);
+    })
+    return values.join(',');
+}
 
 let parseContactCSV=function(csv){
     
@@ -445,7 +457,7 @@ let parseContactCSV=function(csv){
 
     var values=csv.split(',');
    values=values.map((item)=>{
-        	return item.replace(/\"*(.+)\"*/,'$1');
+        	return item.replace(/\"/g,'');
         });
         var contact={};
 
@@ -461,10 +473,10 @@ contact.firstName=nameObj.firstName;
 contact.middleName=nameObj.midName;
 contact.familyName=nameObj.familyName;
 
-        console.dir(contact);
+       // console.dir(contact);
 
-        console.dir(values);
-
+      //  console.dir(values);
+return contact;
 }
 
 
@@ -597,7 +609,9 @@ textBox.style.whiteSpace='nowrap';
                         };
 
                         console.log(line);
-                        parseContactCSV(line);
+                      var contact =  parseContactCSV(line);
+                      console.dir(contact);
+                     console.log(buildContactCSV(contact)) ;
 /*
                         var editor = new contactEditor(line);
                         editor.onSubmit = (data)=>{

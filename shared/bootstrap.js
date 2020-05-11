@@ -6917,6 +6917,8 @@ else
 
     let google = Object.create(null);
 
+
+
     function buildContactRow(contact) {
         var gHeaders = getGoogleContactCSVFields();
 
@@ -7033,8 +7035,9 @@ else
 
         for (var i = 0; i < colsCount; i++) {
             if (values.hasOwnProperty(i)) {
+                var propValue= values[i];
                 // console.log(values[i]);
-                lineStack.push('"' + values[i] + '"');
+                lineStack.push(propValue.length?'"' + propValue + '"':"");
             } else
                 lineStack.push('');
 
@@ -7195,6 +7198,7 @@ headerLines.forEach((line,i)=>{
 
     google.parseContactCSVFields = getGoogleContactCSVFields;
     google.getGoogleContactCSVFields = getGoogleContactCSVFields;
+
     google.buildContactsCSV = function(contacts, groupText) {
         var gHeaders = getGoogleContactCSVFields();
         var headersStr = gHeaders.string;
