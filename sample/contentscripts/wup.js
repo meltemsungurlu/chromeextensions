@@ -440,6 +440,169 @@ var panelControl;
 let collectWupMembers = function() {
  
     console.clear();
+   let writeToBox = ()=>{
+            var str = ayanoglu.google.buildContactsCSV(contacts);
+
+            ayanoglu.utility.copy(str);
+            setTimeout(()=>{
+                textBox.value = str;
+            }
+            , 1);
+
+        }
+
+
+        let collectMembers=()=>{
+
+
+            ayanoglu.wup.workers.collectGroupMembers(contacts).then((members)=>{
+                contacts = members;
+                console.dir(contacts);
+
+                writeToBox();
+
+            }
+            , ()=>{}
+            );
+}
+ var dlg = ayanoglu.ui.dialog();
+dlg.title='Grup üyeleri'
+dlg.control.style.height='100%';
+var textBox = _$('textarea').addTo(dlg.container);
+
+textBox.style.height='100%';
+textBox.style.width='-webkit-fill-available';
+textBox.style.whiteSpace='nowrap';
+
+   let editContact = (e)=>{
+                console.log(e.type);
+
+                var sel = window.getSelection();
+                var text = textBox.value;
+                var lines = text.split('\n');
+                var sPos = textBox.selectionStart;
+                var counter = 0;
+                var line = false;
+                var lineNum = 0;
+                for (var i = 0; i < lines.length; i++) {
+                    if (sPos >= counter && sPos < counter + lines[i].length) {
+                        line = lines[i];
+                        lineNum = i;
+                        break;
+                    }
+                    counter += lines[i].length + 1;
+
+                }
+
+                if (line) {
+                    if (e.type === 'dblclick') {
+
+                        let contactEditor = function(raw) {
+                            let _$ = ayanoglu.DOM._$;
+                            var d = window.document;
+
+                            var cssText = `
+`;
+                            //ayanoglu.DOM.style(cssText);
+
+                            var cId = 'contact-editor-panel'
+                            var control = _$('div').att('id', cId).addTo(d.body);
+                            var header = _$('div').cls('h').addTo(control);
+                            var body = _$('div').cls('b').addTo(control);
+
+                            var table = _$('div').cls('t').addTo(body);
+
+                            this.data = raw;
+
+                            var values = raw.split(',');
+                            var headers = ayanoglu.google.getGoogleContactCSVFields().array;
+
+                            headers.forEach((header,i)=>{
+                                var value = values[i];
+                                value = value.replace(/^"(.*)"$/, '$1');
+                                var row = _$('div').addTo(table);
+                                var nameCell = _$('div').addTo(row).text(header);
+                                var valueCell = _$('div').addTo(row);
+                                var editor = _$('input').att('type', 'text').att('value', value).addTo(valueCell);
+                                editor.addEventListener('change', function(i, ev) {
+                                    var ed = ev.target;
+                                    values[i] = '"' + ed.value + '"';
+                                }
+                                .bind(editor, i));
+
+                            }
+                            );
+
+                            var footer = _$('div').cls('f').addTo(control);
+
+                            var submit = _$('input').att('type', 'button').att('value', 'Kaydet').addTo(footer);
+
+                            submit.onclick = (e)=>{
+                                this.data = values.join(',');
+                                if (typeof this.onSubmit === 'function')
+                                    this.onSubmit(this.data);
+                                d.body.removeChild(control);
+                            }
+
+                            var closer = _$('input').att('type', 'button').att('value', 'Kapat').addTo(footer);
+
+                            closer.onclick = (e)=>{
+                                d.body.removeChild(control);
+                            }
+
+                        };
+/*
+                        var editor = new contactEditor(line);
+                        editor.onSubmit = (data)=>{
+                            lines[lineNum] = data;
+                            textBox.value = lines.join('\n');
+                            console.log(data);
+
+                        }*/
+                        ;
+                        return;
+                    }
+                    textBox.selectionStart = counter;
+                    textBox.selectionEnd = sPos;
+
+                    var fields = document.getSelection().toString().split(',');
+                    var gHeaders = getGoogleContactCSVFields();
+                    textBox.selectionStart = sPos;
+                    var headers = gHeaders.array;
+
+                    var title = headers[fields.length - 1];
+
+                    label.textContent = title;
+                    label.style.display = 'flex';
+                    label.style.left = e.clientX + 'px';
+                    label.style.top = e.clientY + 'px';
+                    clearTimeout(labelTmo);
+                    labelTmo = setTimeout(()=>{
+                        label.style.display = 'none';
+                    }
+                    , 5000)
+
+                }
+
+            }
+            ;
+
+            textBox.addEventListener('dblclick', editContact);
+            textBox.addEventListener('mouseup', editContact);
+
+
+dlg.button('Collect',collectMembers);
+dlg.button('Reset',()=>{});
+dlg.button('Save',()=>{});
+
+
+
+collectMembers();
+
+
+    return 'Collect group members';
+
+
     if (typeof panelControl === 'undefined') {
         panelControl = ayanoglu.ui.panel();
         ca.event.listen('will-close', ()=>{
