@@ -1338,7 +1338,10 @@ font-size: 15px !important;
 }
 
 
-
+.flex-form > div > div > texarea ,
+.flex-form > div > div > input[type=text] {
+   width: -webkit-fill-available;
+}
 
 
 
@@ -1454,10 +1457,14 @@ border: 0px;
         display: flex;
         flex-direction: column;
         box-shadow: 0px 0px 4px 3px gainsboro;
-        border-radius: 16px;
+        border-radius: 5px;
         background-color: rgb(250, 250, 253); 
     }
  
+  .ayanoglu-dialog[class~="modal"]{
+ 
+        border-radius: 16px;
+ }
  
 .slide-in {
 	 transform: translate(100%,-110%);  
@@ -1489,7 +1496,7 @@ border: 0px;
 }
 
       
-        .ayanoglu-dialog > div.f:empty {
+.ayanoglu-dialog > div.f:empty {
     display: none
 }
 
@@ -1611,10 +1618,13 @@ border: 0px;
  .ayanoglu-dialog > div.t {
       display: flex;
     justify-content: flex-end;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.12);
  }
 
  .ayanoglu-dialog > div.t > div {
-       padding:5px;color:blue;cursor:pointer;
+       padding:7px;
+       color:blue;
+       cursor:pointer;
  }
 
     .ayanoglu-dialog > div.f {
@@ -1733,5 +1743,21 @@ border-radius: 7px;
 border: 0px;
 }
 
+textarea.list {
+	height:100%;
+width:-webkit-fill-available;
+white-space:nowrap;
 
+}
 
+.pop-label {
+	background-color:aliceblue;
+        z-index:10000000;
+        position:fixed; 
+    display: none;
+    align-items: center;
+    justify-content: flex-end;
+    padding:7px;
+    border-radius:4px;
+    border: 1px solid lightblue;
+}

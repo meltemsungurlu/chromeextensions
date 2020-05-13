@@ -5440,11 +5440,11 @@ ___dom();
 
     wupLib.openChatPanel = openChatPanel;
 
-    let collectGroupMembers = function(members, group) {
+    let collectGroupMembers = function(membersArr) {
 
         return new Promise((finalResolve,finalReject)=>{
-            if (typeof members === 'undefined')
-                members = {};
+            if (typeof membersArr === 'undefined')
+            	membersArr = [];
 
             // console.clear();
             var textStack = [];
@@ -5463,8 +5463,7 @@ ___dom();
                 var selector = '#app > div > div > div.YD4Yw > div._1-iDe._14VS3 > span > div > span > div > div';
 
                 ayanoglu.DOM.findElement(selector, name).then((infoPanelElement)=>{
-                    //infoPanelElement.scrollTo(0,2000000);
-
+                   
                     let continueAfterExpander = ()=>{
                         var itemSelector = 'div.AfVTG > div  > div  > div > div._2wP_Y';
                         var i = 0;
@@ -5472,8 +5471,7 @@ ___dom();
                         var scroller = ()=>{
 
                             var items = Array.prototype.slice.call(infoPanelElement.querySelectorAll(itemSelector));
-
-                            // console.log('items length', items.length);
+ 
                             items.forEach((item)=>{
                                 // item.style.border = "1px solid blue";
 
@@ -5484,14 +5482,14 @@ ___dom();
                                         if (nameElement = item.querySelector(nameSelector)) {
                                             var name = nameElement.textContent;
                                             // console.log(name, ",", phone);
-                                            if (typeof members[phone] === 'undefined')
-                                                members[phone] = {
+                                            if( /[\w]{3}/.test(name) && !membersArr.find((m)=>{return m.phone1Value===phone})) 
+                                            	membersArr.push( {
                                                     name: name,
-                                                    phone: phone
-                                                }
-                                            item.style.backgroundColor = 'yellow';
+                                                    phone1Type: 'mobile',
+                                                    phone1Value: phone
+                                                }) 
                                         }
-
+  
                                     }
 
                                     if (unReadElement = item.querySelector(unReadSelector)) {//console.log(unReadElement.textContent);
@@ -5513,7 +5511,7 @@ ___dom();
                             } else {
                                 //infoPanelElement.scrollTo(0, 0);
 
-                                finalResolve(members)
+                                finalResolve(membersArr)
                             }
                         }
 
@@ -5972,6 +5970,9 @@ var isGroup=false;
             menu: addMenu,
             add: (child)=>{
                 body.add(child);
+            },
+            close:()=>{
+                document.body.removeChild(panelContainer);
             }
         }
 
@@ -6014,6 +6015,7 @@ var isGroup=false;
 
 function modalDialog(){
 var dlg=dialogBase();
+dlg.control.classList.add('modal');
 dlg.control.classList.add('slide-in');
 dlg.control.classList.add('slide-out');
 return dlg;
@@ -6817,6 +6819,9 @@ else
         }
         );
         document.body.addEventListener('mouseup', upHandler);
+        document.body.addEventListener('keydown', (e)=>{
+        	selPop.cls('');
+        });
 
     }
     ui.selectionPop = selectionPop;
@@ -6918,137 +6923,7 @@ else
     let google = Object.create(null);
 
 
-
-    function buildContactRow(contact) {
-        var gHeaders = getGoogleContactCSVFields();
-
-        var headers = gHeaders.array;
-
-        var colsCount = headers.length;
-        var nameRaw = contact.name;
-        console.info('\t\t👍', nameRaw);
-
-        var fullName = ''
-          , firstName = ''
-          , midName = ''
-          , familyName = '';
-        var phone = contact.phone;
-
-        var wPhone = phone.replace(/[^\d]/g, '');
-
-        if (!/^9\d+/.test(wPhone))
-            wPhone = '9' + wPhone;
-        var pat = /(.+\.+ =?)?(.+)/;
-
-        if (ms = pat.exec(nameRaw)) {
-            var nameParts = [];
-            var name = ms[2];
-            name = name.replace(/[\s]{2,}/, ' ');
-
-            var namesUpper = name.split(' ');
-            var names = [];
-            namesUpper.forEach((n)=>{
-                n = firstToUpper(n);
-                names.push(n);
-            }
-            );
-
-            if (names.length) {
-                firstName = names.shift();
-            }
-            if (names.length)
-                familyName = names.pop();
-            if (names.length)
-                midName = names.join(' ');
-
-            if (firstName) {
-                nameParts.push(firstName);
-            }
-            if (midName) {
-                nameParts.push(midName);
-            }
-            if (familyName) {
-                nameParts.push(familyName);
-            }
-            fullName = nameParts.join(' ');
-
-        }
-
-        var dept = '';
-        var prefix = ''
-
-        var notes = '';
-
-        var values = Object.create({});
-        values[0] = fullName;
-        values[1] = firstName;
-        values[2] = midName;
-        values[3] = familyName;
-
-        values[8] = prefix;
-
-        if (contact.notes)
-            values[25] = contact.notes.toString().replace(/\n/g, '\\n');
-
-        if (contact.group) {
-            values[28] = contact.group;
-        }
-        values[31] = contact.phoneLabel ? contact.phoneLabel : 'Mobile';
-        values[32] = phone;
-
-        if (contact.company) {
-            values[39] = 'Work'
-            values[40] = contact.company
-        }
-
-        if (contact.customFields) {
-            var fieldCounter = 51;
-            contact.customFields.forEach((field,i)=>{
-                if (i > 4)
-                    return;
-                values[fieldCounter] = field.name;
-                fieldCounter++;
-                values[fieldCounter] = field.value;
-                fieldCounter++;
-            }
-            );
-
-        }
-
-        /*
-            values[33] = 'Work';
-            values[34] = ext;
-
-            values[35] = 'Deck';
-            values[36] = deck;
-
-           
-
-            dept = title
-            values[42] = dept;
-            values[43] = title;
-*/
-        values[47] = 'Whatsapp';
-        values[48] = 'https://wa.me/' + wPhone;
-
-        var lineStack = [];
-
-        for (var i = 0; i < colsCount; i++) {
-            if (values.hasOwnProperty(i)) {
-                var propValue= values[i];
-                // console.log(values[i]);
-                lineStack.push(propValue.length?'"' + propValue + '"':"");
-            } else
-                lineStack.push('');
-
-        }
-
-        //console.log(lineStack);
-
-        var gLine = lineStack.join(',');
-        return gLine;
-    }
-    ;google.buildContactRow = buildContactRow;
+ 
 
     function getGoogleContactCSVFields() {
         var headersStr = '';
@@ -7136,15 +7011,15 @@ else
         //40
         headersStr += 'Organization 1 - Yomi Name,';
         //41
-        headersStr += 'Organization 1 - Title:company1Title,';
+        headersStr += 'Organization 1 - Title:company1Title:Hemşire,';
         //42
-        headersStr += 'Organization  1 - Department:company1Department,';
+        headersStr += 'Organization  1 - Department:company1Department:3. Kat B Blok,';
         //43
         headersStr += 'Organization 1 - Symbol,';
         //44
         headersStr += 'Organization 1 - Location,';
         //45
-        headersStr += 'Organization 1 - Job Description,';
+        headersStr += 'Organization 1 - Job Description:Kat Hemşireliği,';
         //46
         headersStr += 'Website 1 - Type:webSite1Type,';
         //47
@@ -7181,65 +7056,159 @@ else
 
 var headers=[];
 var properties={};
+var defaults={};
 headerLines.forEach((line,i)=>{
     var lineSp=line.split(':');
     headers.push(lineSp[0]);
     if(propName=lineSp[1]) properties[i.toString()]=propName;
     else properties[i.toString()]=false;
+
+    if(defaultValue=lineSp[2]) defaults[i.toString()]=defaultValue;
+     else defaults[i.toString()]=false;
 });
         var colsCount = headers.length;
     
         return {
             'string': headers.join(','),
             'array': headers,
-            "properties":properties
+            "properties":properties,
+            "defaults":defaults
         }
     }
+    let parseContactCSV = function(csv) {
 
+        var contactMap = ayanoglu.google.parseContactCSVFields().properties;
+
+        var values = csv.split(',');
+        values = values.map((item)=>{
+            return item.replace(/\"/g, '');
+        }
+        );
+        var contact = {};
+
+        values.forEach((value,i)=>{
+            if (propertyName = contactMap[i.toString()])
+                contact[propertyName] = value;
+        }
+        );
+
+        var name = contact.name;
+        var nameObj = ayanoglu.utility.formatName(name);
+
+        contact.name = nameObj.fullName;
+        contact.firstName = nameObj.firstName;
+        contact.middleName = nameObj.midName;
+        contact.familyName = nameObj.familyName;
+
+        // console.dir(contact);
+
+        //  console.dir(values);
+        return contact;
+    }
+    
+    let buildContactCSV = function(contact,handler) {
+        var csvFields = ayanoglu.google.parseContactCSVFields();
+        var contactMap = csvFields.properties;
+        var fields = csvFields.array;
+        
+        var name = contact.name;
+        var nameObj = ayanoglu.utility.formatName(name);
+
+        contact.name = nameObj.fullName;
+        contact.firstName = nameObj.firstName;
+        contact.middleName = nameObj.middleName;
+        contact.familyName = nameObj.familyName;
+        
+        var phone=contact.phone1Value;
+        var wPhone = phone.replace(/[^\d]/g, '');
+
+      if (!/^9\d+/.test(wPhone))
+          wPhone = '9' + wPhone;
+      
+      contact.webSite1Type = 'Whatsapp';
+      contact.webSite1Value = 'https://wa.me/' + wPhone;
+        
+        
+        var values = [];
+        fields.forEach((field,i)=>{
+            var propertyName = contactMap[i.toString()];
+            var value = "";
+            if (propertyName)
+                value = contact[propertyName];
+            
+            if (value && value.length)
+                value = '"' + value + '"';
+            else value='';
+            if(typeof handler==='function'){
+            	var modifiedValue=handler(propertyName,value,i);
+            	if(modifiedValue) value=modifiedValue;
+            }
+            values.push(value);
+        }
+        )
+      
+        
+        return values.join(',');
+    }
+
+    google.buildContactCSV=buildContactCSV;
+google.parseContactCSV=parseContactCSV;
     google.parseContactCSVFields = getGoogleContactCSVFields;
     google.getGoogleContactCSVFields = getGoogleContactCSVFields;
 
-    google.buildContactsCSV = function(contacts, groupText) {
+    
+    let buildContactsCSV = function(contacts,handler) { 
         var gHeaders = getGoogleContactCSVFields();
         var headersStr = gHeaders.string;
-
-        //Custom Field 1 - Type,Custom Field 1 - Value 
-
+ 
         var headers = gHeaders.array;
 
         var colsCount = headers.length;
-
+/*
         headers.forEach((h,i)=>{
             console.log(i, h);
         }
         );
-
+*/
+        
         var gCsv = [headersStr];
+  contacts.forEach((contact)=>{
+       var gLine = buildContactCSV(contact,handler);
 
-        // pre aaa bbb ccc,aaa,bbb,ccc,,,,,pre,,,,,,,,,,,,,,,,,,,,* myContacts ::: * starred,Mobile,111111,Main,222 222 ::: 333 333,,Reyap Hastanesi,,title,dept,,,,Whatsapp,http://wup
+            gCsv.push(gLine); 
+  });
+       
 
-        var hosp = '0 212 689 0339';
-        var counter = 0;
-        //69
-        var title = '';
-        for (key in contacts) {
-            var contact = contacts[key];
-
-            var gLine = buildContactRow(contact);
-
-            gCsv.push(gLine);
-            counter++;
-
-        }
-
-        console.log(gCsv.length, counter);
+       
         var output = gCsv.join('\n');
-        return output;
-        //ayanoglu.ui.panel(output);
-
+        return output; 
     }
+    google.buildContactsCSV=buildContactsCSV ;
     let utilities = Object.create(null);
     
+
+function getFileNameStamp() {
+    var d = new Date(),
+        month = '' + (d.getMonth() + 1),
+        day = '' + d.getDate(),
+        year = d.getFullYear(),
+        hour = d.getHours(),
+        min = d.getMinutes();
+
+    if (month.length < 2) 
+        month = '0' + month;
+    if (day.length < 2) 
+        day = '0' + day;
+    if (hour.length < 2) 
+        hour = '0' + hour;
+    if (min.length < 2) 
+        min = '0' + min;
+
+    return [year, month, day,hour,min].join('-');
+}
+
+utilities.getFileNameStamp=getFileNameStamp;
+
     utilities.saveAsCSV= (text)=>{
 
        

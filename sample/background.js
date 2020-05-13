@@ -1,9 +1,10 @@
 chrome.runtime.onInstalled.addListener(function () {
-    chrome.storage.sync.set({color: '#3aa757'}, function() {
-      console.log("The color is green.");
-    });
-
+   
   });
+
+
+//var webSocket = new WebSocket("http://iyidoktorlar.com", "optionalProtocol");
+
 
   chrome.declarativeContent.onPageChanged.removeRules(undefined, function() {
       chrome.declarativeContent.onPageChanged.addRules([{
@@ -64,7 +65,7 @@ contentMenuItems.push(jsonStr);
             
     chrome.contextMenus.create(mo);
   }
-    sendResponse({farewell: "Menu items added"});
+    sendResponse({result: "Menu items added"});
 }
 
 
@@ -87,6 +88,7 @@ if(!('update_url' in mnf)) ctxMenu.push( {
                                  'page'
                                 ],
                                 'onclick' : function ( info , tab ) {
+                                	console.log('Reloading...');
   chrome.runtime.reload();
   chrome.tabs.reload(tab.id,{
   	bypassCache:true
