@@ -5571,7 +5571,7 @@ ___dom();
 
                 // console.log('items length', items.length);
                 items.forEach((item,itemIndex)=>{
-                    item.style.border = "1px solid blue";
+//                    item.style.border = "1px solid blue";
                     var nameElement = item.querySelector(nameSelector);
                     var name = false;
                     var phone = false;
