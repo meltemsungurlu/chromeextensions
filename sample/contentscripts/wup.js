@@ -52,10 +52,11 @@ window.csvStack = [];
 let getCSVText=function(){
 	 var gHeaders = ayanoglu.google.parseContactCSVFields();
 	  var headersStr = gHeaders.string;
-    
-     csvStack.unshift(headersStr)
+	  
+       var ta = Array.prototype.slice.call(csvStack);
+     ta.unshift(headersStr)
 
-     return csvStack.join('\n');
+     return ta.join('\n');
 }
 let parseMemberInfo = function() {
 

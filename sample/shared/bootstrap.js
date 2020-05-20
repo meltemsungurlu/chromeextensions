@@ -5453,8 +5453,7 @@ ___dom();
             var contacts = [];
             var groups = [];
 
-            var unReadSelector = 'div > div > div._3j7s9 > div._1AwDx > div._3Bxar > span:nth-child(1) > div > span';
-            var nameSelector = 'div > div > div._3j7s9 > div._1AwDx > div._3Bxar > span._1qP8m > span';
+             var nameSelector = 'div > div > div._3j7s9 > div._1AwDx > div._3Bxar > span._1qP8m > span';
             var phoneSelector = 'div > div > div._3j7s9 > div._2FBdJ > div._25Ooe > span > span';
 
             openChatPanel().then(()=>{
@@ -5492,9 +5491,7 @@ ___dom();
   
                                     }
 
-                                    if (unReadElement = item.querySelector(unReadSelector)) {//console.log(unReadElement.textContent);
-
-                                    }
+                              
                                     itemsCount++;
                                 }
 
@@ -5613,7 +5610,8 @@ var isGroup=false;
                             unread: unread,
                             count: itemsCount,
                             index: itemIndex,
-                            isGroup:isGroup
+                            isGroup:isGroup,
+                            element:item
                         }
 
                         if (typeof callBack === 'function') {
