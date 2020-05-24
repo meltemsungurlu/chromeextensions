@@ -520,7 +520,7 @@ let contactListDialog=function(title,handleClicks){
 
 	        }
 
-	        if (line) {
+	        if (line && lineNum>0) {
 	            if (e.type === 'dblclick') {
 	 
 	                console.clear();
@@ -572,7 +572,19 @@ let contactListDialog=function(title,handleClicks){
 	        }
 
 	    }
-	    ;
+	    
+
+let updateCSVItems=(e)=>{
+	var text=e.target.value;
+	
+	var lines=text.split('\n');
+	lines.shift();
+	csvStack=lines;
+}
+
+ textBox.addEventListener('change', updateCSVItems);
+
+
 if(handleClicks!==false){
     textBox.addEventListener('dblclick', editContact);
     textBox.addEventListener('mouseup', editContact);

@@ -5453,8 +5453,7 @@ ___dom();
             var contacts = [];
             var groups = [];
 
-            var unReadSelector = 'div > div > div._3j7s9 > div._1AwDx > div._3Bxar > span:nth-child(1) > div > span';
-            var nameSelector = 'div > div > div._3j7s9 > div._1AwDx > div._3Bxar > span._1qP8m > span';
+             var nameSelector = 'div > div > div._3j7s9 > div._1AwDx > div._3Bxar > span._1qP8m > span';
             var phoneSelector = 'div > div > div._3j7s9 > div._2FBdJ > div._25Ooe > span > span';
 
             openChatPanel().then(()=>{
@@ -5492,9 +5491,7 @@ ___dom();
   
                                     }
 
-                                    if (unReadElement = item.querySelector(unReadSelector)) {//console.log(unReadElement.textContent);
-
-                                    }
+                              
                                     itemsCount++;
                                 }
 
@@ -5613,7 +5610,8 @@ var isGroup=false;
                             unread: unread,
                             count: itemsCount,
                             index: itemIndex,
-                            isGroup:isGroup
+                            isGroup:isGroup,
+                            element:item
                         }
 
                         if (typeof callBack === 'function') {
@@ -6480,7 +6478,7 @@ position:fixed;
 top:0px;
 left:0px;
 z-index:1000000;
-background-color:rgb(215, 251, 253);
+background-color:rgb(255, 226, 201);
 border-radius:5px; 
 display:flex;
 flex-direction:column;    
@@ -6490,6 +6488,7 @@ opacity:0;
 transition: transform 0.5s;
 transition: opacity 0.9s;
 height:600px;
+width:400px;
 }
 #selector-pop * {
      font-size:14px;
@@ -6511,8 +6510,9 @@ background-color:rgba(0, 0, 0, 0.15);
 
 #selector-pop > div.new > div ,
 #selector-pop > div.list > div {
-    padding:14px;
+    padding:11px;
     cursor: pointer;
+    line-height:19px;
 }
  
 
@@ -6567,7 +6567,7 @@ flex-direction:column;
                 let addEditor = (value,i)=>{
                     var row = _$('div').css('margin-bottom:10px;').addTo(frm);
                     var inputCell = _$('div').css(`display: flex;align-items: center;justify-content: space-between;`).addTo(row);
-                    var valueElement = _$('textarea').css('width: -webkit-fill-available;').addTo(inputCell);
+                    var valueElement = _$('textarea').css('min-height:70px;width: -webkit-fill-available;').addTo(inputCell);
                     var delBtn = _$('div').att('title', (i === -1) ? 'Ekle' : 'Sil').css(`margin-left: 10px;`).cls(i === -1 ? 'icon-plus' : 'icon-eraser').addTo(inputCell);
 
                     valueElement.value = value ? value : '';
@@ -6623,6 +6623,7 @@ flex-direction:column;
                 }
 
                 addEditor(false, -1);
+                  values.sort((a, b) => a.localeCompare(b));
                 values.forEach(addEditor);
 
                 var mnuData=dlg.menu('Data', ()=>{
@@ -6720,9 +6721,8 @@ else
         }
         let addMenu = (text)=>{
             var mnu = _$('div').addTo(listRow);
-            var textElement = _$('div').text(text).cls('t').addTo(mnu);
-            //  var editor = _$('div').cls('icon-edit').addTo(mnu);
-
+            var textElement = _$('div').att('title',text).text(text).cls('t').addTo(mnu);
+            
             if (handle)
                 textElement.addEventListener('click', (e)=>{
                     handle(textElement.textContent);
