@@ -1,0 +1,51 @@
+@charset "UTF-8";
+:root {
+	--tree-icon-color : rgb(128,128,128) ; 
+	--tree-line-color : rgba(188, 188, 188, 0.25) ; 
+	}
+
+
+div.tree-view {
+    margin-left: 10px;
+}
+
+div.tree-view * {
+	font-size: 16px;
+}
+
+div.tree-view .node {
+    display: flex;
+    align-items: flex-start;
+    padding: 7px 0px 7px 0px;
+    border-left: 1px solid var(--tree-line-color);
+    flex-wrap: nowrap;
+}
+
+div.tree-view .node + .node {
+	
+}
+
+div.tree-view .node >  .e {
+	cursor: pointer;
+	color: var(--tree-icon-color);
+    margin-left: -11.85px;
+}
+
+div.tree-view .node >  .t {
+	
+}
+
+div.tree-view   .c {
+	
+/* margin-left: 16px; */
+	
+padding-left: 16px;
+	
+border-left: 1px solid var(--tree-line-color);
+}
+
+ 
+
+div.tree-view    .c[class~="off"] {
+	display:none;
+}

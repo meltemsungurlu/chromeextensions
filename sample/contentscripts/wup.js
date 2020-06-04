@@ -28,6 +28,18 @@ let onLoad= ()=>{
         dlg.writeText(output);
     }
     , 'icon-list');
+
+     pop.add('New Number', ()=>{
+
+var phone=prompt('Telefon Numarası');
+
+     
+
+var link = ayanoglu.wup.makeWinShortcut(phone, 'New');
+               
+                ayanoglu.utility.copy(link);
+    }
+    , 'icon-list');
     
     pop.add('Translate', ()=>{
         var dlg = ayanoglu.ui.modalDialog();
@@ -100,7 +112,7 @@ let parseMemberInfo = function() {
             var dlg = ayanoglu.ui.dialog();
             dlg.control.style.height = '100%'
             dlg.title = contact.name;
-            var frm = contactForm(dlg, dlg.container, contact);
+            var frm =  ayanoglu.ui.contactForm(dlg, dlg.container, contact);
 
             dlg.button('Ekle', ()=>{
                 var line = frm.getCsv();
@@ -197,198 +209,6 @@ ayanoglu.ui.selectionPop((text)=>{
 }
 , true);
 
-let contactForm = function(dlg, container, contact) {
-    ayanoglu.DOM.style(`
-     .flex-form select {
-         padding:8px;
-         }
-.flex-form > div {
-   padding-bottom: 15px;
-    margin-top: 15px;
-    margin-bottom: 0px;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.12);
-}
-
-.flex-form > div > div:first-child {
-    margin-bottom:7px;
-}
-     `);
-
-    let _$ = ayanoglu.DOM._$;
-
-    var table = _$('div').cls('ayanoglu flex-form').addTo(container);
-    var fieldsObj = ayanoglu.google.parseContactCSVFields();
-    var fields = fieldsObj.array;
-    var properties = fieldsObj.properties;
-    var placeHolders = fieldsObj.defaults;
-
-    let addField = (label,name,tag,index,value)=>{
-        var row = _$('div').att('id', 'field-' + index).att('title',index).addTo(table);
-        if (sumMap.split(',').indexOf(index.toString()) === -1)
-            row.style.display = 'none';
-        var labelCell = _$('div').text(label).addTo(row);
-
-        var inputCell = _$('div').addTo(row);
-        var input = _$(tag ? tag : 'input').att('name', name).addTo(inputCell);
-        if(placeHolder=placeHolders[index.toString()]) input.att('placeholder',placeHolder);
-        if (value)
-            input.value = value;
-        row.getValue = ()=>{
-            return input.value;
-        }
-        return input;
-    }
-    ;
-
-    var contactMap = {
-        "0": "name",
-        "28": {
-            value: "WUP ::: * myContacts"
-        },
-        "31": {
-            value: "mobile"
-        },
-        "32": "phone1Value",
-        "39": {
-            value: "work"
-        },
-        "40": {
-            options: ['Reyaphasta', 'Kolanhasta', 'Verahasta']
-        },
-    }
-    var sumMap = '0,8,25,28,31,32,39,40,42,43,47,48';
-
-    fields.forEach((field,i)=>{
-        if (/.+\s+Yomi/i.test(field) || /Yomi\s+.+/i.test(field))
-            return;
-var property=properties[i.toString()];
-        var tag;
-        if (field === "Notes")
-            tag = "textarea";
-        var value;
-        var map = contactMap[i];
-        if (map) {
-            if (typeof map === 'string') {
-                value = contact[map];
-            } else {
-                if (map.value)
-                    value = map.value;
-                if (map.options)
-                    tag = "select";
-            }
-        }
-        if(property==='webSite1Value'){
-        	var phone=contact.phone1Value;
-            var wPhone = phone.replace(/[^\d]/g, '');
-
-          if (!/^9\d+/.test(wPhone))
-              wPhone = '9' + wPhone; 
-          value = 'https://wa.me/' + wPhone;
-        }
-        else      if(property==='webSite1Type'){ 
-          value = 'Whatsapp';
-        }
-        var input = addField(field, 'field-' + i, tag, i, value);
-        if (tag === "select") {
-            map.options.forEach((option)=>{
-                _$('option').att('value', option).addTo(input).textContent = option;
-            }
-            )
-        }
-    }
-    )
-    let toggleField = (on)=>{
-        fields.forEach((field,i)=>{
-            if (row = table.querySelector('div#field-' + i)) {
-                if (on)
-                    row.style.display = 'unset';
-                else if (sumMap.split(',').indexOf(i.toString()) === -1)
-                    row.style.display = 'none';
-            }
-        }
-        )
-
-    }
-
-    dlg.menu('Summary', ()=>{
-        toggleField(false);
-    }
-    );
-    dlg.menu('Full', ()=>{
-        toggleField(true);
-    }
-    );
-
-    let buildContactText = ()=>{
-        var formValues = [];
-
-        fields.forEach((field,i)=>{
-            var value;
-            if (row = table.querySelector('div#field-' + i)) {
-                value = row.getValue();
-            } else
-                value = "";
-
-            formValues.push(value);
-
-        }
-        )
-
-        var name = formValues[0];
-        var nameObj = ayanoglu.utility.formatName(name);
-        formValues[0] = nameObj.fullName;
-        formValues[1] = nameObj.firstName;
-        formValues[2] = nameObj.midName;
-        formValues[3] = nameObj.familyName;
-
-        var phone = formValues[32]
-        var wPhone = phone.replace(/[^\d]/g, '');
-        if (!/^9\d+/.test(wPhone))
-            wPhone = '9' + wPhone;
-        formValues[47] = 'Whatsapp';
-        formValues[48] = 'https://wa.me/' + wPhone;
-
-        var values = formValues.map((item)=>{
-            return '"' + item + '"';
-        }
-        );
-
-        var output = values.join(',');
-
-        return output;
-    }
-
-    let saveAsCSV = ()=>{
-
-        var output = getCSVText();
-
-        ayanoglu.utility.download("contacts-" + getFileNameStamp() + ".csv", output);
-        csvStack = [];
-    }
-    ;
-
-    let addToStack = ()=>{
-        buildContactText();
-    }
-
-    let resetStack = ()=>{
-        csvStack = [];
-    }
-
-    /*
-    dlg.button('Ekle', addToStack    );
-    dlg.button('Temizle', resetStack    );
-    dlg.button('Kayıtlar', showCSV    );
-    dlg.button('Kaydet', saveAsCSV    );
-*/
-    var obj = {
-        getCsv: buildContactText
-    };
-
-    return obj;
-}
-
-ayanoglu.ui.contactForm = contactForm;
 
 let parseContactInfo = function() {
     return new Promise((resolve,reject)=>{
@@ -467,147 +287,8 @@ if (typeof window.contacts === 'undefined')
 
 let buildContactCSV =ayanoglu.google.buildContactCSV;
 let parseContactCSV =ayanoglu.google.parseContactCSV;
-
-let contactListDialog=function(title,handleClicks){
-	  var dlg = ayanoglu.ui.dialog();
-	    dlg.title = title?title:'Kişiler'
-	    dlg.control.style.height = '100%';
-	    
-	    var textBox = _$('textarea').cls('list').addTo(dlg.container);
-
-	    var label = _$('div').cls('pop-label').addTo(dlg.container);
-	    
-	    let saveAsCSV = ()=>{
-
-	        var output = getCSVText();
-
-	        ayanoglu.utility.download("contacts-" + getFileNameStamp() + ".csv", output);
-	        csvStack = [];
-	        window.contacts = [];
-	        textBox.value='';
-	    }
-	 
-
-	    let resetStack = ()=>{
-	        csvStack = [];
-	        window.contacts = [];
-	        textBox.value='';
-	    }
-
-	    dlg.button('Kaydet', saveAsCSV    );
-	    dlg.button('Temizle', resetStack    );
-	   
-	    
-	    var labelTmo;
-	    
-	    let editContact = (e)=>{
-	        console.log(e.type);
-
-	        var sel = window.getSelection();
-	        var text = textBox.value;
-	        var lines = text.split('\n');
-	        var sPos = textBox.selectionStart;
-	        var counter = 0;
-	        var line = false;
-	        var lineNum = 0;
-	        for (var i = 0; i < lines.length; i++) {
-	            if (sPos >= counter && sPos < counter + lines[i].length) {
-	                line = lines[i];
-	                lineNum = i;
-	                break;
-	            }
-	            counter += lines[i].length + 1;
-
-	        }
-
-	        if (line && lineNum>0) {
-	            if (e.type === 'dblclick') {
-	 
-	                console.clear();
-	                console.log(line);
-	                var contact = parseContactCSV(line);
-	                console.dir(contact); 
-
-
-	                
-	                var contactDlg = ayanoglu.ui.dialog();
-	                contactDlg.control.style.height = '100%'
-	                contactDlg.title = contact.name;
-	                var frm = ayanoglu.ui.contactForm(contactDlg, contactDlg.container, contact);
-
-	                contactDlg.button('Kaydet', ()=>{ 
-	                    var csv = frm.getCsv();
-	                    lines[lineNum] = csv;
-	                    textBox.value = lines.join('\n');
-
-	                    contactDlg.close();
-	                    contactDlg = undefined;
-	                    frm = undefined;
-
-	                }
-	                )
-	                ;
-	                return;
-	            }
-	            textBox.selectionStart = counter;
-	            textBox.selectionEnd = sPos;
-
-	            var fields = document.getSelection().toString().split(',');
-	            var gHeaders = ayanoglu.google.parseContactCSVFields();
-	            textBox.selectionStart = sPos;
-	            var headers = gHeaders.array;
-
-	            var title = headers[fields.length - 1];
-
-	            label.textContent = title;
-	            label.style.display = 'flex';
-	            label.style.left = e.clientX + 'px';
-	            label.style.top = e.clientY + 'px';
-	            clearTimeout(labelTmo);
-	            labelTmo = setTimeout(()=>{
-	                label.style.display = 'none';
-	            }
-	            , 5000)
-
-	        }
-
-	    }
-	    
-
-let updateCSVItems=(e)=>{
-	var text=e.target.value;
-	
-	var lines=text.split('\n');
-	lines.shift();
-	csvStack=lines;
-}
-
- textBox.addEventListener('change', updateCSVItems);
-
-
-if(handleClicks!==false){
-    textBox.addEventListener('dblclick', editContact);
-    textBox.addEventListener('mouseup', editContact);
-	
-}
-	    dlg.writeText=function(text){
-	    	textBox.value=text;
-	    }
-dlg.clearText=function(){
-	textBox.value='';
-	    }
-Object.defineProperty(dlg, 'text', {
-    get: function() {
-        return textBox.value;
-    },
-    set: function(v) {textBox.value=v;},
-
-    configurable: false,
-    enumerable: true
-})
-return dlg;
-}
-
+let getCSVText=ayanoglu.ui.getCSVText;
+let contactListDialog= ayanoglu.ui.contactListDialog ;
 var panelControl;
 let collectWupGroupMembers = function() {
 

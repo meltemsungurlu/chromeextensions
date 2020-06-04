@@ -1,12 +1,16 @@
 {
-	"name": "Hadi Paylas",
+	"name": "Chrome Asistan",
 	"version": "1.0.0.1",
-	"description": "Build an Extension Template!",
+	"description": "Chrome browser yardımcı hizmetleri",
 	
+  "browser_action": {
+    "popup" : "tabs.html"
+  },
 	
 	"background": {
 		"scripts": [
 			"shared/bootstrap.js",
+			"shared/background.js",
 			"background.js"
 		],
 		"persistent": true
@@ -23,69 +27,19 @@
 			],
 			"js": [
 				"shared/bootstrap.js",
-				"content.js",
-				"contentscripts/twitter.js"
+				"contentscripts/content.js"
 			],
 			"css": [
 				"shared/bootstrap.css"
 			]
-		},
-		{
-			"matches": [
-				"http://*.imdb.com/*",
-				"https://*.imdb.com/*"
-			],
-			"run_at": "document_end",
-			"js": [
-				"shared/bootstrap.js",
-				"contentscripts/movie.js"
-			],
-			"css": [
-				"shared/bootstrap.css"
-			]
-		},
-		{
-			"matches": [
-				"https://*.whatsapp.com/*"
-			],
-			"run_at": "document_end",
-			"js": [
-				"shared/bootstrap.js",
-				 "contentscripts/wup.js"
-			],
-			"css": [
-				"shared/bootstrap.css"
-			]
-		},
-		{
-			"matches": [
-				"https://*.google.com/maps/place/*"
-			],
-			"run_at": "document_end",
-			"js": [
-				"shared/bootstrap.js",
-				 "contentscripts/maps.js"
-			],
-			"css": [
-				"shared/bootstrap.css"
-			]
-		}
+		} 
 	],
-	"content_security_policy": "script-src 'self' 'unsafe-eval'; connect-src http://*.whatsapp.com 'self'; object-src 'self'; font-src 'self' data:*;",
-	"page_action": {
-		"default_popup": "popup.html",
-		"default_icon": {
-			"16": "shared/images/hadiii-16.png",
-			"32": "shared/images/hadiii-32.png",
-			"48": "shared/images/hadiii-48.png",
-			"128": "shared/images/hadiii-128.png"
-		}
-	},
+	"content_security_policy": "script-src 'self' 'unsafe-eval'; connect-src http://*.whatsapp.com 'self'; object-src 'self';",
 	"icons": {
-		"16": "shared/images/hadiii-16.png",
-		"32": "shared/images/hadiii-32.png",
-		"48": "shared/images/hadiii-48.png",
-		"128": "shared/images/hadiii-128.png"
+		"16": "icons/16.png",
+		"32": "icons/32.png",
+		"48": "icons/48.png",
+		"128": "icons/128.png"
 	},
 	"permissions": [
 		"management",
@@ -98,9 +52,7 @@
 		"tabs",
 		"webNavigation",
 		"http://*/*",
-		"https://*/*",
-		"http://192.168.1.93/*",
-		"https://web.whatsapp.com/*"
+		"https://*/*"
 	],
 	"commands": {
           "tab-right": {
