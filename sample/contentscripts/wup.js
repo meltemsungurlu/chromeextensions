@@ -1,3 +1,5 @@
+var popData=["*Randevu almak için:*   \n\n    90 850 473 77 77","9:00 - 18:00 arası çalışıyorum","Allah ü Teala razı olsun","Allah ü Teala razı olsun abicim","Allah ü Teala Razı olsun abicim.\nBilmukabele biz de Mübarek Ramazan Bayramı'nızı tebrik ederiz. \n\nAllah ü Teala daha nice bayramlara eriştirsin.","Allah ü Teala Razı olsun kardeşim.\n\nBilmukabele biz de Mübarek Ramazan Bayramı'nızı tebrik ederiz tebrik ederiz.\n\nAllah ü Teala daha nice bayramlara eriştirsin.","Allah ü Teala razı olsun.\nBilmukabele biz de Mübarek Ramazan Bayramı'nızı tebrik ederiz tebrik ederiz.\n\nAllah ü Teala daha nice bayramlara eriştirsin.","Amin efendim...","bit.ly/kbb-burun","Bu iyiye işaret","Çok şükür iyiyiz, yaramazlık yok","Cuma gününüz mübarek olsun","Cuma gününüz mübarek olsun efendim...","Eczanelerden reçetesiz alabilirsiniz.","Estağfurullah abicim","Estağfurullah...","Geçmiş olsun ","Hayırlı akşamlar efendim... 😊","Hayırlı Ramazanlar ","http://bit.ly/cayanoglu\n","https://www.instagram.com/drcuneytayanoglu/\n","İstediğiniz  zaman yazmakla rahat olun ","İyi geceler efendim... 😊","İyi günler efendim, görüşmek üzere 😊","Merhaba","Merhaba , nasılsınız ?","Rahatsızlık sebebi ile 3. Haziran Çarşamba gününe kadar raporluyum. \nBu tarihten sonra görüşebiliriz.","Ramazan Bayram'ınızı tebrik eder, sağlık ve huzurlu günler dilerim.","Rica ederim 😊","Selamün Aleyküm","Siz nasılsınız ?","Tabi abicim buyrun 😊","Teşekkür ederim siz nasılsınız ?","Teşekkür ederim,\nSizin de Ramazan Bayram'ınızı tebrik eder, sağlık ve huzurlu günler dilerim.","Teşekkürler 😊","Ve Aleyküm Selam"];
+
 var d = document;
 let onLoad= ()=>{
 
@@ -61,15 +63,7 @@ var link = ayanoglu.wup.makeWinShortcut(phone, 'New');
 addEventListener('load', onLoad)
 
 window.csvStack = [];
-let getCSVText=function(){
-	 var gHeaders = ayanoglu.google.parseContactCSVFields();
-	  var headersStr = gHeaders.string;
-	  
-       var ta = Array.prototype.slice.call(csvStack);
-     ta.unshift(headersStr)
 
-     return ta.join('\n');
-}
 let parseMemberInfo = function() {
 
     parseContactInfo().then((contact)=>{

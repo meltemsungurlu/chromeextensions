@@ -5281,7 +5281,9 @@ ___dom();
     wupLib.workers = Object.create(null)
     let sendMessage = function(message) {
         var find = ayanoglu.DOM.findElement;
-        find('#main > footer > div._3pkkz.V42si.copyable-area > div._1Plpp > div > div._2S1VP.copyable-text.selectable-text', 'textArea').then((element)=>{
+        var msgBoxSelector='#main > footer > div._3pkkz.V42si.copyable-area > div._1Plpp > div > div._2S1VP.copyable-text.selectable-text';
+        msgBoxSelector='#main > footer > div._3ee1T._1LkpH.copyable-area > div._3uMse > div > div.copyable-text.selectable-text';
+        find(msgBoxSelector, 'textArea').then((element)=>{
 
             element.innerHTML = message;
 
