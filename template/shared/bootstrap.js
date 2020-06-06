@@ -503,6 +503,10 @@ function ___dom() {
             return e;
         }
     }
+
+    _$.prototype.div=function(s,a){
+        return _$('div',s,a);
+    }
     /**
          * Initializes DOMElement
          *
@@ -6823,87 +6827,9 @@ return dlg;
         let _$ = ayanoglu.DOM._$;
         var sId = 'selector-pop';
 
-        ayanoglu.DOM.style(`
-
-#${sId} {
-
-position:fixed;
-top:0px;
-left:0px;
-z-index:1000000;
-background-color:rgb(255, 226, 201);
-border-radius:5px; 
-display:flex;
-flex-direction:column;    
-transform-origin: 0 0 ;
-transform : scale(0);
-opacity:0;
-transition: transform 0.5s;
-transition: opacity 0.9s;
-height:600px;
-width:400px;
-}
-#selector-pop * {
-     font-size:14px;
-}
-
-#${sId}[class='pop'] {    
-transform : scale(1);
-opacity:1;
-
-}
-
-#${sId} > div.new {  
-background-color:rgba(0, 0, 0, 0.15);
-  display: flex;
-   flex-direction: row;
-   justify-content: space-between;
-}
-
-
-#selector-pop > div.new > div ,
-#selector-pop > div.list > div {
-    padding:11px;
-    cursor: pointer;
-    line-height:19px;
-}
- 
-
-
-#${sId} > div.list {   
-display:flex;
-flex-direction:column;  
-    overflow-y:auto;
-    flex-grow:2;
-}
-#${sId} > div.list > div {
-    font-size: 14px;
-    font-family: sans-serif;
-    cursor: pointer;
-    border-top: 1px solid #0000001c;
-    display:flex;
-     justify-content: space-between;
-     align-items: center;
-
-}
-
-
-#${sId} > div.new > div { 
- padding: 12px; 
-}
-
-#${sId} > div > div.t { 
-    padding: 12px;
-}
-#${sId} > div > div.icon-edit {
- margin-left:8px;
- margin-right:8px;
-}
-
-        `);
         var selectedText,listRow;
         var selPop = document.getElementById(sId);
-        if (selPop && reset === true) {
+        if (selPop && reset !== true) {
             document.body.removeChild(selPop);
             selPop = undefined;
         }
@@ -6914,16 +6840,22 @@ flex-direction:column;
                 if (!values)
                     values = [];
                 var dlg = new ayanoglu.ui.dialog();
+              
                 dlg.title = 'Replies';
+                dlg.control.style.height='-webkit-fill-available';
                 var frm = _$('div').cls('ayanoglu').addTo(dlg.container);
 
                 let addEditor = (value,i)=>{
+                    var valueObj=typeof value==='object'?value:{text:value};
+                    value=valueObj.text;
+                   
                     var row = _$('div').css('margin-bottom:10px;').addTo(frm);
                     var inputCell = _$('div').css(`display: flex;align-items: center;justify-content: space-between;`).addTo(row);
                     var valueElement = _$('textarea').css('min-height:70px;width: -webkit-fill-available;').addTo(inputCell);
-                    var delBtn = _$('div').att('title', (i === -1) ? 'Ekle' : 'Sil').css(`margin-left: 10px;`).cls(i === -1 ? 'icon-plus' : 'icon-eraser').addTo(inputCell);
+                    var toolBox=_$('div').cls('').addTo(inputCell);
+                    var delBtn = _$('div').att('title', (i === -1) ? 'Ekle' : 'Sil').css(`margin-left: 10px;`).cls(i === -1 ? 'icon-plus' : 'icon-eraser').addTo(toolBox);
 
-                    valueElement.value = value ? value : '';
+                    valueElement.value = value!=false ? value : '';
 
                     valueElement.addEventListener('change', (e)=>{
                         if (i === -1)
@@ -6985,6 +6917,7 @@ flex-direction:column;
                     mnuData.style.display='none';
 
                     var bulkRow=dlg.container.querySelector('div#bulk-editor');
+
                     if(!bulkRow){
                          bulkRow = _$('div').att('id','bulk-editor').css('margin-bottom:20px;');
                         dlg.container.insertBefore(bulkRow, frm);
@@ -6997,27 +6930,28 @@ flex-direction:column;
                            
                             var rawValue=txtElement.value;
                             var changedValues=JSON.parse(rawValue)
-if(typeof changedValues==='object' && typeof changedValues.push==='function' ){
-    values=changedValues;
-       var data = {};
-                        data[storageKey] = values;
 
-                        chrome.storage.sync.set(data, ()=>{
-                            loadMenu(true);
-                            frm.style.display = 'unset';
-                            mnuData.style.display = 'unset';
-                             dlg.container.removeChild(bulkRow);
-                            frm.innerText = '';
-                            addEditor(false, -1);
-                            values.forEach(addEditor);
+                                if(typeof changedValues==='object' && typeof changedValues.push==='function' ){
+                                    values=changedValues;
+                                       var data = {};
+                                                        data[storageKey] = values;
 
-                        }
-                        );
-}
-else
-{
-    alert('Invalid list format!!!');
-}
+                                                        chrome.storage.sync.set(data, ()=>{
+                                                            loadMenu(true);
+                                                            frm.style.display = 'unset';
+                                                            mnuData.style.display = 'unset';
+                                                             dlg.container.removeChild(bulkRow);
+                                                            frm.innerText = '';
+                                                            addEditor(false, -1);
+                                                            values.forEach(addEditor);
+
+                                                        }
+                                                        );
+                                }
+                                else
+                                {
+                                    alert('Invalid list format!!!');
+                                }
 
 
                            
@@ -7039,7 +6973,9 @@ else
                         txtElement.addEventListener('change', (e)=>{
                             saveBtn.disabled = false;
                         }
-                        ) 
+                        );
+
+
                     }
                     
 
@@ -7084,13 +7020,102 @@ else
         }
 
         if (!selPop) {
+
+        ayanoglu.DOM.style(`
+
+#${sId} {
+
+position:fixed;
+top:0px;
+left:0px;
+z-index:1000000;
+background-color:rgb(255, 226, 201);
+border-radius:5px; 
+display:flex;
+flex-direction:column;    
+transform-origin: 0 0 ;
+transform : scale(0);
+opacity:0;
+transition: transform 0.5s;
+transition: opacity 0.9s;
+height:600px;
+width:400px;
+}
+#selector-pop * {
+     font-size:14px;
+}
+
+#${sId}[class='pop'] {    
+transform : scale(1);
+opacity:1;
+
+}
+
+#${sId} > div.new {  
+background-color:rgba(0, 0, 0, 0.15);
+  display: flex;
+   flex-direction: row;
+   justify-content: space-between;
+}
+
+
+#selector-pop > div.new > div ,
+#selector-pop > div.list > div {
+    padding:11px;
+    cursor: pointer;
+    line-height:19px;
+}
+ 
+#selector-pop > div.new > input[type=text] {
+   margin: 6px;
+    border-radius: 4px;
+    background-color: #ffffffc2;
+    border: 0px;    
+    flex-grow: 2;    
+    outline: none;
+}
+
+#${sId} > div.list {   
+display:flex;
+flex-direction:column;  
+    overflow-y:auto;
+    flex-grow:2;
+}
+#${sId} > div.list > div {
+    font-size: 14px;
+    font-family: sans-serif;
+    cursor: pointer;
+    border-top: 1px solid #0000001c;
+    display:flex;
+     justify-content: space-between;
+     align-items: center;
+
+}
+
+
+#${sId} > div.new > div { 
+ padding: 12px; 
+}
+
+#${sId} > div > div.t { 
+    padding: 12px;
+}
+#${sId} > div > div.icon-edit {
+ margin-left:8px;
+ margin-right:8px;
+}
+
+        `);
             selPop = _$('div').atts({
                 id: sId
             }).addTo(document.body);
             var storageKey = 'wup-message-replies';
             var editRow = _$('div').cls('new').addTo(selPop);
              var listRow = _$('div').cls('list').addTo(selPop);
+             
             var addBtn = _$('div').text('Seçimi Ekle').addTo(editRow);
+
+            var searchBox=_$('input').att('type','text').addTo(editRow);
 
             var editBtn = _$('div').text('Düzenle').addTo(editRow);
 
@@ -7122,6 +7147,13 @@ else
                 openEditor()
             }
             );
+
+             searchBox.addEventListener('mouseup', (e)=>{
+        	e.stopPropagation()
+        });
+        searchBox.addEventListener('keydown', (e)=>{
+        	e.stopPropagation()
+        });
 
             loadMenu();
 
