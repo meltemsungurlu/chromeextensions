@@ -212,6 +212,7 @@ let parseContactInfo = function() {
 
             var saved = false, name, phone;
             var numSelector = '#app > div > div > div.YD4Yw > div._1-iDe._14VS3 > span > div > span > div > div > div._2vsnU > div._1CRb5._34vig._3XgGT > span > span';
+          numSelector='#app > div > div > div.YD4Yw > div._1-iDe._14VS3 > span > div > span > div > div > div.Mr-fu > div._2Bps4._1mTqm._1pDAt > span > span';
             find(numSelector, 'Phone').then((numElement)=>{
                 // console.log(numElement.textContent);
 

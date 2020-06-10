@@ -5430,7 +5430,7 @@ ___dom();
 
         return new Promise((resolve,reject)=>{
 
-            var selector = '#main > header > div._5SiUq';
+            var selector = '#main > header > div:first-child';
             var name = 'Header';
 
             var element = document.querySelector(selector)
@@ -7290,6 +7290,7 @@ flex-direction:column;
 
             } else {
                 reject();
+                console.trace('findElement');
                 console.error(`"${name}" not found`);
             }
         }
