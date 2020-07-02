@@ -1,5 +1,15 @@
 //https://tureng.com/en/turkish-english/brew
 
+var d=document,b=d.body;
+ 
+b.addEventListener('dblclick',(e)=>{
+    if(e.altKey && e.ctrlKey && e.shiftKey){
+             e.stopPropagation();
+    b.style.opacity=b.style.opacity=='0.01'?'1':'0.01';
+    }
+  
+})
+
 
 utility.addMenuItems([{
     'id': 'translate-selection',
