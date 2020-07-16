@@ -1,15 +1,27 @@
 //https://tureng.com/en/turkish-english/brew
 
 var d=document,b=d.body;
- 
+let locked=()=>{
+	return b.style.opacity=='0.01';
+}
+ let lockScreen=(e)=>{
+	        if(e && e.stopPropagation) e.stopPropagation();
+
+	     
+        b.style.opacity=e===true?'0.01':(e===false?'1' :( locked()  ?'1':'0.01'));
+        
+      if(e!==true)  setCookie('screen-lock',locked() ?"1":"0",10);
+
+
+}
 b.addEventListener('dblclick',(e)=>{
     if(e.altKey && e.ctrlKey && e.shiftKey){
-             e.stopPropagation();
-    b.style.opacity=b.style.opacity=='0.01'?'1':'0.01';
+    lockScreen(e);
     }
   
 })
-
+  
+ lockScreen(getCookie('screen-lock')=="1");
 
 utility.addMenuItems([{
     'id': 'translate-selection',
