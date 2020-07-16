@@ -205,6 +205,8 @@ ayanoglu.ui.selectionPop((text)=>{
 
 
 let parseContactInfo = function() {
+      var nameSelector ='#app > div > div > div.YD4Yw > div._1-iDe._14VS3 > span > div > span > div > div > div.Mr-fu > div._2Bps4._1mTqm._1pDAt > div:nth-child(3) > span > span'
+                   
     return new Promise((resolve,reject)=>{
     	
         ayanoglu.wup.openChatPanel().then((element)=>{
@@ -241,8 +243,7 @@ let parseContactInfo = function() {
                     )
 
                 } else {
-                    var nameSelector = '#app > div > div > div.YD4Yw > div._1-iDe._14VS3 > span > div > span > div > div > div._2vsnU > div._1CRb5._34vig._3XgGT > div:nth-child(3) > span > span';
-                    find(nameSelector, 'Name').then((nameElement)=>{
+                   find(nameSelector, 'Name').then((nameElement)=>{
                         //  console.log(nameElement.textContent);
                         name = nameElement.textContent
                         resolve({
