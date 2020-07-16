@@ -93,7 +93,9 @@ let parseMemberInfo = function() {
             }
             var nameElement = addField('Etiket', 'label', false, -1, contact.name);
             var txtElement = addField('Etiket', 'text', 'textarea', -1);
-
+txtElement.addEventListener('change',(e)=>{
+  ayanoglu.utility.copy(txtElement.value);  
+});
             dlg.button('Oluştur', ()=>{
                 var link = ayanoglu.wup.makeWinShortcut(contact.phone1Value, nameElement.value);
                 txtElement.value = link;
@@ -114,7 +116,7 @@ let parseMemberInfo = function() {
                 var nContact=parseContactCSV(line);
                 
                 csvStack.some((csvLine)=>{
-                	var tContact=parseContactCSV(line);
+                	var tContact=parseContactCSV(csvLine);
                 	if(nContact.phone1Value===tContact.phone1Value) {
                 		exists=true;
                 		return true;
@@ -223,8 +225,8 @@ let parseContactInfo = function() {
                 if (!/[\d]{10,}/.test(num)) {
                     // saved
                     name = phone;
-                    numSelector = '#app > div > div > div.YD4Yw > div._1-iDe._14VS3 > span > div > span > div > div > div._2vsnU > div:nth-child(4) > div:nth-child(3) > div > div > span > span'
-
+                    console.log('Name found',name);
+                    numSelector='#app > div > div > div.YD4Yw > div._1-iDe._14VS3 > span > div > span > div > div > div.Mr-fu > div:nth-child(4) > div:nth-child(3) > div > div > span > span'
                     find(numSelector, 'Phone').then((phoneElement)=>{
                         //  console.log(nameElement.textContent);
                         var phone = phoneElement.textContent

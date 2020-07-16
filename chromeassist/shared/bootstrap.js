@@ -5306,10 +5306,15 @@ ___dom();
 
       wupLib.makeWinShortcut = function(phone, name) {
          var wPhone = phone.replace(/[^\d]/g, '');
-       if (/^[\d]{10}$/.test(wPhone))
+          if (/^[\d]{11,}$/.test(wPhone));
+          else{
+              if (/^[\d]{,10}$/.test(wPhone))
             wPhone = '90' + wPhone;
         if (!/^9\d+/.test(wPhone))
-            wPhone = '9' + wPhone;
+            wPhone = '9' + wPhone;  
+          }
+            
+     
         var link = 'api.whatsapp.com/send?phone=' + wPhone;
         if (name)
             link = '*' + name + '* ' + link;
