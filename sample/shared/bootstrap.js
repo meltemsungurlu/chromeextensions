@@ -5466,9 +5466,11 @@ ___dom();
             var paneSelector = '#pane-side';
             var contacts = [];
             var groups = [];
-
-             var nameSelector = 'div > div > div._3j7s9 > div._1AwDx > div._3Bxar > span._1qP8m > span';
-            var phoneSelector = 'div > div > div._3j7s9 > div._2FBdJ > div._25Ooe > span > span';
+//div._1TM40 > div:nth-child(5) > div:nth-child(2) > div > div:nth-child(18) > div > div > div._2kHpK > div._1582E > div.m61XR > span._1_1Jb > span
+             var nameSelector =':scope span[class="_3Whw5"]';// 'div > div > div > div > div > div > div._2kHpK > div._1582E > div.m61XR > span._1_1Jb > span';
+            
+//div._1TM40 > div:nth-child(5) > div:nth-child(2) > div > div:nth-child(1) > div > div > div._2kHpK > div._3dtfX > div > span > span
+            var phoneSelector = ':scope span[class="_3ko75 _5h6Y_ _3Whw5"]'; // 'div > div > div > div > div > div > div._2kHpK > div._3dtfX > div > span > span';
 
             openChatPanel().then(()=>{
 
@@ -5476,9 +5478,11 @@ ___dom();
                 var selector = '#app > div > div > div.YD4Yw > div._1-iDe._14VS3 > span > div > span > div > div';
 
                 ayanoglu.DOM.findElement(selector, name).then((infoPanelElement)=>{
+                  
                    
                     let continueAfterExpander = ()=>{
-                        var itemSelector = 'div.AfVTG > div  > div  > div > div._2wP_Y';
+// div._1TM40 > div:nth-child(5) > div:nth-child(2) > div > div:nth-child(2)
+                       var itemSelector = 'div._1TM40 > div  > div  > div > div._210SC';
                         var i = 0;
                         console.clear();
 console.groupCollapsed('Collecting members...');
@@ -5529,8 +5533,9 @@ console.groupEnd();
 
                         setTimeout(scroller, 1)
                     }
-
-                    var expanderSelector = 'div.AfVTG > div  > div._2EXPL._3xj48';
+//#app > div > div > div.YD4Yw > div._1-iDe._14VS3 > span > div > span > div > div > div._1TM40 > div:nth-child(5) > div.eJ0yJ._1Mq-e
+//#app > div > div > div.YD4Yw > div._1-iDe._14VS3 > span > div > span > div > div > div._1TM40 > div:nth-child(5) > div.eJ0yJ._1Mq-e
+                    var expanderSelector = 'div._1TM40 > div  > div.eJ0yJ._1Mq-e';
 
                     var exps = Array.prototype.slice.call(infoPanelElement.querySelectorAll(expanderSelector));
 
@@ -5837,7 +5842,8 @@ var isGroup=false;
                 value: "work"
             },
             "40": {
-                options: ['Reyaphasta', 'Kolanhasta', 'Verahasta']
+               // options: ['Reyaphasta', 'Kolanhasta', 'Verahasta']
+               value:''
             },
         }
         var sumMap = '0,8,25,28,31,32,39,40,42,43,47,48';
@@ -5984,8 +5990,10 @@ var isGroup=false;
     	    let saveAsCSV = ()=>{
 
     	        var output = getCSVText();
+var prefix=prompt('Dosya adı','contacts');
+if(prefix.length===0) prefix='contacts';
 
-    	        ayanoglu.utility.download("contacts-" + getFileNameStamp() + ".csv", output);
+    	        ayanoglu.utility.download(prefix + "-" + getFileNameStamp() + ".csv", output);
     	        csvStack = [];
     	        window.contacts = [];
     	        textBox.value='';
