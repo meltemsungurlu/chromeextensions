@@ -5559,7 +5559,7 @@ console.groupEnd();
 
     wupLib.workers.collectGroupMembers = collectGroupMembers;
     let iterateUsers = function(callBack) {
-
+console.log('iterating Users');
         var unique = [];
 
         console.clear();
@@ -5571,7 +5571,9 @@ console.groupEnd();
         var unReadSelector = 'div > div > div._3j7s9 > div._1AwDx > div._3Bxar > span:nth-child(1) > div > span';
         //unReadSelector = 'div > div > div._3j7s9 > div._1AwDx > div._3Bxar > span:nth-child(1) > div:nth-child(2) > span.OUeyt';
        
+       //div > div > div._2kHpK > div._3dtfX > div._3CneP > span > span
         var nameSelector = 'div > div > div._3j7s9 > div._2FBdJ > div._25Ooe > span > span';
+        nameSelector = ':scope > div > div > div:nth-child(2) > div > div > span';
 
         var groupNameSelector = 'div > div > div._3j7s9 > div._2FBdJ > div._25Ooe > div > span'
 
@@ -5593,13 +5595,10 @@ console.groupEnd();
                     var name = false;
                     var phone = false;
                     var unread = false;
-var isGroup=false;
+                    var isGroup=false;
                     if (nameElement) {
 
-                        name = nameElement.textContent;
-                       
-
-                       
+                        name = nameElement.textContent; 
 
                     } else if (groupElement = item.querySelector(groupNameSelector)) {
                         name = groupElement.textContent;
@@ -5612,6 +5611,7 @@ var isGroup=false;
                          if (unique.indexOf(name) !== -1)
                             return false;
 
+            ayanoglu.DOM.simulateMouseEvents(item, 'click');
                         unique.push(name);
 
                         if (/\+\d+\s+[\d]{3}\s+[\d]{3}\s+[\d]{2}\s+[\d]{2}/ig.test(name)) {
