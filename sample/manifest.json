@@ -32,6 +32,20 @@
 		},
 		{
 			"matches": [
+				"http://*.youtube.com/*",
+				"https://*.youtube.com/*"
+			],
+			"run_at": "document_end",
+			"js": [
+				"shared/bootstrap.js",
+				"contentscripts/ytb.js"
+			],
+			"css": [
+				"shared/bootstrap.css"
+			]
+		},
+		{
+			"matches": [
 				"http://*.imdb.com/*",
 				"https://*.imdb.com/*"
 			],

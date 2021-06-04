@@ -2,11 +2,9 @@
 	"name": "Chrome Asistan",
 	"version": "1.0.0.1",
 	"description": "Chrome browser yardımcı hizmetleri",
-	
-  "browser_action": {
-    "popup" : "tabs.html"
-  },
-	
+	"browser_action": {
+		"popup": "tabs.html"
+	},
 	"background": {
 		"scripts": [
 			"shared/bootstrap.js",
@@ -32,7 +30,7 @@
 			"css": [
 				"shared/bootstrap.css"
 			]
-		} 
+		}
 	],
 	"content_security_policy": "script-src 'self' 'unsafe-eval'; connect-src http://*.whatsapp.com 'self'; object-src 'self';",
 	"icons": {
@@ -52,39 +50,40 @@
 		"tabs",
 		"webNavigation",
 		"http://*/*",
-		"https://*/*"
+		"https://*/*",
+		"bookmarks"
 	],
 	"commands": {
-          "tab-right": {
-            "suggested_key": {
-              "default": "Ctrl+Shift+L",
-              "mac": "Command+Shift+L"
-            },
-            "description": "Toggle feature foo"
-          },
-          "tab-left": {
-            "suggested_key": {
-              "default": "Ctrl+Shift+K",
-              "mac": "Command+Shift+K"
-            },
-            "description": "Toggle feature foo"
-          },
-          "_execute_browser_action": {
-            "suggested_key": {
-              "windows": "Ctrl+Shift+Right",
-              "mac": "Command+Shift+Y",
-              "chromeos": "Ctrl+Shift+U",
-              "linux": "Ctrl+Shift+J"
-            }
-          },
-          "_execute_page_action": {
-            "suggested_key": {
-              "default": "Ctrl+Shift+E",
-              "windows": "Alt+Shift+P",
-              "mac": "Alt+Shift+P"
-            }
-          }
-        },
+		"tab-right": {
+			"suggested_key": {
+				"default": "Ctrl+Shift+L",
+				"mac": "Command+Shift+L"
+			},
+			"description": "Toggle feature foo"
+		},
+		"tab-left": {
+			"suggested_key": {
+				"default": "Ctrl+Shift+K",
+				"mac": "Command+Shift+K"
+			},
+			"description": "Toggle feature foo"
+		},
+		"_execute_browser_action": {
+			"suggested_key": {
+				"windows": "Ctrl+Shift+Right",
+				"mac": "Command+Shift+Y",
+				"chromeos": "Ctrl+Shift+U",
+				"linux": "Ctrl+Shift+J"
+			}
+		},
+		"_execute_page_action": {
+			"suggested_key": {
+				"default": "Ctrl+Shift+E",
+				"windows": "Alt+Shift+P",
+				"mac": "Alt+Shift+P"
+			}
+		}
+	},
 	"options_page": "options.html",
 	"manifest_version": 2
 }
