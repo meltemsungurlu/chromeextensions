@@ -683,8 +683,9 @@ function collectUnknownNumbers() {
     dlg.control.style.left = 'auto';
     var textElement = _$('textarea').css('margin: 0px; height: 100%; width: -webkit-fill-available;white-space: nowrap;').addTo(dlg.container);
 
-    var stack = [];
 
+    var stack = [];
+var groupIndex=1;
     ayanoglu.wup.workers.iterateUsers((contact)=>{
         if (contact === false) {
 
@@ -694,17 +695,18 @@ function collectUnknownNumbers() {
             var link = ayanoglu.wup.makeWinShortcut(contact.phone);
             if (stack.length % 10 === 0) {
                 textElement.value += '\n\n\n*Group ' + (stack.length / 10) + '*\n\n';
-            }
-            textElement.value += link + '\n';
-            console.log(link);
-            stack.push(link);
+            groupIndex=1;
+            } 
+            textElement.value +=groupIndex + ') ' +  link + '\n\n';
 
+            console.log(groupIndex + ') ' + link);
+            stack.push(link);
+groupIndex++;
         }
     }
     );
 
 }
-
 function getFileNameStamp() {
     var d = new Date()
       , month = '' + (d.getMonth() + 1)
