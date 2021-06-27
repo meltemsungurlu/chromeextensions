@@ -29,6 +29,21 @@
 			"css": [
 				"shared/bootstrap.css"
 			]
+		},	{
+			"matches": [
+				"http://*.hadiii.com/*",
+				"https://*.hadiii.com/*"
+			],
+			"run_at": "document_end",
+			"js": [
+				"shared/bootstrap.js",
+				"shared/ui.js",
+				"contentscripts/pop-editor.js"
+			],
+			"css": [
+				"shared/bootstrap.css",
+				"shared/ui.css"
+			]
 		},
 		{
 			"matches": [
@@ -65,10 +80,12 @@
 			"run_at": "document_end",
 			"js": [
 				"shared/bootstrap.js",
+				 "shared/ui.js",
 				 "contentscripts/wup.js"
 			],
 			"css": [
-				"shared/bootstrap.css"
+				"shared/bootstrap.css",				
+				 "shared/ui.css"
 			]
 		},
 		{

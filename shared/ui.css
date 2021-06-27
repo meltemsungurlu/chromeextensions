@@ -1,0 +1,230 @@
+@charset "UTF-8";
+
+#selector-pop {
+	position: fixed;
+	top: 0px;
+	left: 0px;
+	z-index: 1000000;
+	background-color: rgb(255 255 201/ 1);
+	border-radius: 5px;
+	display: flex;
+	flex-direction: column;
+	transform-origin: 0 0;
+	transform: scale(0);
+	opacity: 0;
+	transition: transform 0.5s;
+	transition: opacity 0.9s;
+	height: 600px;
+	width: 400px;
+}
+
+
+ 
+#selector-pop * {
+ font-size:14px;
+}
+
+#selector-pop[class='pop'] {    
+transform : scale(1);
+opacity:1;
+
+}
+
+ 
+#selector-pop > div.header {
+	background-color: rgb(0 0 0/ 11%);
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: center;
+}
+
+#selector-pop > div.header > i {
+	
+}
+#selector-pop > div.header > i::before {
+    font-size: 19px;
+    margin:0px;
+}
+
+#selector-pop > div.header > :is(input,i) {
+    
+    margin-right:10px
+}
+#selector-pop > div.header > i.faws-close-2::before {
+    font-size: 19px;
+}
+
+#selector-pop > div.toggle {	
+	flex-direction: column;
+	height: 500px;
+	display:none;
+}
+#selector-pop > div.toggle[class~="pop"]{
+		display: flex;
+}
+#selector-pop > div.toggle textarea {
+    width: -webkit-fill-available;
+    height: -webkit-fill-available;
+    padding-right: 23px;
+}
+
+ 
+#selector-pop > div.toggle   {
+    
+    position: relative;
+}
+
+#selector-pop > div.toggle > i {
+    position: absolute;    
+    top: 3px;
+    right: 0px;
+    bottom: 0px;
+}
+
+#selector-pop > div.toggle > i[class~="icon-plus"] {
+    
+    top: auto;
+    bottom: 0px;
+}
+
+#selector-pop > div.toggle > i:before {
+    font-size: 20px;
+    cursor: pointer;
+}
+#selector-pop > .list::-webkit-scrollbar {
+    width: 7px;
+    background-color: rgb(0 0 0 / 0.03);
+} 
+
+#selector-pop > .list::-webkit-scrollbar-thumb {
+     
+    background-color: rgb(0 0 0 / 0.13);
+} 
+#selector-pop > :is(div.header, div.list) > div  {
+padding:7px;
+cursor: pointer; 
+}
+
+ 
+
+#selector-pop > :is(div.header, div.list) > div > div {
+     font-size:13px;
+    line-height: 19px; 
+}
+#selector-pop > div.header > input[type=checkbox]{
+	transform: scale(1.6);
+}
+
+
+#selector-pop > div.header > input[type=text] {
+margin: 6px;
+border-radius: 4px;
+background-color: #ffffffc2;
+border: 0px;    
+flex-grow: 2;    
+outline: none;
+padding:5px;
+}
+
+#selector-pop > div.list {   
+display:flex;
+flex-direction:column;  
+overflow-y:auto;
+flex-grow:2;
+}
+#selector-pop > div.list > div {
+font-size: 14px;
+font-family: sans-serif;
+cursor: pointer;
+border-top: 1px solid #0000001c;
+display:flex;
+ justify-content: space-between;
+ align-items: center;
+
+}
+
+#selector-pop > div.header > div { 
+padding: 12px; 
+}
+
+#selector-pop > div > div.t { 
+padding: 12px;
+}
+#selector-pop > div > div.icon-edit {
+margin-left:8px;
+margin-right:8px;
+}
+
+    
+
+    	#pop-command-win {
+    	position:fixed;
+    	top:50px;
+    	left:450px;
+    	z-index:1000000;
+    	height:30px;
+    	background-color:rgb(255,255,150);
+    	border-radius:5px;
+    	width: 30px;
+        font-size: 24px; 
+        align-items: center;
+    	display:flex;
+    	}
+
+
+    	#pop-command-win > div  {
+    	position:absolute;
+    	left:30px;
+        height: inherit;
+    	background-color:inherit;
+    	display:flex; 
+    	transform-style: flat;
+    	transform-origin: left 0px;
+    	transition: transform transform 0.3s ease-out,opacity 0.5s ease-out;
+    	transform: scale(0,1);
+    	opacity: 0;
+    	}
+#pop-command-win:hover  {
+    		border-radius:5px 0px 0px 5px; 
+    		
+    	} 
+    	#pop-command-win:hover > div {
+    		transform: scale(1,1);
+    		opacity: 1;
+    	} 
+
+    	#pop-command-win > div  > div  
+    	{
+    	    display: flex;
+    	    justify-content: center;
+    	    align-items: center; 
+    	    font-size: 19px;
+    	    width: 30px;
+    	    color: black; 
+           cursor:pointer;
+    	}
+    	#pop-command-win > div  > div:last-child {
+    	        
+    	    border-radius:0px 5px 5px 0px;
+    	}
+
+#pop-command-win > div  > div + div {
+
+    	    border-left: 1px groove rgba(226, 221, 221, 0.25);
+}
+
+
+#pop-command-win:before,
+    	#pop-command-win > div > div:before {
+    		color:inherit; 
+    		font-size: inherit;
+	font-style: normal !important;
+	font-weight: normal !important;
+	box-sizing: border-box;
+	text-rendering: auto;
+	-webkit-font-smoothing: antialiased;
+    		/*content: "\f0c9";*/
+    	}
+
+    	

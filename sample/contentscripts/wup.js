@@ -1,3 +1,4 @@
+//# sourceURL=@chrome-extension-wup.js
 let wupLib = Object.create(null);
 wupLib.workers = Object.create(null);
 
@@ -258,6 +259,7 @@ let collectGroupMembers = function(membersArr) {
 }
 
 wupLib.workers.collectGroupMembers = collectGroupMembers;
+
 let iterateUsers = function(callBack) {
     console.log('iterating Users');
     var unique = [];
@@ -548,6 +550,31 @@ let onLoad = ()=>{
     }
     , 'icon-export');
 
+    pop.add('Collect Cuma Numbers', ()=>{
+        collectUnknownNumbers((contact)=>{
+        	 
+            
+            var el=	contact.element.querySelector('#pane-side > div:nth-child(1) > div > div > div:nth-child(1) > div > div > div.TbtXF > div._1SjZ2 > div._2vfYK > span')
+           if(el){ 
+        	   var srcEl=contact.element.querySelector(':scope *[src^="https://web.whatsapp."]');
+
+        	   if(srcEl){
+        	  var src=srcEl.getAttribute('src');
+        	  var matches=/u=(\d+)%/.exec(src);
+        	  if(matches && matches[1]) {
+        		  contact.phone=matches[1];
+        	  }
+        	  else return false;
+        	   }  else return false;
+        	   var text=el.textContent;
+        	  return text.search(/cuma/i)
+           }
+            
+            return false;
+            });
+    }
+    , 'icon-export');
+    
     pop.add('Show Collection', ()=>{
         var dlg = contactListDialog('Member Collection');
         var output = getCSVText();
@@ -557,11 +584,16 @@ let onLoad = ()=>{
 
     pop.add('New Number', ()=>{
 
+
         var phone = prompt('Telefon Numarası');
 
-        var link = ayanoglu.wup.makeWinShortcut(phone, 'New');
-
-        ayanoglu.utility.copy(link);
+        var link = ayanoglu.wup.makeWinShortcut(phone);
+        
+//905332761903
+        var url='https://' + link;
+        var anchor=_$('a').att('href',url).addTo(document.body); 
+        ca.event.raise('click',{},anchor,true);
+        document.body.removeChild(dv); 
     }
     , 'icon-list');
 
@@ -672,8 +704,10 @@ let parseMemberInfo = function() {
     );
 }
 
-function collectUnknownNumbers() {
-
+function collectUnknownNumbers(filter) {
+if(!filter) filter=(contact)=>{
+	  return (contact.name === false)  ;
+}
     var dlg = ayanoglu.ui.dialog();
 
     dlg.title = 'Unknown Numbers';
@@ -691,7 +725,8 @@ var groupIndex=1;
 
             return;
         }
-        if (contact.name === false) {
+        if(filter(contact)){
+
             var link = ayanoglu.wup.makeWinShortcut(contact.phone);
             if (stack.length % 10 === 0) {
                 textElement.value += '\n\n\n*Group ' + (stack.length / 10) + '*\n\n';
@@ -701,8 +736,9 @@ var groupIndex=1;
 
             console.log(groupIndex + ') ' + link);
             stack.push(link);
-groupIndex++;
+            groupIndex++;
         }
+      
     }
     );
 
@@ -727,11 +763,36 @@ function getFileNameStamp() {
     return [year, month, day, hour, min].join('-');
 }
 
-ayanoglu.ui.selectionPop((text)=>{
+const popPanel=ayanoglu.ui.controls.selectionPop((text)=>{
     console.log(text);
     ayanoglu.wup.workers.sendMessage(text);
 }
 , true);
+
+utility.addMenuItems([
+	{
+		'id':'open-editor',
+		'title' : 'Open Message Panel',
+		'contexts' : [
+			'page'
+			]
+	}
+	]);
+var mousePos;
+document.addEventListener('mouseup', function (e) {
+	  if (e.button == 2) {
+		  mousePos=e;
+	    var p = {clientX: e.clientX, clientY: e.clientY};
+	    var msg = {text: 'example', point: p, from: 'mouseup'};
+	  
+	    chrome.runtime.sendMessage(msg, function(response) {});
+	  }
+	})
+
+utility.addMenuListener( (menu,info,tab)=>{
+	popPanel.show(mousePos); 
+})
+
 
 let parseContactInfo = function() {
     var nameSelector = '#app > div > div > div.YD4Yw > div._1-iDe._14VS3 > span > div > span > div > div > div.Mr-fu > div._2Bps4._1mTqm._1pDAt > div:nth-child(3) > span > span'

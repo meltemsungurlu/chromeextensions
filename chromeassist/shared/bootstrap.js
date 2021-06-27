@@ -1,5 +1,6 @@
+//# sourceURL=@chrome-extension-bootstrap.js
 /* jshint undef: true, unused: true, eqeqeq: true, maxdepth:2 */
-
+console.clear();
 window.empty = function(o) {
     if (!isset(o))
         return true;
@@ -230,7 +231,8 @@ class contentPanel extends baseControl {
     }
 
 }
-
+ 
+ 
 class utility {
     static injectSharedStyle() {
         var target = document.head || document.documentElement;
@@ -345,18 +347,33 @@ class utility {
             console.log(response);
         });
     }
-    /**
-Moko
-*/
+
+   static gPos;
+
     static addMenuListener(callBack) {
         chrome.extension.onMessage.addListener(function(message, sender, callback) {
+        	
             if (message.menuItem) {
-                callBack(message.menuItem, message.info, message.tab);
+            	 console.log('%cMouse Event while callback','color:red;padding:10px;',utility.gPos,gPos);
+                callBack(message.menuItem, message.info, message.tab,utility.gPos,gPos);
             }
 
         });
     }
 }
+
+var gPos=null;
+
+//receiving message
+chrome.extension.onMessage.addListener(function(msg, sender, sendResponse) {
+if (msg.from == 'mouseup') {
+//storing position
+	utility.gPos=gPos=msg.point ;
+
+  console.log('%cMouse Event Listened','color:red;padding:10px;',utility.gPos);
+}
+})
+
 function __cookie() {
 
     /**
@@ -5230,7 +5247,7 @@ window.use = function(ns) {
     var ctx = window;
     for (var i = 0; i < nsArr.length; i++) {
         var n = nsArr[i];
-        if (!ctx.hasOwnProperty(n))
+        if (! Object.hasOwnProperty.call(ctx, n))
             Object.defineProperty(ctx, n, {
                 enumerable: true,
                 configurable: false,
@@ -6544,7 +6561,7 @@ position:fixed;
 top:0px;
 left:0px;
 z-index:1000000;
-background-color:rgb(255, 226, 201);
+background-color: rgb(248 250 199);
 border-radius:5px; 
 display:flex;
 flex-direction:column;    
@@ -6626,6 +6643,7 @@ flex-direction:column;
             }).addTo(document.body);
             var storageKey = 'wup-message-replies';
             var editRow = _$('div').cls('new').addTo(selPop);
+            var toggleRow = _$('div').cls('toggle').addTo(selPop);
              var listRow = _$('div').cls('list').addTo(selPop);
              
             var addBtn = _$('div').text('Seçimi Ekle').addTo(editRow);

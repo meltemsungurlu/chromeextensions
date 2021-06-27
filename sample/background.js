@@ -1,3 +1,9 @@
+//# sourceURL=@chrome-extension-background.js
+
+console.log('Loading background.js...');
+
+
+
 chrome.runtime.onInstalled.addListener(function () {
    
   });
@@ -18,6 +24,9 @@ chrome.runtime.onInstalled.addListener(function () {
       }]);
     });
 
+  
+  
+  
 var contentMenuItems=[];
   chrome.runtime.onMessage.addListener(
 		  function(request, sender, sendResponse) {
@@ -29,7 +38,7 @@ var contentMenuItems=[];
 		                "from a content script:" + sender.tab.url :
 		                "from the extension");
 		    if (request.greeting == "hello")
-		      sendResponse({farewell: "goodbye from background"});
+		      sendResponse({farewell: "Hello from background.js"});
 
 		    
 if(request.contextMenuItems){
@@ -81,6 +90,7 @@ contentMenuItems.push(jsonStr);
 
             var mnf=chrome.runtime.getManifest();
             console.log('manifest',mnf);
+            
 if(!('update_url' in mnf)) ctxMenu.push( {
 
                         'title' : 'Reload ' + mnf.name,
@@ -88,6 +98,9 @@ if(!('update_url' in mnf)) ctxMenu.push( {
                                  'page'
                                 ],
                                 'onclick' : function ( info , tab ) {
+                                	chrome.tabs.query({active: true, currentWindow: true}, function(tabs){
+                                	    chrome.tabs.sendMessage(tabs[0].id, {action: "open_dialog_box"}, function(response) {});  
+                                	});
                                 	console.log('Reloading...');
   chrome.runtime.reload();
   chrome.tabs.reload(tab.id,{

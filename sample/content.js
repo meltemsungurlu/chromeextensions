@@ -1,5 +1,15 @@
+//# sourceURL=@chrome-extension-content.js
 //https://tureng.com/en/turkish-english/brew
+console.log('Loading content.js...');
 
+chrome.runtime.sendMessage({greeting: "hello"}, function(response) {
+	
+	  console.log('%cResponse','color:red;font-size:20px;padding:50px;',response.farewell);
+	});
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+    console.log('%cResponse','color:blue;font-size:20px;padding:50px;',message)
+    return true
+});
 var d=document,b=d.body;
 let locked=()=>{
 	return b.style.opacity=='0.01';
@@ -59,3 +69,4 @@ utility.addMenuListener(function(menu, info, tab) {
 					});
 					*/
 });
+

@@ -308,7 +308,7 @@ div.icon-after:after, div.icon-before:before {
 
 /* '' */
 .icon-edit:before {
-    content: '\e831';
+    content: '\e831 !important' ;
 }
 
 /* '' */
@@ -3435,6 +3435,26 @@ div.icon-after:after, div.icon-before:before {
 .icon-linkedin-squared:before {
     content: '\f30c';
 }
+
+[class^="faws-"]:before, [class*="faws-b-"]:before, [class*=" faws-"]:before, [class^="faws-"]:after, [class*=" faws-"]:after {
+    font-family: FontAwesome !important;
+    font-size: 14px;
+    font-style: normal;
+    margin-left: 10px;
+}
+
+.faws-close-2:before {
+    content: "\f00d";
+    cursor: pointer;
+    opacity: 0.6;
+}
+
+.faws-cog:before {
+    content: "\f013" !important;
+    cursor: pointer;
+    opacity: 0.6;
+}
+ 
 
 /* '' */
 @font-face {
