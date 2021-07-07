@@ -1,60 +1,39 @@
 <!DOCTYPE html>
-  <html>
-    <head>
-      <style>
-        button {
-          height: 30px;
-          width: 30px;
-          outline: none;
-        }
-input[type=button] {
-  padding: 6px 13px;
-    font-weight: bold;
-    font-family: arial;
+<html>
+<head>
+<style>
+.tab-control {
+
 }
-        .content .buttons-box  {
-          padding:5px 0px 5px 0px;
-        }
 
-      </style>
-    </head>
-    <body>
-      <div class="container" style="width:400px;">
-        <div class="tab-control">
-          <div class="tabs">
+.tab-control > .tabs {
 
-          </div>
-          <div class="content">
-<!-- text processor-->
-<div>
-<!-- text -->
-<div>
-  <div>
+}
 
-  </div>
+.tab-control > .tabs > div {
 
-  <div>
-  <div>
-      <textarea id="source-box" style="width:100%;height:100px;"></textarea>
-  </div>
-  <div class="buttons-box">
-    <input type="button" id="encode-cmd" value="Convert">
-  </div>
-  <div>
-      <textarea id="result-box" style="width:100%;height:100px;"></textarea>
-  </div>
-  </div>
-</div>
-<!-- end text -->
-</div>
-<!-- end text processor-->
+}
+.hyper-link {
+color:blue;
+cursor: pointer;
+}
+ 
+</style>
+</head>
+<body>
+	<div class="container" style="width: 400px;">
+		<div class="tab-control">
+			<div class="tabs">
+				<div>mokoro</div>
+			</div>
+			<div class="content">
+				 <div class="hyper-link" id="process">Kill Tabs</div>
+
+			</div>
+		</div>
+	</div>
 
 
-          </div>
-        </div>
-      </div>
-
-
-    <script src="popup.js"></script>
-    </body>
-  </html>
+	<script src="popup.js"></script>
+</body>
+</html>

@@ -1,133 +1,138 @@
 //# sourceURL=@chrome-extension-background.js
-
+// https://developer.chrome.com/docs/extensions/mv3/manifest/
+// https://developer.chrome.com/docs/extensions/mv3/intro/mv3-overview/
 console.log('Loading background.js...');
 
-
-
-chrome.runtime.onInstalled.addListener(function () {
-   
-  });
-
+chrome.runtime.onInstalled.addListener(function() {
+});
 
 //var webSocket = new WebSocket("http://iyidoktorlar.com", "optionalProtocol");
 
-
-  chrome.declarativeContent.onPageChanged.removeRules(undefined, function() {
-      chrome.declarativeContent.onPageChanged.addRules([{
+chrome.declarativeContent.onPageChanged.removeRules(undefined, function() {
+    chrome.declarativeContent.onPageChanged.addRules([{
         conditions: [new chrome.declarativeContent.PageStateMatcher({
-          pageUrl: {
-          // hostEquals: 'developer.chrome.com'
-          },
-        })
-        ],
-            actions: [new chrome.declarativeContent.ShowPageAction()]
-      }]);
-    });
+            pageUrl: {// hostEquals: 'developer.chrome.com'
+            },
+        })],
+        actions: [new chrome.declarativeContent.ShowPageAction()]
+    }]);
+});
 
-  
-  
-  
-var contentMenuItems=[];
-  chrome.runtime.onMessage.addListener(
-		  function(request, sender, sendResponse) {
-         console.log(request);
-			  if (request.greeting )
-				  console.log(request.greeting);
-			  ;
-		    console.log(sender.tab ?
-		                "from a content script:" + sender.tab.url :
-		                "from the extension");
-		    if (request.greeting == "hello")
-		      sendResponse({farewell: "Hello from background.js"});
-
-		    
-if(request.contextMenuItems){
-  for (var i=0;i<request.contextMenuItems.length;i++) {
-    var mo = request.contextMenuItems[i];
-var jsonStr=JSON.stringify(mo);
-
-if ( contentMenuItems.indexOf(jsonStr)!==-1 )
-        continue;
-
-contentMenuItems.push(jsonStr);
-
-    if ( mo.disabled === true )
-            continue;
+let processPopUpCommand=(args)=>{
+	 
+	 let queryOptions = { active: true, currentWindow: true };
+	 chrome.tabs.query(queryOptions,
+			 (tabs)=>{
+				 var tab=tabs[0];
+				 console.log(tab);
+				 chrome.processes.getProcessIdForTab(tab.id,(PID)=>{
+					 console.log('PID: ',PID);
+				 })
+			 		
+				 }
+			 ) ;
  
-            mo['onclick'] = function ( info , tab ) {
-              console.log("item " + info.menuItemId + " was clicked");
-                  console.log("info: " +  info );
-                  console.log("tab: " +  tab );
-
-                  // Add all you functional Logic here
-                  chrome.tabs.query({
-                      "active": true,
-                      "currentWindow": true
-                  }, function (tabs) {
-                      chrome.tabs.sendMessage(tabs[0].id, {
-                          menuItem: mo,
-                          info:info,
-                          tab:tabs[0]
-                      });
-                  });
-            }
-            
-    chrome.contextMenus.create(mo);
-  }
-    sendResponse({result: "Menu items added"});
 }
 
+var contentMenuItems = [];
+chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+    console.log(request);
+    if (request.greeting)
+        console.log(request.greeting);
+    ;console.log(sender.tab ? "from a content script:" + sender.tab.url : "from the extension");
+    if (request.greeting == "hello")
+        sendResponse({
+            farewell: "Hello from background.js"
+        });
+if (request.popUp){
+processPopUpCommand(request.popUp)
+}
+ else   if (request.contextMenuItems) {
+        for (var i = 0; i < request.contextMenuItems.length; i++) {
+            var mo = request.contextMenuItems[i];
+            var jsonStr = JSON.stringify(mo);
 
-		  });
+            if (contentMenuItems.indexOf(jsonStr) !== -1)
+                continue;
+
+            contentMenuItems.push(jsonStr);
+
+            if (mo.disabled === true)
+                continue;
+
+            mo['onclick'] = function(info, tab) {
+                console.log("item " + info.menuItemId + " was clicked");
+                console.log("info: " + info);
+                console.log("tab: " + tab);
+
+                // Add all you functional Logic here
+                chrome.tabs.query({
+                    "active": true,
+                    "currentWindow": true
+                }, function(tabs) {
+                    chrome.tabs.sendMessage(tabs[0].id, {
+                        menuItem: mo,
+                        info: info,
+                        tab: tabs[0]
+                    });
+                });
+            }
+
+            chrome.contextMenus.create(mo);
+        }
+        sendResponse({
+            result: "Menu items added"
+        });
+    }
+
+});
 
 // https://webteizle.vip/filtre.asp?a=passengers
 // https://developer.chrome.com/apps/contextMenus
 
+var ctxMenu = [];
 
+var mnf = chrome.runtime.getManifest();
+console.log('manifest', mnf);
 
+if (!('update_url'in mnf))
+    ctxMenu.push({
 
-            var ctxMenu = [];
-
-            var mnf=chrome.runtime.getManifest();
-            console.log('manifest',mnf);
-            
-if(!('update_url' in mnf)) ctxMenu.push( {
-
-                        'title' : 'Reload ' + mnf.name,
-                        'contexts' : [
-                                 'page'
-                                ],
-                                'onclick' : function ( info , tab ) {
-                                	chrome.tabs.query({active: true, currentWindow: true}, function(tabs){
-                                	    chrome.tabs.sendMessage(tabs[0].id, {action: "open_dialog_box"}, function(response) {});  
-                                	});
-                                	console.log('Reloading...');
-  chrome.runtime.reload();
-  chrome.tabs.reload(tab.id,{
-  	bypassCache:true
-  },()=>{
-  	console.log('reloaded');
-  });
-                                        }
-
-
-                });
-
-
-            for ( var key=0;key< ctxMenu.length;key++ ) {
-
-                      var mo = ctxMenu[key];
-                      if ( mo.disabled === true )
-                              continue;
-                      chrome.contextMenus.create(mo);
+        'title': 'Reload ' + mnf.name,
+        'contexts': ['page'],
+        'onclick': function(info, tab) {
+            chrome.tabs.query({
+                active: true,
+                currentWindow: true
+            }, function(tabs) {
+                chrome.tabs.sendMessage(tabs[0].id, {
+                    action: "open_dialog_box"
+                }, function(response) {});
+            });
+            console.log('Reloading...');
+            chrome.runtime.reload();
+            chrome.tabs.reload(tab.id, {
+                bypassCache: true
+            }, ()=>{
+                console.log('reloaded');
             }
+            );
+        }
 
+    });
 
+for (var key = 0; key < ctxMenu.length; key++) {
 
-    function setStyle(){
+    var mo = ctxMenu[key];
+    if (mo.disabled === true)
+        continue;
+    chrome.contextMenus.create(mo);
+}
 
-        var d=document;
-        var cssText=`
+function setStyle() {
+
+    var d = document;
+    var cssText = `
         ytd-miniplayer {
             --ytd-miniplayer-width: 800px;
             --ytd-miniplayer-height: 450px;
@@ -151,14 +156,13 @@ if(!('update_url' in mnf)) ctxMenu.push( {
         }
         `;
 
-        var style=d.createElement('style');
-        style.id='ytd-mod-style';
-        style.textContent=cssText;
-        d.head.appendChild(style);
+    var style = d.createElement('style');
+    style.id = 'ytd-mod-style';
+    style.textContent = cssText;
+    d.head.appendChild(style);
 
-    };
-
-    
-    chrome.commands.onCommand.addListener(function(command) {
-        console.log('Command:', command);
-      });
+}
+;
+chrome.commands.onCommand.addListener(function(command) {
+    console.log('Command:', command);
+});

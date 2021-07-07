@@ -25,6 +25,7 @@ document.addEventListener('mouseup', function (e) {
 	  
 	    chrome.runtime.sendMessage(msg, function(response) {});
 	  }
+	  return true;
 	})
 
 utility.addMenuListener( (menu,info,tab)=>{

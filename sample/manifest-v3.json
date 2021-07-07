@@ -1,18 +1,13 @@
 {
-
-	"manifest_version": 2,
+"manifest_version": 3,
 	"name": "Hadi Paylas",
-	"version": "1.0.0.1",
+	"version": "1.3.0.1",
 	"description": "Build an Extension Template!",
-	
-	
-	"background": {
-		"scripts": [
+ 
+	"background.service_worker": [
 			"shared/bootstrap.js",
 			"background.js"
 		],
-		"persistent": true
-	},
 	"content_scripts": [
 		{
 			"matches": [
@@ -31,7 +26,8 @@
 			"css": [
 				"shared/bootstrap.css"
 			]
-		},	{
+		},
+		{
 			"matches": [
 				"http://*.hadiii.com/*",
 				"https://*.hadiii.com/*"
@@ -82,12 +78,12 @@
 			"run_at": "document_end",
 			"js": [
 				"shared/bootstrap.js",
-				 "shared/ui.js",
-				 "contentscripts/wup.js"
+				"shared/ui.js",
+				"contentscripts/wup.js"
 			],
 			"css": [
-				"shared/bootstrap.css",				
-				 "shared/ui.css"
+				"shared/bootstrap.css",
+				"shared/ui.css"
 			]
 		},
 		{
@@ -97,15 +93,17 @@
 			"run_at": "document_end",
 			"js": [
 				"shared/bootstrap.js",
-				 "contentscripts/maps.js"
+				"contentscripts/maps.js"
 			],
 			"css": [
 				"shared/bootstrap.css"
 			]
 		}
 	],
-	"content_security_policy": "script-src 'self' 'unsafe-eval'; connect-src http://*.whatsapp.com 'self'; object-src 'self'; font-src 'self' data:*;",
-	"page_action": {
+	"content_security_policy": {
+		"extension_pages": "script-src 'self' ; connect-src http://*.whatsapp.com 'self'; object-src 'self'; font-src 'self' data:*;"
+	},
+	"action": {
 		"default_popup": "popup.html",
 		"default_icon": {
 			"16": "shared/images/hadiii-16.png",
@@ -127,44 +125,47 @@
 		"storage",
 		"contextMenus",
 		"cookies",
-		"*://*/*",
 		"tabs",
-		"webNavigation",
+		"webNavigation"
+	],
+	"host_permissions ": [
+		"*://*/*",
 		"http://*/*",
 		"https://*/*",
 		"http://192.168.1.93/*",
 		"https://web.whatsapp.com/*"
 	],
 	"commands": {
-          "tab-right": {
-            "suggested_key": {
-              "default": "Ctrl+Shift+L",
-              "mac": "Command+Shift+L"
-            },
-            "description": "Toggle feature foo"
-          },
-          "tab-left": {
-            "suggested_key": {
-              "default": "Ctrl+Shift+K",
-              "mac": "Command+Shift+K"
-            },
-            "description": "Toggle feature foo"
-          },
-          "_execute_browser_action": {
-            "suggested_key": {
-              "windows": "Ctrl+Shift+Right",
-              "mac": "Command+Shift+Y",
-              "chromeos": "Ctrl+Shift+U",
-              "linux": "Ctrl+Shift+J"
-            }
-          },
-          "_execute_page_action": {
-            "suggested_key": {
-              "default": "Ctrl+Shift+E",
-              "windows": "Alt+Shift+P",
-              "mac": "Alt+Shift+P"
-            }
-          }
-        },
+		"tab-right": {
+			"suggested_key": {
+				"default": "Ctrl+Shift+L",
+				"mac": "Command+Shift+L"
+			},
+			"description": "Toggle feature foo"
+		},
+		"tab-left": {
+			"suggested_key": {
+				"default": "Ctrl+Shift+K",
+				"mac": "Command+Shift+K"
+			},
+			"description": "Toggle feature foo"
+		},
+		"_execute_browser_action": {
+			"suggested_key": {
+				"windows": "Ctrl+Shift+Right",
+				"mac": "Command+Shift+Y",
+				"chromeos": "Ctrl+Shift+U",
+				"linux": "Ctrl+Shift+J"
+			}
+		},
+		"_execute_page_action": {
+			"suggested_key": {
+				"default": "Ctrl+Shift+E",
+				"windows": "Alt+Shift+P",
+				"mac": "Alt+Shift+P"
+			}
+		}
+	},
 	"options_page": "options.html"
+	
 }

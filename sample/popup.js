@@ -1,30 +1,17 @@
-// Copyright 2018 The Chromium Authors. All rights reserved.
-// Use of this source code is governed by a BSD-style license that can be
-// found in the LICENSE file.
+//# sourceURL=@chrome-extension-options.js
 // https://developer.chrome.com/extensions/getstarted
 'use strict';
 
+let processDv=document.querySelector('div.tab-control > div.content > div#process');
+ 
  
 
-function encodeText(){
-  let color = element.target.value;
-  chrome.tabs.query(
-    {active: true, currentWindow: true},
-    function(tabs) {
-    chrome.tabs.executeScript(
-        tabs[0].id,
-        {code: 'document.body.style.backgroundColor = "' + color + '";'});
-  });
-  alert('tamam')
-}
-
-
-let source = document.getElementById('source-box');
-let result = document.getElementById('result-box');
-let convert = document.getElementById('encode-cmd');
-
-convert.onclick = function(e) {
-  var s=source.value;
-  s=encodeURI(s);
-  result.value=s;
+processDv.onclick = (e)=> {
+	 console.log(e.type);
+	chrome.runtime.sendMessage({ popUp:{
+		 event:e
+	}, greeting: "hello from popup page"}, function(response) {
+		
+		  console.log('%cResponse','color:red;font-size:20px;padding:50px;',response.farewell);
+		});
 };
