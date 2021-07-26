@@ -1,6 +1,6 @@
 //# sourceURL=@chrome-extension-bootstrap.js
 /* jshint undef: true, unused: true, eqeqeq: true, maxdepth:2 */
-console.clear();
+// console.clear();
 window.empty = function(o) {
     if (!isset(o))
         return true;
@@ -9,14 +9,13 @@ window.empty = function(o) {
         return true;
 
     return false;
-}
-;
+};
 /**
-         * @memberof window
-         * @method
-         * @param {Object} context
-         * @param {String} name name or dotted name of object
-         */
+ * @memberof window
+ * @method
+ * @param {Object} context
+ * @param {String} name name or dotted name of object
+ */
 window.isDefined = function(context, name) {
     if (!isset(context))
         return false;
@@ -34,8 +33,7 @@ window.isDefined = function(context, name) {
     }
 
     return true;
-}
-;
+};
 window.isset = function(o) {
     if (o == null)
         return false;
@@ -45,8 +43,7 @@ window.isset = function(o) {
         return false;
 
     return true;
-}
-;
+};
 /**
  * @link
  * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/get
@@ -67,8 +64,7 @@ String.prototype.toObject = function(c, bln) {
 
             eval(code1);
             return o1;
-        }
-        ).call(c || this, code);
+        }).call(c || this, code);
         // if(o instanceof Error){
         // //   throw new Error();
         // var err = o.constructor('Error in Evaled Script: ' + o.message);
@@ -84,11 +80,10 @@ String.prototype.toObject = function(c, bln) {
         console.error(e.stack);
         console.error(code);
 
-        throw new evalError("Can not evaluate string code as object because of " + e.message,code);
+        throw new evalError("Can not evaluate string code as object because of " + e.message, code);
     }
     return o;
-}
-;
+};
 String.prototype.canonize = function() {
     var can = this.toString();
     //var trOddCodes=[199,208,221,222,214,220,231,240,253,254,246,252];
@@ -98,7 +93,7 @@ String.prototype.canonize = function() {
     for (var i = 0, lng = trOddChars.length; i < lng; ++i) {
         var trCh = trOddChars[i];
         var enCh = enOddChars[i];
-        var rgx = new RegExp(trCh,'g');
+        var rgx = new RegExp(trCh, 'g');
         can = can.replace(rgx, enCh);
     }
 
@@ -110,8 +105,7 @@ String.prototype.canonize = function() {
         return match.replace(ch, ch.toLowerCase());
     });
     return can;
-}
-;
+};
 String.prototype.isGUID = function() {
     var v = this.toString();
     if (this.indexOf("{") == -1) {
@@ -119,15 +113,13 @@ String.prototype.isGUID = function() {
     }
     var rgExp = new RegExp("^\{?[A-Fa-f0-9]{8}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{12}\}?$");
     return rgExp.test(v);
-}
-;
+};
 String.prototype.inList = function(listStr, delimiter) {
     if (typeof listStr === 'undefined' || listStr == null || listStr == true || listStr == false)
         return false;
     delimiter = delimiter ? delimiter : ',';
     return listStr.split(delimiter).indexOf(this.toString()) !== -1;
-}
-;
+};
 class chromeResponse {
 
     constructor(response, metaCode) {
@@ -158,15 +150,14 @@ console.log('%cconsole log level: ', 'color:red;', chromeConsoleLevel);
             var fn = proxied[name];
             console[name] = function() {
 
-                if (chromeConsoleLevel)
-                    return this.apply(this, arguments);
-            }
-            .bind(fn);
+                    if (chromeConsoleLevel)
+                        return this.apply(this, arguments);
+                }
+                .bind(fn);
         }
 
     }
-}
-)(window.console);
+})(window.console);
 
 class baseControl {
     constructor() {
@@ -201,9 +192,9 @@ class contentPanel extends baseControl {
         closer.cls("chrome-closer icon-after");
         closer.onclick = function(e) {
 
-            this.hide();
-        }
-        .bind(this);
+                this.hide();
+            }
+            .bind(this);
 
         this.control.add(closer);
 
@@ -231,8 +222,8 @@ class contentPanel extends baseControl {
     }
 
 }
- 
- 
+
+
 class utility {
     static injectSharedStyle() {
         var target = document.head || document.documentElement;
@@ -251,7 +242,7 @@ class utility {
     static injectFiles() {
 
         console.log('injecting...')
-        // if(typeof document ==='undefined') return;
+            // if(typeof document ==='undefined') return;
         var target = document.head || document.documentElement;
 
         var styleLoaded = false;
@@ -348,40 +339,40 @@ class utility {
         });
     }
 
-   static gPos;
+    static gPos;
 
     static addMenuListener(callBack) {
         chrome.extension.onMessage.addListener(function(message, sender, callback) {
-        	
+
             if (message.menuItem) {
-            	 console.log('%cMouse Event while callback','color:red;padding:10px;',utility.gPos,gPos);
-                callBack(message.menuItem, message.info, message.tab,utility.gPos,gPos);
+                console.log('%cMouse Event while callback', 'color:red;padding:10px;', utility.gPos, gPos);
+                callBack(message.menuItem, message.info, message.tab, utility.gPos, gPos);
             }
 
         });
     }
 }
 
-var gPos=null;
+var gPos = null;
 
 //receiving message
 chrome.extension.onMessage.addListener(function(msg, sender, sendResponse) {
-if (msg.from == 'mouseup') {
-//storing position
-	utility.gPos=gPos=msg.point ;
+    if (msg.from == 'mouseup') {
+        //storing position
+        utility.gPos = gPos = msg.point;
 
-  console.log('%cMouse Event Listened','color:red;padding:10px;',utility.gPos);
-}
+        console.log('%cMouse Event Listened', 'color:red;padding:10px;', utility.gPos);
+    }
 })
 
 function __cookie() {
 
     /**
-         * @link https://developer.mozilla.org/en-US/docs/Web/API/Document/cookie
-         * @memberof window
-         * @method
-         * @param {String} name
-         */
+     * @link https://developer.mozilla.org/en-US/docs/Web/API/Document/cookie
+     * @memberof window
+     * @method
+     * @param {String} name
+     */
     function getCookie(cookie_name) {
         var results = document.cookie.match(cookie_name + '=(.*?)(;|$)');
 
@@ -394,11 +385,11 @@ function __cookie() {
     }
 
     /**
-         * @link https://developer.mozilla.org/en-US/docs/Web/API/Document/cookie
-         * @memberof window
-         * @method
-         * @param {String} name
-         */
+     * @link https://developer.mozilla.org/en-US/docs/Web/API/Document/cookie
+     * @memberof window
+     * @method
+     * @param {String} name
+     */
     function deleteCookie(cookie_name) {
         // var cookie_date = new Date();
         // // current date & time
@@ -407,19 +398,19 @@ function __cookie() {
     }
 
     /**
-         * @link https://developer.mozilla.org/en-US/docs/Web/API/Document/cookie
-         * @memberof window
-         * @method
-         * @param {String} name
-         * @param {String} value
-         * @param {Number} exp_d days before expire default 10
-         * @param {String} path
-         * @param {String} domain
-         * @param {Boolean} secure
-         */
+     * @link https://developer.mozilla.org/en-US/docs/Web/API/Document/cookie
+     * @memberof window
+     * @method
+     * @param {String} name
+     * @param {String} value
+     * @param {Number} exp_d days before expire default 10
+     * @param {String} path
+     * @param {String} domain
+     * @param {Boolean} secure
+     */
     function setCookie(name, value, exp_d, path, domain, secure) {
         // if exp date is not set
-        if (typeof exp_d === 'undefined' || exp_d === null || typeof (exp_d) != "number") {
+        if (typeof exp_d === 'undefined' || exp_d === null || typeof(exp_d) != "number") {
             // set cookie 10 days later
             exp_d = 10;
         }
@@ -446,9 +437,9 @@ function __cookie() {
     }
 
     /**
-         * @namespace
-         * @name window
-         */
+     * @namespace
+     * @name window
+     */
     window.setCookie = setCookie;
     window.getCookie = getCookie;
     window.deleteCookie = deleteCookie;
@@ -460,41 +451,41 @@ __cookie();
 function ___dom() {
 
     /**
-         * @namespace DOM Functions
-         */
+     * @namespace DOM Functions
+     */
     /**
-         * @class
-         * @name NodeList
-         */
+     * @class
+     * @name NodeList
+     */
     /**
-         * @class
-         * @name HTMLElement
-         */
+     * @class
+     * @name HTMLElement
+     */
     /**
-         * @class
-         * @name HTMLFormElement
-         * @augments HTMLElement
-         */
+     * @class
+     * @name HTMLFormElement
+     * @augments HTMLElement
+     */
     /**
-         * @class
-         * @name HTMLDivElement
-         * @augments HTMLElement
-         */
+     * @class
+     * @name HTMLDivElement
+     * @augments HTMLElement
+     */
     /**
-         * @class
-         * @name HTMLInputElement
-         * @augments HTMLElement
-         */
+     * @class
+     * @name HTMLInputElement
+     * @augments HTMLElement
+     */
     /**
-         * @class
-         * @name HTMLTextAreaElement
-         * @augments HTMLElement
-         */
+     * @class
+     * @name HTMLTextAreaElement
+     * @augments HTMLElement
+     */
     /**
-         * @class
-         * @name HTMLSelectElement
-         * @augments HTMLElement
-         */
+     * @class
+     * @name HTMLSelectElement
+     * @augments HTMLElement
+     */
     function _$(k, s, a) {
         if (!k) {
             this.body = document.body;
@@ -521,10 +512,10 @@ function ___dom() {
         }
     }
 
-    _$.prototype.div=function(s,a){
-        return _$('div',s,a);
-    }
-    /**
+    _$.prototype.div = function(s, a) {
+            return _$('div', s, a);
+        }
+        /**
          * Initializes DOMElement
          *
          * @function
@@ -559,11 +550,12 @@ function ___dom() {
         if (commit instanceof Function)
             commit();
 
-    }
-    ;
+    };
+
     function isA(o) {
         return o && o.__proto__ && o.__proto__ === Array.prototype;
     }
+
     function backSet(sg, pp, sg1, v) {
         if (this.backSet) {
             var t = this.backSet(sg, pp);
@@ -576,83 +568,81 @@ function ___dom() {
         pp[sg1] = v;
         this[sg].push(pp);
         return pp;
-    }
-    ;/**
-         * returns whether form is dirty
-         *
-         * @name HTMLFormElement#dirty
-         * @returns {bool}
-         */
+    };
     /**
-         * @function
-         * @name HTMLFormElement#removeObject
-         * @param {string}
-         *                g group name
-         */
+     * returns whether form is dirty
+     *
+     * @name HTMLFormElement#dirty
+     * @returns {bool}
+     */
     /**
-         * insert object into form as dimensional name form
-         *
-         * @function
-         * @name HTMLFormElement#addObject
-         * @param {string}
-         *                n element name
-         * @param {Object}
-         *                o object to add
-         * @param {string}
-         *                g group name
-         */
+     * @function
+     * @name HTMLFormElement#removeObject
+     * @param {string}
+     *                g group name
+     */
     /**
-         * @function
-         * @name HTMLFormElement#getObject
-         */
+     * insert object into form as dimensional name form
+     *
+     * @function
+     * @name HTMLFormElement#addObject
+     * @param {string}
+     *                n element name
+     * @param {Object}
+     *                o object to add
+     * @param {string}
+     *                g group name
+     */
     /**
-         * @function
-         * @name HTMLFormElement#fillForm
-         */
+     * @function
+     * @name HTMLFormElement#getObject
+     */
     /**
-         * @function
-         * @name HTMLFormElement#resetDirty
-         */
+     * @function
+     * @name HTMLFormElement#fillForm
+     */
     /**
-         *
-         * @memberOf __closure
-         */
+     * @function
+     * @name HTMLFormElement#resetDirty
+     */
+    /**
+     *
+     * @memberOf __closure
+     */
     const __prototype__ = {};
     __prototype__.onRegionOver = function(start, handle, end) {
         ca.event.listen('mousemove', function(e) {
-            var pass = e.offsetX > e.target.offsetWidth - start;
-            if (typeof end !== 'undefined')
-                pass = pass && e.offsetX < e.target.offsetWidth - end;
-            handle.call(this, pass);
-        }
-        .bind(this), this, false);
-    }
-    ;
+                var pass = e.offsetX > e.target.offsetWidth - start;
+                if (typeof end !== 'undefined')
+                    pass = pass && e.offsetX < e.target.offsetWidth - end;
+                handle.call(this, pass);
+            }
+            .bind(this), this, false);
+    };
     /**
-         * @memberOf __prototype__
-         */
+     * @memberOf __prototype__
+     */
     __prototype__.onRegionClick = function(size, h, start, height) {
         ca.event.listen('click', function(e) {
-            if (e.target !== this)
-                return;
-            var pass = e.offsetX > e.target.offsetWidth - size;
-            if (typeof height !== 'undefined')
-                pass = pass && e.offsetY < height;
-            if (typeof start !== 'undefined')
-                pass = pass && e.offsetX < e.target.offsetWidth - start;
-            if (pass) {
-                e.preventDefault();
-                e.stopPropagation();
-                e.stopImmediatePropagation();
-                h.call(e.target, e);
+                if (e.target !== this)
+                    return;
+                var pass = e.offsetX > e.target.offsetWidth - size;
+                if (typeof height !== 'undefined')
+                    pass = pass && e.offsetY < height;
+                if (typeof start !== 'undefined')
+                    pass = pass && e.offsetX < e.target.offsetWidth - start;
+                if (pass) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    e.stopImmediatePropagation();
+                    h.call(e.target, e);
+                }
             }
-        }
-        .bind(this), this, false);
-    }
-    ;
+            .bind(this), this, false);
+    };
     /**
-         * @memberOf __prototype__
-         */
+     * @memberOf __prototype__
+     */
     __prototype__.sort = function(tagName, sortFunc, selector, args) {
         var a = Array.prototype.slice.call(arguments, 2);
         a.unshift(tagName);
@@ -660,11 +650,10 @@ function ___dom() {
         ar.sort(sortFunc);
         for (var i = 0, ln = ar.length; i < ln; ++i)
             this.appendChild(ar[i]);
-    }
-    ;
+    };
     /**
-         * @memberOf __prototype__
-         */
+     * @memberOf __prototype__
+     */
     __prototype__.reset = {
         prototypeOf: [HTMLTextAreaElement, HTMLInputElement, HTMLSelectElement],
         handle: function() {
@@ -691,12 +680,12 @@ function ___dom() {
                     option = option.nextElementSibling;
                 }
             } else
-                throw new Error('Cannot reset for ',this);
+                throw new Error('Cannot reset for ', this);
         }
     };
     /**
-         * @memberOf __prototype__
-         */
+     * @memberOf __prototype__
+     */
     __prototype__.resetDirty = {
         prototypeOf: [HTMLFormElement, HTMLTextAreaElement, HTMLInputElement, HTMLSelectElement],
         handle: function() {
@@ -732,12 +721,12 @@ function ___dom() {
                     option = option.nextElementSibling;
                 }
             } else
-                throw new Error('Cannot reset dirty for ',this);
+                throw new Error('Cannot reset dirty for ', this);
         }
     };
     /**
-         * @memberOf __prototype__
-         */
+     * @memberOf __prototype__
+     */
     __prototype__.HTMLFormElement = {
         prototypeOf: HTMLFormElement,
         handles: {
@@ -746,26 +735,26 @@ function ___dom() {
                     cb(true);
                 else
                     ca.ui.confirm('Devam ederseniz formdaki değişiklikleri kaybedeceksiniz.<br>Devam edilsin mi ?', function(ok) {
-                        this.confirmed = ok;
-                        cb(ok);
-                    }
-                    .bind(this), {
-                        'Evet': true,
-                        'Hayır': false
-                    });
+                            this.confirmed = ok;
+                            cb(ok);
+                        }
+                        .bind(this), {
+                            'Evet': true,
+                            'Hayır': false
+                        });
             },
             confirmClose: function(cb, terminate) {
 
                 ca.event.raise('confirm-close', {}, this, true);
                 ca.ui.confirm('Devam ederseniz formdaki değişiklikleri<br>kaybedeceksiniz. Devam edilsin mi ?', function(cb2, terminate2, ok) {
-                    if (terminate2 === true && ok !== true)
-                        return;
-                    cb2(ok === true);
-                }
-                .bind(this, cb, terminate), {
-                    'Evet': true,
-                    'Hayır': false
-                });
+                        if (terminate2 === true && ok !== true)
+                            return;
+                        cb2(ok === true);
+                    }
+                    .bind(this, cb, terminate), {
+                        'Evet': true,
+                        'Hayır': false
+                    });
             },
             checkDirty: function() {
                 var bln = this.dirty;
@@ -821,27 +810,27 @@ function ___dom() {
                     var item = items[i];
                     if (item.type == "button" || item.excluded)
                         continue;
-                    var name = item.name
-                      , value = item.getValue();
+                    var name = item.name,
+                        value = item.getValue();
                     values.push(name + '=' + encodeURIComponent(value));
                 }
                 return (values.length === 1 ? '&' : '') + values.join('&');
             },
             /**
-                                 * @param {string}
-                                 *                n base name for select
-                                 * @param {string}
-                                 *                a alias
-                                 * @return void
-                                 */
+             * @param {string}
+             *                n base name for select
+             * @param {string}
+             *                a alias
+             * @return void
+             */
             getObject: function(n, a, prop) {
                 // console.clear();
                 // console.group('GetObject');
                 var items = this.elements;
                 var o = {};
                 var np = n ? '(' + n + ')?' : '([\\w\\-]+)?';
-                var rtRgx = new RegExp('^' + np + '(\\[[\\w+\\-]+\\].*)?','i');
-                var rgx = new RegExp('\\[([\\w+\\-]+)\\]','ig');
+                var rtRgx = new RegExp('^' + np + '(\\[[\\w+\\-]+\\].*)?', 'i');
+                var rgx = new RegExp('\\[([\\w+\\-]+)\\]', 'ig');
                 // console.warn('GetObject items
                 // length', items.length);
                 for (var i = 0; i < items.length; i++) {
@@ -932,30 +921,31 @@ function ___dom() {
             }
         }
     };
+
     function invalidate(valid) {
         if (valid === false) {
             this.cls('validator-pop');
             this.targetElement.form.isValid = false;
             this.targetElement.isValid = false;
         }
-    }
-    ;/**
-         * @memberOf __prototype__
-         */
+    };
+    /**
+     * @memberOf __prototype__
+     */
     __prototype__.validate = {
         prototypeOf: [HTMLInputElement, HTMLTextAreaElement, HTMLSelectElement],
         /**
-                         * looks up divs with validate attribute and match it
-                         * with input with same name sets their class as
-                         * validator
-                         *
-                         * @deprecated
-                         */
+         * looks up divs with validate attribute and match it
+         * with input with same name sets their class as
+         * validator
+         *
+         * @deprecated
+         */
         handle: function() {
             // console.info('validating ', this);
-            var p = this.parentNode
-              , form = this.form
-              , eName = this.getAttribute('name');
+            var p = this.parentNode,
+                form = this.form,
+                eName = this.getAttribute('name');
             this.isValid = true;
             if (!this.form || this.excluded)
                 return true;
@@ -993,8 +983,8 @@ function ___dom() {
                 vel.targetElement = this;
                 vel.invalidate = invalidate;
                 /*
-                                         * Run validator handle
-                                         */
+                 * Run validator handle
+                 */
                 if (validatorHandle instanceof Function) {
                     console.info("isValid by validator", eName);
                     var retVal = validatorHandle.call(this);
@@ -1002,8 +992,8 @@ function ___dom() {
                 } else {
                     if (compare || pat) {
                         /*
-                                                         * run compare validator
-                                                         */
+                         * run compare validator
+                         */
                         if (compare) {
                             var fels = form.elements;
                             for (var i = 0, j = fels.length; i < j; i++) {
@@ -1014,12 +1004,13 @@ function ___dom() {
                                     break;
                                 }
                             }
-                        }/*
-                                                         * run pattern
-                                                         * validator
-                                                         */
+                        }
+                        /*
+                         * run pattern
+                         * validator
+                         */
                         else if (pat) {
-                            var rgx = new RegExp(pat,"ig");
+                            var rgx = new RegExp(pat, "ig");
                             valid = rgx.test(value);
                         }
                         console.info("isValid", eName);
@@ -1029,10 +1020,11 @@ function ___dom() {
                             window.scrollTo(0, parseInt((this.offsetPos.top - 60) / 2));
                         }
                         this.isValid = valid;
-                    }/*
-                                                 * set a function for
-                                                 * manual pop
-                                                 */
+                    }
+                    /*
+                     * set a function for
+                     * manual pop
+                     */
                     else {}
                 }
             }
@@ -1040,48 +1032,48 @@ function ___dom() {
         }
     };
     /**
-         * @memberOf __prototype__
-         */
+     * @memberOf __prototype__
+     */
     __prototype__.countLimit = [{
         prototypeOf: HTMLTextAreaElement,
         handle: function(box, limit) {
             box.text(this.innerText.length);
             ca.event.listen('keyup', function(e) {
-                var value = e.target.getValue();
-                if (value.length > limit) {
-                    this.css('color:red');
-                } else
-                    this.css('color:initial');
-                this.text(value.length);
-            }
-            .bind(box), this, false);
-            ca.event.listen('keypress', function(e) {
-                var value = e.target.getValue();
-                var kc = e.charCode
-                var patt = /[\w\s\d]/i;
-                var isChar = patt.test(String.fromCharCode(kc));
-                if (value.length > limit && isChar) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    e.stopImmediatePropagation();
+                    var value = e.target.getValue();
+                    if (value.length > limit) {
+                        this.css('color:red');
+                    } else
+                        this.css('color:initial');
+                    this.text(value.length);
                 }
-            }
-            .bind(box), this, false);
+                .bind(box), this, false);
+            ca.event.listen('keypress', function(e) {
+                    var value = e.target.getValue();
+                    var kc = e.charCode
+                    var patt = /[\w\s\d]/i;
+                    var isChar = patt.test(String.fromCharCode(kc));
+                    if (value.length > limit && isChar) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        e.stopImmediatePropagation();
+                    }
+                }
+                .bind(box), this, false);
         }
     }];
     /**
-         * @memberOf __prototype__
-         */
+     * @memberOf __prototype__
+     */
     __prototype__.getValue = [{
         prototypeOf: HTMLInputElement,
         handle: function() {
             switch (this.type) {
-            case "checkbox":
-                return (this.checked == false ? false : this.value);
-                break;
-            default:
-                return this.value;
-                break;
+                case "checkbox":
+                    return (this.checked == false ? false : this.value);
+                    break;
+                default:
+                    return this.value;
+                    break;
             }
         }
     }, {
@@ -1096,8 +1088,8 @@ function ___dom() {
         }
     }];
     /**
-         * @memberOf __prototype__
-         */
+     * @memberOf __prototype__
+     */
     __prototype__.setValue = [{
         prototypeOf: HTMLTextAreaElement,
         handle: function(v) {
@@ -1110,17 +1102,17 @@ function ___dom() {
         prototypeOf: HTMLInputElement,
         handle: function(v) {
             switch (this.type) {
-            case "checkbox":
-                this.checked = v;
-                if (v == true)
-                    this.setAttribute('checked', '');
-                else
-                    this.removeAttribute('checked');
-                break;
-            default:
-                this.value = v;
-                this.setAttribute('value', v);
-                break;
+                case "checkbox":
+                    this.checked = v;
+                    if (v == true)
+                        this.setAttribute('checked', '');
+                    else
+                        this.removeAttribute('checked');
+                    break;
+                default:
+                    this.value = v;
+                    this.setAttribute('value', v);
+                    break;
             }
         }
     }, {
@@ -1130,22 +1122,22 @@ function ___dom() {
         }
     }];
     /**
-         * @memberOf __prototype__
-         */
+     * @memberOf __prototype__
+     */
     __prototype__.maskDigit = {
         prototypeOf: HTMLInputElement,
         /**
-                         * Rules digit input and use setError for fault entry
-                         * Use onkeypress
-                         *
-                         * @example onkeypress="this.maskDigit(3,event);"
-                         * @function
-                         * @name HTMLInputElement#maskDigit
-                         * @param {int}
-                         *                l length of input
-                         * @param {MouseEvent}
-                         *                event
-                         */
+         * Rules digit input and use setError for fault entry
+         * Use onkeypress
+         *
+         * @example onkeypress="this.maskDigit(3,event);"
+         * @function
+         * @name HTMLInputElement#maskDigit
+         * @param {int}
+         *                l length of input
+         * @param {MouseEvent}
+         *                event
+         */
         handle: function(l, event) {
             if (event.keyCode < 48 || event.keyCode > 57 || this.value.length >= l) {
                 event.preventDefault();
@@ -1158,42 +1150,43 @@ function ___dom() {
         }
     };
     /**
-         * @memberOf __prototype__
-         */
+     * @memberOf __prototype__
+     */
     __prototype__.spin = {
         prototypeOf: HTMLInputElement,
-        handle: /**
-                         * Set className 'spin' and disables
-                         * form
-                         *
-                         * @function
-                         * @name HTMLInputElement#spin
-                         * @param {boolean}
-                         *                on
-                         */
-        function(on) {
+        handle:
+        /**
+         * Set className 'spin' and disables
+         * form
+         *
+         * @function
+         * @name HTMLInputElement#spin
+         * @param {boolean}
+         *                on
+         */
+            function(on) {
             this.cls('spin', on);
             if (this.form)
                 this.form.disable(on, false);
         }
     };
     /**
-         * @memberOf __prototype__
-         */
+     * @memberOf __prototype__
+     */
     __prototype__.setKeyPress = {
         prototypeOf: HTMLInputElement,
         /**
-                         * Assign enter key press functionality to element
-                         *
-                         * @function
-                         * @name HTMLInputElement#setKeyPress
-                         * @param {Object}
-                         *                assgn Element that click event will be
-                         *                used
-                         * @param {Function}
-                         *                hnd
-                         *
-                         */
+         * Assign enter key press functionality to element
+         *
+         * @function
+         * @name HTMLInputElement#setKeyPress
+         * @param {Object}
+         *                assgn Element that click event will be
+         *                used
+         * @param {Function}
+         *                hnd
+         *
+         */
         handle: function(assgn, hnd) {
             if (this.onkeypress)
                 return;
@@ -1206,39 +1199,38 @@ function ___dom() {
                     }
                     hnd.call(assgn);
                 }
-            }
-            ;
+            };
         }
     };
     /**
-         * toolTip options
-         *
-         * @public
-         * @namespace
-         * @name toolTipOptions
-         * @property {string} message
-         * @property {int} [side=0] 0:top...
-         * @property {int} [position=50]
-         * @property {int|bool} [timeOut=false] hide timeout
-         * @property {string} className
-         * @property {string} hideEvent event name that causes tip to disappear
-         * @property {string|Object} style
-         *
-         */
+     * toolTip options
+     *
+     * @public
+     * @namespace
+     * @name toolTipOptions
+     * @property {string} message
+     * @property {int} [side=0] 0:top...
+     * @property {int} [position=50]
+     * @property {int|bool} [timeOut=false] hide timeout
+     * @property {string} className
+     * @property {string} hideEvent event name that causes tip to disappear
+     * @property {string|Object} style
+     *
+     */
     /**
-         * @type {Function}
-         * @param {toolTipOptions}
-         *                opts
-         */
+     * @type {Function}
+     * @param {toolTipOptions}
+     *                opts
+     */
     toolTip = function(opts) {
         // FIXME position problem in dialog
         var _a = arguments;
-        var opts = _a[0]
-          , side = _a[1]
-          , pos = _a[02]
-          , tmo = _a[3]
-          , cls = _a[4]
-          , hideEvent = _a[5];
+        var opts = _a[0],
+            side = _a[1],
+            pos = _a[02],
+            tmo = _a[3],
+            cls = _a[4],
+            hideEvent = _a[5];
         var msg = opts;
         var style = {};
         if (opts instanceof Object) {
@@ -1280,9 +1272,9 @@ function ___dom() {
             var left = parseInt(rc.width / 2);
 
             var top = (box.offsetHeight * -1) - 8;
-            if (pos && (side == 0 || side == 2)) {// left += parseInt(((rc.width -
-            // parseInt(getComputedStyle(box).width)) * pos)
-            // / 100);
+            if (pos && (side == 0 || side == 2)) { // left += parseInt(((rc.width -
+                // parseInt(getComputedStyle(box).width)) * pos)
+                // / 100);
             }
             var cs = getComputedStyle(this);
             var bs = getComputedStyle(box);
@@ -1295,10 +1287,10 @@ function ___dom() {
             // if(document.scrollingElement) top -=
             // document.scrollingElement.scrollTop;
 
-            if (pos && (side == 1 || side == 3)) {// top +=
-            // parseInt(((rc.width -
-            // parseInt(getComputedStyle(box).width)) * pos)
-            // / 100);
+            if (pos && (side == 1 || side == 3)) { // top +=
+                // parseInt(((rc.width -
+                // parseInt(getComputedStyle(box).width)) * pos)
+                // / 100);
             }
             box.css({
                 top: top + 'px',
@@ -1307,8 +1299,8 @@ function ___dom() {
                 opacity: 1,
                 // position: 'fixed',
             });
-        }
-        ;var mh = position.bind(this, box, side, pos);
+        };
+        var mh = position.bind(this, box, side, pos);
         mh();
         // if (this.dragEventTarget)
         // this.dragEventTarget.addEventListener('move', mh, false);
@@ -1324,34 +1316,31 @@ function ___dom() {
             this.addEventListener(hideEvent, hf, false);
         }
         return box;
-    }
-    ;
+    };
     /**
-         * @private
-         */
+     * @private
+     */
     hideTip = function(t, tmo) {
         clearTimeout(tmo);
         t = t || 1;
         return setTimeout((function() {
             this.css('transition: opacity 0.7s ease-in-out; opacity: 0;transition: opacity 0.7s ease-in-out; opacity: 0;');
             setTimeout(this.remove.bind(this), 700);
-        }
-        ).bind(this), t);
-    }
-    ;
+        }).bind(this), t);
+    };
     /**
-         * @function
-         * @name HTMLElement#setToolTip
-         * @param {toolTipOptions}
-         *                opts
-         * @TODO place on body with position:fixed
-         * @memberOf __prototype__
-         */
+     * @function
+     * @name HTMLElement#setToolTip
+     * @param {toolTipOptions}
+     *                opts
+     * @TODO place on body with position:fixed
+     * @memberOf __prototype__
+     */
     __prototype__.setToolTip = function(opts) {
-        var msg = arguments[0]
-          , pos = arguments[1]
-          , hh = arguments[2]
-          , cls = arguments[3];
+        var msg = arguments[0],
+            pos = arguments[1],
+            hh = arguments[2],
+            cls = arguments[3];
         if (!(opts instanceof Object && opts.message))
             opts = {
                 message: msg,
@@ -1361,19 +1350,18 @@ function ___dom() {
             };
         // Array.prototype.push.call(arguments) ;
         toolTip.apply(this, [opts]);
-    }
-    ;
+    };
     /**
-         * @function
-         * @name HTMLElement#setError
-         * @param {toolTipOptions}
-         *                opts
-         * @memberOf __prototype__
-         */
+     * @function
+     * @name HTMLElement#setError
+     * @param {toolTipOptions}
+     *                opts
+     * @memberOf __prototype__
+     */
     __prototype__.setError = function(opts) {
-        var msg = arguments[0]
-          , pos = arguments[1]
-          , tmo = arguments[2];
+        var msg = arguments[0],
+            pos = arguments[1],
+            tmo = arguments[2];
         var args;
         if (opts instanceof Object) {
             opts.className = 'pop-error';
@@ -1392,22 +1380,21 @@ function ___dom() {
         ca.event.raise('error-set', {
             message: msg
         }, this, true);
-    }
-    ;
+    };
     /**
-         * <div class="hyper-link upload-file"
-         * data-control-on-ready="function(){
-         * ca.event.listen('click',function(e){ e.stopPropagation();
-         * e.stopImmediatePropagation(); }.bind(this),this,true);
-         * this.initializeUpload.call(this); }">Dosya yükle</div>
-         *
-         * events upload-initialize , upload-complete
-         *
-         * @param {object}
-         *                args { debug : false, filter : 'jpg,jpeg,gif,png',
-         *                overwrite : false, maxLength : -1, temporary : true, }
-         * @memberOf __prototype__
-         */
+     * <div class="hyper-link upload-file"
+     * data-control-on-ready="function(){
+     * ca.event.listen('click',function(e){ e.stopPropagation();
+     * e.stopImmediatePropagation(); }.bind(this),this,true);
+     * this.initializeUpload.call(this); }">Dosya yükle</div>
+     *
+     * events upload-initialize , upload-complete
+     *
+     * @param {object}
+     *                args { debug : false, filter : 'jpg,jpeg,gif,png',
+     *                overwrite : false, maxLength : -1, temporary : true, }
+     * @memberOf __prototype__
+     */
     __prototype__.initializeUpload = {
         prototypeOf: HTMLElement,
         handle: function(args) {
@@ -1430,14 +1417,15 @@ function ___dom() {
                 console.groupEnd();
                 options.extend(args);
             }
+
             function ih(args, e) {
                 var a = {
                     oninit: function(options) {
-                        ca.event.raise('upload-initialize', {
-                            options: options
-                        }, this, false);
-                    }
-                    .bind(this),
+                            ca.event.raise('upload-initialize', {
+                                options: options
+                            }, this, false);
+                        }
+                        .bind(this),
                     callBack: function(options, target) {
                         // cb.call(this.uploadResponse,
                         // args.params,
@@ -1461,8 +1449,8 @@ function ___dom() {
         }
     };
     /**
-         * @memberOf __prototype__
-         */
+     * @memberOf __prototype__
+     */
     __prototype__.addScript = {
         prototypeOf: HTMLHeadElement,
         handle: function(url, eh, async) {
@@ -1474,30 +1462,30 @@ function ___dom() {
             this.add(node);
             var isOpera = false;
             eh = eh instanceof Function ? eh : function(url, e) {
-                debug(arguments, 'addScript event for ' + url);
-            }
-            .bind(window, url);
+                    debug(arguments, 'addScript event for ' + url);
+                }
+                .bind(window, url);
             if (node.attachEvent && // Check if
-            // node.attachEvent is
-            // artificially added by
-            // custom
-            // script
-            // or
-            // natively supported by browser
-            // read
-            // https://github.com/jrburke/requirejs/issues/187
-            // if we can NOT find [native
-            // code] then it must NOT
-            // natively
-            // supported.
-            // in IE8, node.attachEvent does
-            // not have toString()
-            // Note the test for "[native
-            // code" with no closing
-            // brace,
-            // see:
-            // https://github.com/jrburke/requirejs/issues/273
-            !(node.attachEvent.toString && node.attachEvent.toString().indexOf('[native code') < 0) && !isOpera)
+                // node.attachEvent is
+                // artificially added by
+                // custom
+                // script
+                // or
+                // natively supported by browser
+                // read
+                // https://github.com/jrburke/requirejs/issues/187
+                // if we can NOT find [native
+                // code] then it must NOT
+                // natively
+                // supported.
+                // in IE8, node.attachEvent does
+                // not have toString()
+                // Note the test for "[native
+                // code" with no closing
+                // brace,
+                // see:
+                // https://github.com/jrburke/requirejs/issues/273
+                !(node.attachEvent.toString && node.attachEvent.toString().indexOf('[native code') < 0) && !isOpera)
                 node.attachEvent('readystatechange', eh);
             else {
                 node.addEventListener('load', eh, false);
@@ -1507,12 +1495,12 @@ function ___dom() {
         }
     };
     /*
-         * Theme Rule name: storage.type; scope: storage.type; style:
-         * Foreground: {0, 0, 192, 255}, Style: 1
-         */
+     * Theme Rule name: storage.type; scope: storage.type; style:
+     * Foreground: {0, 0, 192, 255}, Style: 1
+     */
     /**
-         * @memberOf __prototype__
-         */
+     * @memberOf __prototype__
+     */
     __prototype__.toggleAttribute = function(n, bln, on, off) {
         if (bln === true) {
             this.setAttribute(n, on || '');
@@ -1522,8 +1510,8 @@ function ___dom() {
             else
                 this.removeAttribute(n);
         }
-    }
-    ;
+    };
+
     function parseDom(a, ns) {
         ns = typeof ns === 'undefined' ? {} : ns;
         if (this instanceof HTMLElement) {
@@ -1546,7 +1534,7 @@ function ___dom() {
         }
         var all = this.children;
         /* loop backward */
-        for (var i = all.length; i--; ) {
+        for (var i = all.length; i--;) {
             var el = all[i];
             parseDom.call(el, a, ns);
         }
@@ -1563,7 +1551,7 @@ function ___dom() {
         }
         ___parseElement___.call(this, a, ns);
         if (window.CustomEvent) {
-            var event = new CustomEvent('parseElement',{
+            var event = new CustomEvent('parseElement', {
                 detail: {
                     element: this,
                     arguments: a,
@@ -1575,26 +1563,26 @@ function ___dom() {
             window.dispatchEvent(event);
         } else
             console.error('window.CustomEvent not supported.Event not raised');
-    }
-    ;/**
-         * parses dom
-         *
-         * @revision for loop revised as negative and iterative
-         * @function
-         * @name HTMLElement#parseDOM
-         * @returns {void}
-         * @fires Window#parseElement
-         * @memberOf __prototype__
-         */
-    __prototype__.parseDOM = parseDom;
-    ;/**
-         * disables element for keyboard and mouse actions
-         *
-         * @function
-         * @name HTMLElement#disable
-         * @returns {void}
-         * @memberOf __prototype__
-         */
+    };
+    /**
+     * parses dom
+     *
+     * @revision for loop revised as negative and iterative
+     * @function
+     * @name HTMLElement#parseDOM
+     * @returns {void}
+     * @fires Window#parseElement
+     * @memberOf __prototype__
+     */
+    __prototype__.parseDOM = parseDom;;
+    /**
+     * disables element for keyboard and mouse actions
+     *
+     * @function
+     * @name HTMLElement#disable
+     * @returns {void}
+     * @memberOf __prototype__
+     */
     __prototype__.disable = function(on, progress) {
         var underlayClass = 'progress-underlay';
         underlayClassModifier = false;
@@ -1625,11 +1613,11 @@ function ___dom() {
             if (n) {
                 n.css('transition: opacity 0.3s ease-in-out;opacity:0;');
                 hto = setTimeout(function(n) {
-                    n.remove();
-                    this.___disabler___ = undefined;
-                    delete this.___disabler___;
-                }
-                .bind(this, n), 400);
+                        n.remove();
+                        this.___disabler___ = undefined;
+                        delete this.___disabler___;
+                    }
+                    .bind(this, n), 400);
             }
             return;
         }
@@ -1647,7 +1635,7 @@ function ___dom() {
             }
             var cs = getComputedStyle(this);
             if (progress === false)
-                ;
+            ;
             else if (typeof progress == 'string')
                 n.css(progress);
             else if ('object' === typeof progress && progress.cursor) {
@@ -1659,6 +1647,7 @@ function ___dom() {
                 if (underlayClassModifier)
                     this.cls(underlayClassModifier, true);
             }
+
             function rePos(n) {
                 var rc = this.getClientRects();
                 if (rc) {
@@ -1710,16 +1699,15 @@ function ___dom() {
             rePos.call(this, n);
             window.addEventListener("resize", rePos.bind(this, n), false);
         }
-    }
-    ;
+    };
     /**
-         * disables element for keyboard and mouse actions
-         *
-         * @function
-         * @name HTMLElement#disable__
-         * @returns {void}
-         * @memberOf __prototype__
-         */
+     * disables element for keyboard and mouse actions
+     *
+     * @function
+     * @name HTMLElement#disable__
+     * @returns {void}
+     * @memberOf __prototype__
+     */
     __prototype__.disable__ = function(on, progress) {
         if (isInputElement(this)) {
             this.toggleAttribute('disabled', on);
@@ -1739,11 +1727,11 @@ function ___dom() {
             if (n) {
                 n.css('transition: opacity 0.3s ease-in-out;opacity:0;');
                 hto = setTimeout(function(n) {
-                    n.remove();
-                    this.___disabler = undefined;
-                    delete this.___disabler;
-                }
-                .bind(this, n), 400);
+                        n.remove();
+                        this.___disabler = undefined;
+                        delete this.___disabler;
+                    }
+                    .bind(this, n), 400);
             }
             return;
         }
@@ -1776,6 +1764,7 @@ function ___dom() {
             } else {
                 n.css('background-image:url(' + src + ');');
             }
+
             function rePos(n) {
                 var p = this.getParent(function() {
                     return this !== document.documentElement && this !== document.body && getComputedStyle(this).overflow == 'auto' || getComputedStyle(this).overflow == 'scroll';
@@ -1813,12 +1802,11 @@ function ___dom() {
             rePos.call(this, n);
             window.addEventListener("resize", rePos.bind(this, n), false);
         }
-    }
-    ;
+    };
     /**
-         *
-         * @memberOf __prototype__
-         */
+     *
+     * @memberOf __prototype__
+     */
     __prototype__.disable_ = function(on, progress) {
         var n = this.___disabler;
         var hto;
@@ -1829,8 +1817,7 @@ function ___dom() {
                     n.remove();
                     this.___disabler = undefined;
                     delete this.___disabler;
-                }
-                ).bind(this, n), 400);
+                }).bind(this, n), 400);
             }
             return;
         }
@@ -1854,6 +1841,7 @@ function ___dom() {
                 n.css(progress);
             else
                 n.css('background-image:url(/graphics/web/processing.gif);');
+
             function rePos(n) {
                 var collRect = this.getClientRects();
                 var rc;
@@ -1868,26 +1856,25 @@ function ___dom() {
                         backgroundPosition: '50% ' + (n.scrollHeight ? parseInt(n.scrollHeight / 2) + 'px' : '50%')
                     });
                 n.topMost();
-            }
-            ;n.css({
+            };
+            n.css({
                 opacity: 1,
                 borderRadius: getComputedStyle(this).borderRadius
             });
             rePos.call(this, n);
             window.addEventListener("resize", rePos.bind(this, n), false);
         }
-    }
-    ;
+    };
     /**
-         * enables dragging support
-         *
-         * @function
-         * @name HTMLElement#canDrag
-         * @param {bool}
-         *                rem remember position. Element id must be set.
-         * @returns {void}
-         * @memberOf __prototype__
-         */
+     * enables dragging support
+     *
+     * @function
+     * @name HTMLElement#canDrag
+     * @param {bool}
+     *                rem remember position. Element id must be set.
+     * @returns {void}
+     * @memberOf __prototype__
+     */
     __prototype__.canDrag = function(rem) {
         function remPos() {
             var ck = getCookie(this.id + "-drag-coords");
@@ -1901,15 +1888,17 @@ function ___dom() {
         if (rem && this.id) {
             domReady(remPos.bind(this));
         }
-        var oClickHnd, d = this, b = document.body;
-        var offSetX = 0
-          , offSetY = 0;
+        var oClickHnd, d = this,
+            b = document.body;
+        var offSetX = 0,
+            offSetY = 0;
         var moving = false;
+
         function move(e) {
             e = e || window.event;
             // e.preventDefault();
-            var x = e.clientX
-              , y = e.clientY;
+            var x = e.clientX,
+                y = e.clientY;
             x -= offSetX;
             y -= offSetY;
             // console.info('move target',d.id,x,y);
@@ -1917,11 +1906,13 @@ function ___dom() {
             d.style.top = y + 'px';
             return false;
         }
+
         function clickHnd(e) {
             e.preventDefault();
             e.stopPropagation();
             return false;
         }
+
         function mousedown(e) {
             e = e || window.event;
             var button = e.which || e.button;
@@ -1938,14 +1929,14 @@ function ___dom() {
             b.addEventListener('mousemove', move, false);
             d.resetCursor = (function(c) {
                 this.style.cursor = c;
-            }
-            ).bind(d, d.style.cursor);
+            }).bind(d, d.style.cursor);
             d.style.cursor = "move";
             d.style.cursor = "move";
             moving = true;
             return false;
-        }
-        ;function bmouseup(e) {
+        };
+
+        function bmouseup(e) {
             e = e || window.event;
             e.preventDefault();
             e.stopPropagation();
@@ -1958,8 +1949,9 @@ function ___dom() {
             d.removeEventListener('click', clickHnd, false);
             moving = false;
             return false;
-        }
-        ;function mouseup(e) {
+        };
+
+        function mouseup(e) {
             e = e || window.event;
             d.removeEventListener('mouseup', mouseup, false);
             d.removeEventListener('click', clickHnd, false);
@@ -1976,18 +1968,17 @@ function ___dom() {
             e.cancelBubble = true;
             moving = false;
             return false;
-        }
-        ;this.addEventListener('mousedown', mousedown, false);
-    }
-    ;
+        };
+        this.addEventListener('mousedown', mousedown, false);
+    };
     /**
-         * fill container element
-         *
-         * @function
-         * @name HTMLElement#fillHeight
-         *
-         * @memberOf __prototype__
-         */
+     * fill container element
+     *
+     * @function
+     * @name HTMLElement#fillHeight
+     *
+     * @memberOf __prototype__
+     */
     __prototype__.fillHeight = function() {
         var p = this.offsetParent;
         var h = 0;
@@ -2003,12 +1994,11 @@ function ___dom() {
         }
         h = document.documentElement.clientHeight - top - h;
         this.style.height = h + 'px';
-    }
-    ;
+    };
     /**
-         *
-         * @memberOf __prototype__
-         */
+     *
+     * @memberOf __prototype__
+     */
     __prototype__.dispose = function() {
         if (this.getAttribute && this.getAttribute("value"))
             this.setAttribute("value", "");
@@ -2029,20 +2019,19 @@ function ___dom() {
             delete this[k];
             this[k] = undefined;
         }
-    }
-    ;
+    };
     /**
-         * removes child elements and attributes raises cancellable clear event
-         * on element
-         *
-         * @function
-         * @name HTMLElement#clear
-         * @param {bool}
-         *                destruct whether remove attributes and descendant
-         *                nodes
-         *
-         * @memberOf __prototype__
-         */
+     * removes child elements and attributes raises cancellable clear event
+     * on element
+     *
+     * @function
+     * @name HTMLElement#clear
+     * @param {bool}
+     *                destruct whether remove attributes and descendant
+     *                nodes
+     *
+     * @memberOf __prototype__
+     */
     __prototype__.clear = function(destruct) {
         var ce = {
             cancel: false
@@ -2050,6 +2039,7 @@ function ___dom() {
         ca.event.raise('clear', ce, this, true);
         if (ce.cancel === true)
             return;
+
         function notifyDescent(el, ev) {
             for (var i = 0; i < el.childNodes.length; i++) {
                 var ch = el.childNodes[i];
@@ -2062,8 +2052,8 @@ function ___dom() {
         if (ce.cancel === true)
             return;
         /**
-                 * @private
-                 */
+         * @private
+         */
         function removeDescent(el, destruct) {
             if (el.getAttribute && el.getAttribute("value"))
                 el.setAttribute("value", "");
@@ -2077,8 +2067,8 @@ function ___dom() {
                 delete ch;
                 ch = undefined;
             }
-        }
-        ;try {
+        };
+        try {
             removeDescent(this, destruct);
         } catch (er) {
             console.error('clear error', this, er);
@@ -2087,22 +2077,21 @@ function ___dom() {
             window.CollectGarbage();
         }
         return this;
-    }
-    ;
+    };
     /**
-         * switches style display none or block
-         *
-         * @function
-         * @name HTMLElement#toggle
-         * @param {bool}
-         *                on
-         * @param {Function}
-         *                cb called on DOMElement instance with visibility
-         *                parameter
-         * @version 1.001
-         *
-         * @memberOf __prototype__
-         */
+     * switches style display none or block
+     *
+     * @function
+     * @name HTMLElement#toggle
+     * @param {bool}
+     *                on
+     * @param {Function}
+     *                cb called on DOMElement instance with visibility
+     *                parameter
+     * @version 1.001
+     *
+     * @memberOf __prototype__
+     */
     __prototype__.toggle = function(on, cb) {
         console.info('toggle has new features');
         if (cb instanceof Array) {
@@ -2123,18 +2112,17 @@ function ___dom() {
         if (cb instanceof Function)
             cb.call(this, this.visible);
         return this;
-    }
-    ;
+    };
     /**
-         * switches style display to block
-         *
-         * @function
-         * @name HTMLElement#show
-         * @param {Function}
-         *                h called on DOMElement instance with visibility
-         *                parameter
-         * @memberOf __prototype__
-         */
+     * switches style display to block
+     *
+     * @function
+     * @name HTMLElement#show
+     * @param {Function}
+     *                h called on DOMElement instance with visibility
+     *                parameter
+     * @memberOf __prototype__
+     */
     __prototype__.show = function(h) {
         if (this.hasAttribute('data-control-event-display-params')) {
             var cls = this.getAttribute('data-control-event-display-params');
@@ -2152,20 +2140,19 @@ function ___dom() {
         if (h instanceof Function)
             h.apply(this, Array.prototype.slice.call(arguments, 1));
         return this;
-    }
-    ;
+    };
     /**
-         * removes Element , raises cancellable will-remove and remove events
-         *
-         * @function
-         * @name HTMLElement#remove
-         * @param {bool}
-         *                dispose either dispose attributes and object
-         *                properties
-         * @return removed object (this) if not removed returns false
-         *
-         * @memberOf __prototype__
-         */
+     * removes Element , raises cancellable will-remove and remove events
+     *
+     * @function
+     * @name HTMLElement#remove
+     * @param {bool}
+     *                dispose either dispose attributes and object
+     *                properties
+     * @return removed object (this) if not removed returns false
+     *
+     * @memberOf __prototype__
+     */
     __prototype__.remove = function(dispose) {
         if (this.parentNode) {
             var cea = {
@@ -2180,21 +2167,20 @@ function ___dom() {
         if (dispose === true)
             this.dispose();
         return this;
-    }
-    ;
+    };
     /**
-         * changes style display of Element o none If element has
-         * data-control-event-display-params parameter uses it by changing class
-         * name for visibility change
-         *
-         * @function
-         * @name HTMLElement#hide
-         * @param {Function}
-         *                h called on DOMElement instance with visibility
-         *                parameter
-         *
-         * @memberOf __prototype__
-         */
+     * changes style display of Element o none If element has
+     * data-control-event-display-params parameter uses it by changing class
+     * name for visibility change
+     *
+     * @function
+     * @name HTMLElement#hide
+     * @param {Function}
+     *                h called on DOMElement instance with visibility
+     *                parameter
+     *
+     * @memberOf __prototype__
+     */
     __prototype__.hide = function(h) {
         if (this.hasAttribute('data-control-event-display-params')) {
             var cls = this.getAttribute('data-control-event-display-params');
@@ -2206,16 +2192,15 @@ function ___dom() {
         if (h instanceof Function)
             h.apply(this, Array.prototype.slice.call(arguments, 1));
         return this;
-    }
-    ;
+    };
     /**
-         * @param tagName
-         *                string
-         * @param selector
-         *                Function passes this as HTMLElement and arguments as
-         *                arguments
-         * @memberOf __prototype__
-         */
+     * @param tagName
+     *                string
+     * @param selector
+     *                Function passes this as HTMLElement and arguments as
+     *                arguments
+     * @memberOf __prototype__
+     */
     __prototype__.allTags = function(tagName, selector) {
         var col = this.getElementsByTagName(tagName);
         var args = Array.prototype.slice.call(arguments, 2);
@@ -2223,8 +2208,8 @@ function ___dom() {
         Array.prototype.unshift.call(args, col, selector, out);
         applyNodeSelector.apply(this, args);
         return out;
-    }
-    ;
+    };
+
     function applyNodeSelector(col, selector, out) {
         var args = Array.prototype.slice.call(arguments, 3);
         for (var i = 0; i < col.length; i++) {
@@ -2236,21 +2221,21 @@ function ___dom() {
                 if (select === true)
                     out.push(item);
             }
-        }
-        ;return out;
+        };
+        return out;
     }
     /**
-         * @function
-         * @name HTMLElement#tags
-         * @param {String}
-         *                tagName tag name to be filtered
-         * @param {Function|bool}
-         *                selector callback called with element context and
-         *                arguments, if returns true elements filtered for
-         *                selection else not selected if passed as true returns
-         *                all tags with getElementsByTagName
-         * @memberOf __prototype__
-         */
+     * @function
+     * @name HTMLElement#tags
+     * @param {String}
+     *                tagName tag name to be filtered
+     * @param {Function|bool}
+     *                selector callback called with element context and
+     *                arguments, if returns true elements filtered for
+     *                selection else not selected if passed as true returns
+     *                all tags with getElementsByTagName
+     * @memberOf __prototype__
+     */
     __prototype__.getTags = function(tagName, selector) {
         console.warn('tags function does not use axis use tags2');
         var out = [];
@@ -2265,22 +2250,21 @@ function ___dom() {
                 if (select === true)
                     out.push(item);
             }
-        }
-        ;return out;
-    }
-    ;
+        };
+        return out;
+    };
     /**
-         * @function
-         * @name HTMLElement#tags
-         * @param {String}
-         *                tagName tag name to be filtered
-         * @param {Function|bool}
-         *                selector callback called with element context and
-         *                arguments, if returns true elements filtered for
-         *                selection else not selected if passed as true returns
-         *                all tags with getElementsByTagName
-         * @memberOf __prototype__
-         */
+     * @function
+     * @name HTMLElement#tags
+     * @param {String}
+     *                tagName tag name to be filtered
+     * @param {Function|bool}
+     *                selector callback called with element context and
+     *                arguments, if returns true elements filtered for
+     *                selection else not selected if passed as true returns
+     *                all tags with getElementsByTagName
+     * @memberOf __prototype__
+     */
     __prototype__.tags = function(tagName, selector) {
         console.warn('tags function does not use axis use tags2');
         var out = [];
@@ -2295,22 +2279,21 @@ function ___dom() {
                 if (select === true)
                     out.push(item);
             }
-        }
-        ;return out;
-    }
-    ;
+        };
+        return out;
+    };
     /**
-         * @function
-         * @name HTMLElement#tags2
-         * @param {String}
-         *                tagName tag name to be filtered
-         * @param {Function|bool}
-         *                selector callback called with element context and
-         *                arguments, if returns true elements filtered for
-         *                selection else not selected if passed as true returns
-         *                all tags with getElementsByTagName
-         * @memberOf __prototype__
-         */
+     * @function
+     * @name HTMLElement#tags2
+     * @param {String}
+     *                tagName tag name to be filtered
+     * @param {Function|bool}
+     *                selector callback called with element context and
+     *                arguments, if returns true elements filtered for
+     *                selection else not selected if passed as true returns
+     *                all tags with getElementsByTagName
+     * @memberOf __prototype__
+     */
     __prototype__.tags2 = function(tagName, selector) {
         var col = this.childNodes;
         var out = [];
@@ -2328,14 +2311,13 @@ function ___dom() {
                     out.push(item);
                 cursor++;
             }
-        }
-        ;return out;
-    }
-    ;
+        };
+        return out;
+    };
     /**
-         *
-         * @memberOf __prototype__
-         */
+     *
+     * @memberOf __prototype__
+     */
     __prototype__.prepend = function() {
         var a = Array.prototype.slice.call(arguments);
         var outs = [];
@@ -2354,17 +2336,16 @@ function ___dom() {
             outs.push(item);
         }
         return outs;
-    }
-    ;
+    };
     /**
-         * @param {Object}
-         *                ch
-         * @param {Array}
-         *                rc x1,y1,x2,y2 pixel coordinates
-         * @param {String}
-         *                t title when over
-         *
-         */
+     * @param {Object}
+     *                ch
+     * @param {Array}
+     *                rc x1,y1,x2,y2 pixel coordinates
+     * @param {String}
+     *                t title when over
+     *
+     */
     __prototype__.setRectClick = function(ch, rc, t, e) {
         var e = e || window.event;
         // if(e.type!='mouseover') return;
@@ -2374,8 +2355,8 @@ function ___dom() {
         } catch (e) {
             collRect = null;
         }
-        var x = [rc[0], rc[2]]
-          , y = [rc[1], rc[3]];
+        var x = [rc[0], rc[2]],
+            y = [rc[1], rc[3]];
         if (isset(collRect) && collRect.length > 0) {
             rect = collRect[0];
             for (var i = 0; i < 2; i++) {
@@ -2405,11 +2386,10 @@ function ___dom() {
                 // this.onclick=this.___preClickHandle;
             }
         }
-    }
-    ;
+    };
     /**
-         * @memberOf __prototype__
-         */
+     * @memberOf __prototype__
+     */
     __prototype__.slide = function(on) {
         h = 0;
         for (var i = 0, lng = this.childElementCount; i < lng; i++) {
@@ -2429,12 +2409,11 @@ function ___dom() {
         };
         this.css(css);
         ca.event.raise('slide', on, this, false);
-    }
-    ;
+    };
     /**
-         *
-         * @memberOf __prototype__
-         */
+     *
+     * @memberOf __prototype__
+     */
     __prototype__.animate = function() {
         this.hide = function() {
             var cs = {};
@@ -2442,22 +2421,19 @@ function ___dom() {
             // cs['transition'] = 'opacity 1,1s ease-in-out';
             this.css(cs);
             return this;
-        }
-        ;
+        };
         this.show = function() {
             var cs = {};
             cs['opacity'] = '1';
             // cs['transition'] = 'opacity 1.5s ease-in-out';
             this.css(cs);
             return this;
-        }
-        ;
+        };
         return this;
-    }
-    ;
+    };
     /**
-         * @memberOf __prototype__
-         */
+     * @memberOf __prototype__
+     */
     __prototype__.selectText = {
         prototypeOf: [HTMLDivElement, HTMLSpanElement],
         handle: function() {
@@ -2473,17 +2449,16 @@ function ___dom() {
         }
     };
     /**
-         * @memberOf __prototype__
-         */
+     * @memberOf __prototype__
+     */
     __prototype__._ = function(name, handler, target, capture) {
         ca.event.listen(name, handler, (target || this), (capture || false));
 
         return this;
-    }
-    ;
+    };
     /**
-         * Iterate descendant nodes and query for stub attribute
-         */
+     * Iterate descendant nodes and query for stub attribute
+     */
     __prototype__.collectNodesWithDashedAttributes = function(name, collector) {
         var out = {};
         var target = this;
@@ -2500,20 +2475,18 @@ function ___dom() {
 
         }
         return out;
-    }
-    ;
+    };
     /**
-         * @memberOf __prototype__
-         */
+     * @memberOf __prototype__
+     */
     __prototype__.$ = function(tagName) {
         var el = _$(tagName);
         this.add(el);
         return el;
-    }
-    ;
+    };
     /**
-         * @memberOf __prototype__
-         */
+     * @memberOf __prototype__
+     */
     __prototype__.add = function() {
         var a = Array.prototype.slice.call(arguments);
         var outs = [];
@@ -2529,11 +2502,10 @@ function ___dom() {
             outs.push(item);
         }
         return outs;
-    }
-    ;
+    };
     /**
-         * @memberOf __prototype__
-         */
+     * @memberOf __prototype__
+     */
     __prototype__.isHidden = function() {
         if (this.hasAttribute('data-control-event-display-params')) {
             var cls = this.getAttribute('data-control-event-display-params');
@@ -2541,12 +2513,11 @@ function ___dom() {
             return this.className.split(' ').indexOf(cls[1]) !== -1;
         }
         return this.style.display == 'none';
-    }
-    ;
+    };
     /**
-         *
-         * @memberOf __prototype__
-         */
+     *
+     * @memberOf __prototype__
+     */
     __prototype__.isVisible = function(h) {
         if (this.hasAttribute('data-control-event-display-params')) {
             var cls = this.getAttribute('data-control-event-display-params');
@@ -2557,12 +2528,11 @@ function ___dom() {
         if (isv == true && h instanceof Function)
             h.call(this);
         return isv;
-    }
-    ;
+    };
     /**
-         *
-         * @memberOf __prototype__
-         */
+     *
+     * @memberOf __prototype__
+     */
     __prototype__.disableEvent = function() {
         for (var i = 0; i < arguments.length; i++) {
             var a = arguments[i];
@@ -2572,59 +2542,55 @@ function ___dom() {
                 return false;
             }, false);
         }
-    }
-    ;
+    };
     /**
-         *
-         * @memberOf __prototype__
-         */
+     *
+     * @memberOf __prototype__
+     */
     __prototype__.html = function(v) {
         switch (this.tagName.toLowerCase()) {
 
-        default:
-            this.innerHTML = v;
+            default: this.innerHTML = v;
         }
         return this;
-    }
-    ;
+    };
     /**
-         *
-         * @memberOf __prototype__
-         */
+     *
+     * @memberOf __prototype__
+     */
     __prototype__.text = function(v) {
         switch (this.tagName.toLowerCase()) {
-        case "input":
-            this.value = v;
-            break;
-        case "textarea":
-            if (moz || chrome)
+            case "input":
                 this.value = v;
-            else {
+                break;
+            case "textarea":
+                if (moz || chrome)
+                    this.value = v;
+                else {
+                    this.textContent = v;
+                }
+                break;
+            default:
                 this.textContent = v;
-            }
-            break;
-        default:
-            this.textContent = v;
         }
         return this;
-    }
-    ;
+    };
     /**
-         * sets element style
-         *
-         * @function
-         * @name HTMLElement#css
-         * @param {String|Object}
-         *                style style attributes
-         * @memberOf __prototype__
-         */
+     * sets element style
+     *
+     * @function
+     * @name HTMLElement#css
+     * @param {String|Object}
+     *                style style attributes
+     * @memberOf __prototype__
+     */
     __prototype__.css = function(style) {
         if (typeof style == "string") {
             this.style.cssText += style;
             // this.setAttribute('style',this.style.cssText);
         } else {
             for (var item in style) {
-                if (typeof (style[item]) != "function") {
+                if (typeof(style[item]) != "function") {
                     try {
                         if (this.style.setProperty) {
                             var val = style[item];
@@ -2647,31 +2613,29 @@ function ___dom() {
             }
         }
         return this;
-    }
-    ;
+    };
     /**
-         * return element has parentElement
-         *
-         * @function
-         * @name HTMLElement#hasParent
-         * @param {Function}
-         *                callback return parent is validated by returning true
-         * @memberOf __prototype__
-         */
+     * return element has parentElement
+     *
+     * @function
+     * @name HTMLElement#hasParent
+     * @param {Function}
+     *                callback return parent is validated by returning true
+     * @memberOf __prototype__
+     */
     __prototype__.hasParent = function(cb) {
         var a = Array.prototype.slice.call(arguments);
         return this.getParent.apply(this, a) !== null;
-    }
-    ;
+    };
     /**
-         * return element parentElement
-         *
-         * @function
-         * @name HTMLElement#hasParent
-         * @param {Function}
-         *                callback return parent is validated by returning true
-         * @memberOf __prototype__
-         */
+     * return element parentElement
+     *
+     * @function
+     * @name HTMLElement#hasParent
+     * @param {Function}
+     *                callback return parent is validated by returning true
+     * @memberOf __prototype__
+     */
     __prototype__.getParent = function(cb) {
         var a = Array.prototype.slice.call(arguments, 1);
         var p = this;
@@ -2682,17 +2646,16 @@ function ___dom() {
             p = p.parentElement;
         }
         return null;
-    }
-    ;
+    };
     /**
-         * return element parentElement at given depth
-         *
-         * @function
-         * @name HTMLElement#hasParent
-         * @param {int}
-         *                depth parent depth
-         * @memberOf __prototype__
-         */
+     * return element parentElement at given depth
+     *
+     * @function
+     * @name HTMLElement#hasParent
+     * @param {int}
+     *                depth parent depth
+     * @memberOf __prototype__
+     */
     __prototype__.ancestor = function(depth) {
         var i = 0;
         var p = this;
@@ -2701,30 +2664,28 @@ function ___dom() {
             i++;
         }
         return p;
-    }
-    ;
+    };
     /**
-         *
-         * @memberOf __prototype__
-         */
+     *
+     * @memberOf __prototype__
+     */
     __prototype__.hasClass = function(cls) {
         var ar = this.className.split(' ');
         return ar.indexOf(cls) != -1;
-    }
-    ;
+    };
     /**
-         * @function
-         * @name HTMLElement#cls
-         * @param {Array|String}
-         *                v
-         * @param {Boolean|String}
-         *                tg set tg as false to remove true to add class, string
-         *                to replace first argument with this one
-         * @param {bool}
-         *                rev process items in reverse order
-         * @returns {HTMLElement}
-         * @memberOf __prototype__
-         */
+     * @function
+     * @name HTMLElement#cls
+     * @param {Array|String}
+     *                v
+     * @param {Boolean|String}
+     *                tg set tg as false to remove true to add class, string
+     *                to replace first argument with this one
+     * @param {bool}
+     *                rev process items in reverse order
+     * @returns {HTMLElement}
+     * @memberOf __prototype__
+     */
     __prototype__.cls = function(v, tg, rev) {
         var splice = Array.prototype.splice;
         var ar = this.className.split(' ');
@@ -2755,8 +2716,8 @@ function ___dom() {
                         ar.push(v);
                 }
             }
-            ar=ar.filter((c)=>{
-            	return c.trim().length>0
+            ar = ar.filter((c) => {
+                return c.trim().length > 0
             })
             this.className = ar.join(' ');
             return this;
@@ -2767,37 +2728,34 @@ function ___dom() {
             this.className = v;
         }
         return this;
-    }
-    ;
+    };
     __prototype__.toggleClass = function(v) {
         this.cls(v, !this.hasClass(v))
-    }
-    ;
+    };
     /**
-         * @function
-         * @name HTMLElement#cls
-         * @param {String}
-         *                v id of the element
-         * @returns {HTMLElement}
-         * @memberOf __prototype__
-         */
+     * @function
+     * @name HTMLElement#cls
+     * @param {String}
+     *                v id of the element
+     * @returns {HTMLElement}
+     * @memberOf __prototype__
+     */
     __prototype__.setId = function(v) {
         this.id = v;
         this.setAttribute("id", v);
         return this;
-    }
-    ;
+    };
     /**
-         * @function
-         * @name HTMLElement#att
-         * @param {String}
-         *                n name of the attribute. Can be colon semicolon name
-         *                value pairs
-         * @param {String}
-         *                v value of the attribute
-         * @returns {HTMLElement}
-         * @memberOf __prototype__
-         */
+     * @function
+     * @name HTMLElement#att
+     * @param {String}
+     *                n name of the attribute. Can be colon semicolon name
+     *                value pairs
+     * @param {String}
+     *                v value of the attribute
+     * @returns {HTMLElement}
+     * @memberOf __prototype__
+     */
     __prototype__.att = function(n, v) {
         var ats = {};
         if (typeof v == 'undefined' && n.split(':').length) {
@@ -2810,32 +2768,31 @@ function ___dom() {
             ats[n] = v;
         this.atts(ats);
         return this;
-    }
-    ;
+    };
     /**
-         * @function
-         * @name HTMLElement#attrib
-         * @param {String}
-         *                n name of the attribute. Can be colon semicolon name
-         *                value pairs
-         * @param {String}
-         *                v value of the attribute
-         * @returns {HTMLElement}
-         * @memberOf __prototype__
-         */
+     * @function
+     * @name HTMLElement#attrib
+     * @param {String}
+     *                n name of the attribute. Can be colon semicolon name
+     *                value pairs
+     * @param {String}
+     *                v value of the attribute
+     * @returns {HTMLElement}
+     * @memberOf __prototype__
+     */
     __prototype__.attrib = __prototype__.att;
     /**
-         * sets attributes of element
-         *
-         * @function
-         * @name HTMLElement#atts
-         * @param {Object}
-         *                ats attributes
-         * @returns {HTMLElement}
-         *
-         * @memberOf __prototype__
-         * @private
-         */
+     * sets attributes of element
+     *
+     * @function
+     * @name HTMLElement#atts
+     * @param {Object}
+     *                ats attributes
+     * @returns {HTMLElement}
+     *
+     * @memberOf __prototype__
+     * @private
+     */
     __prototype__.atts = function(ats) {
         if (ats) {
             for (var item in ats) {
@@ -2861,25 +2818,23 @@ function ___dom() {
             }
         }
         return this;
-    }
-    ;
+    };
     /**
-         * centerScreen Not implemented
-         *
-         * @function
-         * @name HTMLElement#centerScreen
-         * @returns {void}
-         *
-         * @memberOf __prototype__
-         */
+     * centerScreen Not implemented
+     *
+     * @function
+     * @name HTMLElement#centerScreen
+     * @returns {void}
+     *
+     * @memberOf __prototype__
+     */
     __prototype__.centerScreen = function() {
         console.error("centerScreen Not implemented");
-    }
-    ;
+    };
     /**
-         * @namespace ns
-         * @memberOf __closure
-         */
+     * @namespace ns
+     * @memberOf __closure
+     */
     var __property__ = {
         activeElements: {
             propertyOf: HTMLFormElement,
@@ -2889,18 +2844,18 @@ function ___dom() {
                 for (var i = 0; i < els.length; i++) {
                     if (els[i].excluded == false)
                         o[els[i].name] = els[i];
-                }
-                ;return o;
+                };
+                return o;
             },
             configurable: false
         },
         /**
-                         * returns the form of div element
-                         *
-                         * @name HTMLDivElement#form
-                         * @returns {HTMLFormElement}
-                         * @memberOf __property__
-                         */
+         * returns the form of div element
+         *
+         * @name HTMLDivElement#form
+         * @returns {HTMLFormElement}
+         * @memberOf __property__
+         */
         elementsCount: {
             propertyOf: [HTMLFormElement],
             get: function() {
@@ -2927,11 +2882,11 @@ function ___dom() {
             configurable: true
         },
         /**
-                         * returns the checkbox is checked or set checked
-                         *
-                         * @name HTMLDivElement#checked
-                         * @returns {boolean}
-                         */
+         * returns the checkbox is checked or set checked
+         *
+         * @name HTMLDivElement#checked
+         * @returns {boolean}
+         */
         checked: {
             propertyOf: [HTMLDivElement],
             get: function() {
@@ -2948,11 +2903,11 @@ function ___dom() {
             configurable: true
         },
         /**
-                         * returns element size by calculating padding
-                         *
-                         * @name HTMLElement#clientSize
-                         * @returns {w,h}
-                         */
+         * returns element size by calculating padding
+         *
+         * @name HTMLElement#clientSize
+         * @returns {w,h}
+         */
         clientSize: {
             get: function() {
                 var s = getComputedStyle(this);
@@ -2979,123 +2934,127 @@ function ___dom() {
             },
             configurable: true
         },
-        dirty: [/**
-                                 * returns whether element is dirty
-                                 *
-                                 * @name HTMLTextAreaElement#dirty
-                                 * @returns {bool}
-                                 */
-        {
-            propertyOf: [HTMLTextAreaElement],
-            get: function() {
-                if (this.excluded)
-                    return false;
-                // console.info('TextArea Dirty
-                // ?',
-                // this.defaultValue !=
-                // this.getValue(),
-                // this.defaultValue,
-                // this.getValue(),
-                // this.defaultChecked, this);
-                return this.getAttribute('defaultValue') != this.getValue();
+        dirty: [
+            /**
+             * returns whether element is dirty
+             *
+             * @name HTMLTextAreaElement#dirty
+             * @returns {bool}
+             */
+            {
+                propertyOf: [HTMLTextAreaElement],
+                get: function() {
+                    if (this.excluded)
+                        return false;
+                    // console.info('TextArea Dirty
+                    // ?',
+                    // this.defaultValue !=
+                    // this.getValue(),
+                    // this.defaultValue,
+                    // this.getValue(),
+                    // this.defaultChecked, this);
+                    return this.getAttribute('defaultValue') != this.getValue();
+                },
+                configurable: true
             },
-            configurable: true
-        }, /**
-                                 * returns whether element is dirty
-                                 *
-                                 * @name HTMLSelectElement#dirty
-                                 * @returns {bool}
-                                 */
-        {
-            propertyOf: [HTMLSelectElement],
-            get: function() {
-                if (this.excluded)
-                    return false;
-                // if (this.defaultValue !=
-                // this.getValue())
-                // console.info('Select Dirty
-                // ?',
-                // this.defaultValue !=
-                // this.getValue(),
-                // 'initial=',
-                // this.defaultValue, 'value=',
-                // this
-                // .getValue(), this);
-                var option = this.options.item(0);
-                while (option) {
-                    if (option.defaultSelected) {
-                        // console.info('checkselect
-                        // is dirty',
-                        // option.defaultSelected);
-                        return option.value != this.getValue();
+            /**
+             * returns whether element is dirty
+             *
+             * @name HTMLSelectElement#dirty
+             * @returns {bool}
+             */
+            {
+                propertyOf: [HTMLSelectElement],
+                get: function() {
+                    if (this.excluded)
+                        return false;
+                    // if (this.defaultValue !=
+                    // this.getValue())
+                    // console.info('Select Dirty
+                    // ?',
+                    // this.defaultValue !=
+                    // this.getValue(),
+                    // 'initial=',
+                    // this.defaultValue, 'value=',
+                    // this
+                    // .getValue(), this);
+                    var option = this.options.item(0);
+                    while (option) {
+                        if (option.defaultSelected) {
+                            // console.info('checkselect
+                            // is dirty',
+                            // option.defaultSelected);
+                            return option.value != this.getValue();
+                        }
+                        option = option.nextElementSibling;
                     }
-                    option = option.nextElementSibling;
-                }
-                return false;
-            },
-            configurable: true
-        }, /**
-                                 * returns whether element is dirty
-                                 *
-                                 * @name HTMLInputElement#dirty
-                                 * @returns {bool}
-                                 */
-        {
-            propertyOf: [HTMLInputElement],
-            get: function() {
-                if (this.type == "button")
                     return false;
-                // console.info('Input Dirty ?',
-                // this.defaultValue !=
-                // this.getValue(),
-                // this.defaultValue,
-                // this.getValue(),
-                // this.defaultChecked, this);
-                if (this.type == "checkbox" || this.type == "radio") {
-                    return (this.getAttribute('defaultChecked') === "true" ? true : false) != this.checked;
-                }
-                return this.getAttribute('defaultValue') != this.getValue();
+                },
+                configurable: true
             },
-            configurable: true
-        }, {
-            propertyOf: [HTMLFormElement],
-            get: function() {
-                if (this.hasAttribute('data-control-flag-dirty'))
-                    return true;
-                if (this.initialElementsCount !== this.elementsCount)
-                    return true;
-                var els = this.elements;
-                console.groupCollapsed('check Form dirty', this, els.length, arguments);
-                for (var i = 0; i < els.length; i++) {
-                    var item = els[i];
-                    if (item.excluded)
-                        continue;
-                    if (item.type === 'button')
-                        continue;
-                    // console.log('Check
-                    // dirty', item);
-                    if (item.dirty === true) {
-                        console.warn('Form dirty by', item);
-                        console.groupEnd();
+            /**
+             * returns whether element is dirty
+             *
+             * @name HTMLInputElement#dirty
+             * @returns {bool}
+             */
+            {
+                propertyOf: [HTMLInputElement],
+                get: function() {
+                    if (this.type == "button")
+                        return false;
+                    // console.info('Input Dirty ?',
+                    // this.defaultValue !=
+                    // this.getValue(),
+                    // this.defaultValue,
+                    // this.getValue(),
+                    // this.defaultChecked, this);
+                    if (this.type == "checkbox" || this.type == "radio") {
+                        return (this.getAttribute('defaultChecked') === "true" ? true : false) != this.checked;
+                    }
+                    return this.getAttribute('defaultValue') != this.getValue();
+                },
+                configurable: true
+            }, {
+                propertyOf: [HTMLFormElement],
+                get: function() {
+                    if (this.hasAttribute('data-control-flag-dirty'))
                         return true;
+                    if (this.initialElementsCount !== this.elementsCount)
+                        return true;
+                    var els = this.elements;
+                    console.groupCollapsed('check Form dirty', this, els.length, arguments);
+                    for (var i = 0; i < els.length; i++) {
+                        var item = els[i];
+                        if (item.excluded)
+                            continue;
+                        if (item.type === 'button')
+                            continue;
+                        // console.log('Check
+                        // dirty', item);
+                        if (item.dirty === true) {
+                            console.warn('Form dirty by', item);
+                            console.groupEnd();
+                            return true;
+                        }
                     }
-                }
-                console.info('Form not dirty');
-                console.groupEnd();
-                return false;
+                    console.info('Form not dirty');
+                    console.groupEnd();
+                    return false;
+                },
+                set: function(v) {
+                    if (v)
+                        this.setAttribute('data-control-flag-dirty', '');
+                    else
+                        this.removeAttribute('data-control-flag-dirty');
+                    ca.event.raise('dirty', v, this);
+                    ca.event.raise('change', {
+                        source: this
+                    }, this, false);
+                },
+                configurable: true
             },
-            set: function(v) {
-                if (v)
-                    this.setAttribute('data-control-flag-dirty', '');
-                else
-                    this.removeAttribute('data-control-flag-dirty');
-                ca.event.raise('dirty', v, this);
-                ca.event.raise('change', {
-                    source: this
-                }, this, false);
-            },
-            configurable: true
-        }, ],
+        ],
         excluded: {
             get: function() {
                 if (!this.form)
@@ -3127,6 +3086,7 @@ function ___dom() {
         formElements: {
             get: function() {
                 var a = {};
+
                 function collect(a, items) {
                     if (items.length) {
                         for (var i = 0, lng = items.length; i < lng; ++i) {
@@ -3396,12 +3356,12 @@ function ___dom() {
             configurable: false
         },
         /**
-                                 * returns element or parent that has
-                                 * data-control-draggable attribute
-                                 *
-                                 * @name HTMLElement#dragEventTarget
-                                 * @returns {HTMLElement}
-                                 */
+         * returns element or parent that has
+         * data-control-draggable attribute
+         *
+         * @name HTMLElement#dragEventTarget
+         * @returns {HTMLElement}
+         */
         dragEventTarget: {
             get: function() {
                 if (this.hasAttribute('data-control-draggable'))
@@ -3412,11 +3372,11 @@ function ___dom() {
             }
         },
         /**
-                                 * returns getClientRects first indexed item
-                                 *
-                                 * @name HTMLElement#clientRect
-                                 * @returns {Object} Rectangle object
-                                 */
+         * returns getClientRects first indexed item
+         *
+         * @name HTMLElement#clientRect
+         * @returns {Object} Rectangle object
+         */
         clientRect: {
             get: function() {
                 var collRect;
@@ -3482,12 +3442,12 @@ function ___dom() {
             configurable: false
         },
         /**
-                                 * returns element or parent that has
-                                 * data-control-closure-scope attribute
-                                 *
-                                 * @name HTMLElement#closureScope
-                                 * @returns {HTMLElement}
-                                 */
+         * returns element or parent that has
+         * data-control-closure-scope attribute
+         *
+         * @name HTMLElement#closureScope
+         * @returns {HTMLElement}
+         */
         closure: {
             get: function() {
                 if (this.hasAttribute('data-control-closure-scope')) {
@@ -3530,12 +3490,12 @@ function ___dom() {
             }
         },
         /**
-                                 * returns element or parent that has
-                                 * data-control-render-target attribute
-                                 *
-                                 * @name HTMLElement#eventTarget
-                                 * @returns {HTMLElement}
-                                 */
+         * returns element or parent that has
+         * data-control-render-target attribute
+         *
+         * @name HTMLElement#eventTarget
+         * @returns {HTMLElement}
+         */
         renderTarget: {
             get: function() {
                 if (this.hasAttribute('data-control-render-target')) {
@@ -3547,18 +3507,18 @@ function ___dom() {
             }
         },
         /**
-                                 * returns element padding metrics
-                                 *
-                                 * @name HTMLElement#computedBorder
-                                 * @returns {HTMLElement}
-                                 */
+         * returns element padding metrics
+         *
+         * @name HTMLElement#computedBorder
+         * @returns {HTMLElement}
+         */
         computedBorder: {
             get: function() {
                 var cs = getComputedStyle(this);
-                var top = parseInt(cs.borderTop)
-                  , bot = parseInt(cs.borderBottom)
-                  , left = parseInt(cs.borderLeft)
-                  , right = parseInt(cs.borderRight);
+                var top = parseInt(cs.borderTop),
+                    bot = parseInt(cs.borderBottom),
+                    left = parseInt(cs.borderLeft),
+                    right = parseInt(cs.borderRight);
                 top = isNaN(top) ? 0 : top;
                 bot = isNaN(bot) ? 0 : bot;
                 left = isNaN(left) ? 0 : left;
@@ -3578,18 +3538,18 @@ function ___dom() {
             }
         },
         /**
-                                 * returns element padding metrics
-                                 *
-                                 * @name HTMLElement#computedPadding
-                                 * @returns {HTMLElement}
-                                 */
+         * returns element padding metrics
+         *
+         * @name HTMLElement#computedPadding
+         * @returns {HTMLElement}
+         */
         computedPadding: {
             get: function() {
                 var cs = getComputedStyle(this);
-                var top = parseInt(cs.paddingTop)
-                  , bot = parseInt(cs.paddingBottom)
-                  , left = parseInt(cs.paddingLeft)
-                  , right = parseInt(cs.paddingRight);
+                var top = parseInt(cs.paddingTop),
+                    bot = parseInt(cs.paddingBottom),
+                    left = parseInt(cs.paddingLeft),
+                    right = parseInt(cs.paddingRight);
                 var v = top + bot;
                 var h = left + right;
                 return {
@@ -3605,12 +3565,12 @@ function ___dom() {
             }
         },
         /**
-                                 * returns element or parent that has
-                                 * data-event-target attribute
-                                 *
-                                 * @name HTMLElement#eventTarget
-                                 * @returns {HTMLElement}
-                                 */
+         * returns element or parent that has
+         * data-event-target attribute
+         *
+         * @name HTMLElement#eventTarget
+         * @returns {HTMLElement}
+         */
         eventTarget: {
             get: function() {
                 if (this.detached)
@@ -3626,12 +3586,12 @@ function ___dom() {
         },
 
         /**
-                                 * returns element or parent that has
-                                 * data-event-target attribute
-                                 *
-                                 * @name HTMLElement#eventTarget
-                                 * @returns {HTMLElement}
-                                 */
+         * returns element or parent that has
+         * data-event-target attribute
+         *
+         * @name HTMLElement#eventTarget
+         * @returns {HTMLElement}
+         */
         eventTemplate: {
             get: function() {
                 if (this.detached)
@@ -3646,24 +3606,24 @@ function ___dom() {
             }
         },
         /**
-                                 * returns element have data-event-bridge
-                                 * attribute
-                                 *
-                                 * @name HTMLElement#isEventBridge
-                                 * @returns {HTMLElement}
-                                 */
+         * returns element have data-event-bridge
+         * attribute
+         *
+         * @name HTMLElement#isEventBridge
+         * @returns {HTMLElement}
+         */
         isEventBridge: {
             get: function() {
                 return this.hasAttribute('data-event-bridge');
             }
         },
         /**
-                                 * returns element or parent that has
-                                 * data-event-bridge attribute
-                                 *
-                                 * @name HTMLElement#eventBridge
-                                 * @returns {HTMLElement}
-                                 */
+         * returns element or parent that has
+         * data-event-bridge attribute
+         *
+         * @name HTMLElement#eventBridge
+         * @returns {HTMLElement}
+         */
         eventBridge: {
             get: function() {
                 if (this.hasAttribute('data-event-bridge')) {
@@ -3675,12 +3635,12 @@ function ___dom() {
             }
         },
         /**
-                                 * returns element or parent that has
-                                 * data-event-node attribute
-                                 *
-                                 * @name HTMLElement#eventNode
-                                 * @returns {HTMLElement}
-                                 */
+         * returns element or parent that has
+         * data-event-node attribute
+         *
+         * @name HTMLElement#eventNode
+         * @returns {HTMLElement}
+         */
         eventNode: {
             get: function() {
                 if (this.hasAttribute('data-event-node')) {
@@ -3708,12 +3668,12 @@ function ___dom() {
             }
         },
         /**
-                                 * returns value of element or parent that has
-                                 * data-event-target attribute
-                                 *
-                                 * @name HTMLElement#eventTarget
-                                 * @returns {HTMLElement}
-                                 */
+         * returns value of element or parent that has
+         * data-event-target attribute
+         *
+         * @name HTMLElement#eventTarget
+         * @returns {HTMLElement}
+         */
         label: {
             get: function() {
                 if (this.hasAttribute('data-control-label')) {
@@ -3725,12 +3685,12 @@ function ___dom() {
             }
         },
         /**
-                                 * returns element or parent that has
-                                 * data-control-group attribute
-                                 *
-                                 * @name HTMLElement#controlGroup
-                                 * @returns {HTMLElement}
-                                 */
+         * returns element or parent that has
+         * data-control-group attribute
+         *
+         * @name HTMLElement#controlGroup
+         * @returns {HTMLElement}
+         */
         controlGroup: {
             get: function() {
                 if (this.hasAttribute('data-control-group')) {
@@ -3742,12 +3702,12 @@ function ___dom() {
             }
         },
         /**
-                                 * returns element display state using
-                                 * data-control-event-display-params attribute
-                                 *
-                                 * @name HTMLElement#visible
-                                 * @returns {bool}
-                                 */
+         * returns element display state using
+         * data-control-event-display-params attribute
+         *
+         * @name HTMLElement#visible
+         * @returns {bool}
+         */
         visible: {
             get: function() {
                 if (this.hasAttribute('data-control-event-display-params')) {
@@ -3760,16 +3720,16 @@ function ___dom() {
             }
         },
         /**
-                                 * returns element offset position
-                                 *
-                                 * @name HTMLElement#visible
-                                 * @returns {Object} left,top
-                                 */
+         * returns element offset position
+         *
+         * @name HTMLElement#visible
+         * @returns {Object} left,top
+         */
         offsetPos: {
             get: function() {
-                var op = this
-                  , ol = 0
-                  , ot = 0;
+                var op = this,
+                    ol = 0,
+                    ot = 0;
                 while (op) {
                     ol += op.offsetLeft;
                     ot += op.offsetTop;
@@ -3796,36 +3756,35 @@ function ___dom() {
         },
     };
     /**
-         * @memberOf __property__
-         */
+     * @memberOf __property__
+     */
     __property__.itemRequest = __property__.controlRequest;
     __property__.itemCommand = __property__.controlCommand;
     /**
-         * Raise element before element [el] by setting z-index
-         *
-         * @function
-         * @name HTMLElement#justBefore
-         * @param {HTMLElement}
-         *                el
-         *
-         * @memberOf __prototype__
-         */
+     * Raise element before element [el] by setting z-index
+     *
+     * @function
+     * @name HTMLElement#justBefore
+     * @param {HTMLElement}
+     *                el
+     *
+     * @memberOf __prototype__
+     */
     __prototype__.justBefore = function(el) {
         var zi = parseInt(el.style.zIndex);
         zi = isNaN(zi) ? 2 : zi;
         zi--;
         this.style.zIndex = zi;
-    }
-    ;
+    };
     /**
-         * Raise control top of other controls by setting z-index
-         *
-         * @function
-         * @name HTMLElement#topMost
-         *
-         *
-         * @memberOf __prototype__
-         */
+     * Raise control top of other controls by setting z-index
+     *
+     * @function
+     * @name HTMLElement#topMost
+     *
+     *
+     * @memberOf __prototype__
+     */
     __prototype__.topMost = function() {
         var all = document.all;
         var top = 0;
@@ -3843,22 +3802,21 @@ function ___dom() {
         // console.log("topMost", top);
         this.style.zIndex = top;
         return this;
-    }
-    ;
+    };
     /**
-         *
-         * @memberOf __prototype__
-         */
+     *
+     * @memberOf __prototype__
+     */
     __prototype__.setTitle = {
         prototypeOf: HTMLDocument,
         /**
-                         * sets title of document
-                         *
-                         * @function
-                         * @name HTMLDocument#setTitle
-                         * @param {String}
-                         *                v - title for document
-                         */
+         * sets title of document
+         *
+         * @function
+         * @name HTMLDocument#setTitle
+         * @param {String}
+         *                v - title for document
+         */
         handle: function(v) {
             if (!window.___defaultDocumentTitle___)
                 window.___defaultDocumentTitle___ = this.title;
@@ -3868,59 +3826,59 @@ function ___dom() {
             ts.unshift(v);
             this.title = ts.join(' - ');
             /*
-                                 * var t = this.title; var ts = t.split(' - ');
-                                 * ts.splice(0, 1); ts.unshift(v); this.title =
-                                 * ts.join(' - ');
-                                 */
+             * var t = this.title; var ts = t.split(' - ');
+             * ts.splice(0, 1); ts.unshift(v); this.title =
+             * ts.join(' - ');
+             */
         }
     };
     /**
-         *
-         * @memberOf __prototype__
-         */
+     *
+     * @memberOf __prototype__
+     */
     __prototype__.HTMLCollection = {
         prototypeOf: HTMLCollection,
         handles: {
             /**
-                                 * applies select array function on
-                                 * HTMLCollection
-                                 *
-                                 * @function
-                                 * @name HTMLCollection#select
-                                 * @returns {Array} of HTMLElement
-                                 */
+             * applies select array function on
+             * HTMLCollection
+             *
+             * @function
+             * @name HTMLCollection#select
+             * @returns {Array} of HTMLElement
+             */
             select: function(cb, a) {
                 var col = this.toArray();
                 return col.select.apply(col, arguments);
             },
             /**
-                                 * applies each array function on HTMLCollection
-                                 *
-                                 * @function
-                                 * @name HTMLCollection#each
-                                 */
+             * applies each array function on HTMLCollection
+             *
+             * @function
+             * @name HTMLCollection#each
+             */
             each: function(cb, a) {
                 var col = this.toArray();
                 return col.each.apply(col, arguments);
             },
             /**
-                                 * applies find array function on HTMLCollection
-                                 *
-                                 * @function
-                                 * @name HTMLCollection#find
-                                 */
+             * applies find array function on HTMLCollection
+             *
+             * @function
+             * @name HTMLCollection#find
+             */
             find: function(cb, a) {
                 var col = this.toArray();
                 return col.find.apply(col, arguments);
             },
             /**
-                                 * converts HTMLCollection to array and returns
-                                 * it
-                                 *
-                                 * @function
-                                 * @name HTMLCollection#toArray
-                                 * @returns {Array} of HTMLElement
-                                 */
+             * converts HTMLCollection to array and returns
+             * it
+             *
+             * @function
+             * @name HTMLCollection#toArray
+             * @returns {Array} of HTMLElement
+             */
             toArray: function() {
                 var col = [];
                 for (var i = 0; i < this.length; i++) {
@@ -3931,46 +3889,45 @@ function ___dom() {
         }
     };
     /**
-         * @private
-         */
+     * @private
+     */
     ___proto_getValue = function() {
         switch (this.tagName.toLowerCase()) {
-        case "input":
-        case "select":
-            switch (this.type) {
-            case "checkbox":
-                return (this.checked == false ? null : this.value);
+            case "input":
+            case "select":
+                switch (this.type) {
+                    case "checkbox":
+                        return (this.checked == false ? null : this.value);
+                        break;
+                    default:
+                        return this.value;
+                }
+                break;
+            case "textarea":
+                return (chrome ? this.value : this.innerText);
                 break;
             default:
-                return this.value;
-            }
-            break;
-        case "textarea":
-            return (chrome ? this.value : this.innerText);
-            break;
-        default:
-            console.assert(false, this.tagName + ' not implemented');
+                console.assert(false, this.tagName + ' not implemented');
         }
-    }
-    ;
+    };
     /**
-         * adds element to element
-         *
-         * @function
-         * @name HTMLElement#addTo
-         * @param {HTMLElement}
-         *                o element being added
-         * @returns {HTMLElement} added element
-         */
+     * adds element to element
+     *
+     * @function
+     * @name HTMLElement#addTo
+     * @param {HTMLElement}
+     *                o element being added
+     * @returns {HTMLElement} added element
+     */
     /**
-         * prepends element to element
-         *
-         * @function
-         * @name HTMLElement#prependTo
-         * @param {HTMLElement}
-         *                o element being prepended
-         * @returns {HTMLElement} prepended element
-         */
+     * prepends element to element
+     *
+     * @function
+     * @name HTMLElement#prependTo
+     * @param {HTMLElement}
+     *                o element being prepended
+     * @returns {HTMLElement} prepended element
+     */
     var toNames = 'add,prepend'.split(',');
     for (var i = 0; i < toNames.length; i++) {
         var f = toNames[i];
@@ -3978,15 +3935,15 @@ function ___dom() {
             return function(c) {
                 f.call(c, this);
                 return this;
-            }
-            ;
-        }
-        )(__prototype__[f]);
+            };
+        })(__prototype__[f]);
     }
+
     function isInputElement(e) {
         return e instanceof HTMLInputElement || e instanceof HTMLSelectElement || e instanceof HTMLTextAreaElement;
-    }
-    ;function loadPrototypes() {
+    };
+
+    function loadPrototypes() {
         function loadPrototype(key, item) {
             if (item.hasOwnProperty('prototypeOf')) {
                 var pto = item.prototypeOf;
@@ -4031,8 +3988,9 @@ function ___dom() {
             // TODO Burası patlar
         }
         console.groupEnd();
-    }
-    ;function loadProperties() {
+    };
+
+    function loadProperties() {
         function loadProperty(name, def) {
             console.log('loadProperty', name, def);
             if (def.hasOwnProperty('propertyOf')) {
@@ -4063,27 +4021,27 @@ function ___dom() {
             }
         }
         console.groupEnd();
-    }
-    ;loadPrototypes();
+    };
+    loadPrototypes();
     loadProperties();
     /**
-         * Whether validation enabled for this element
-         *
-         * @name HTMLElement#canValidate
-         * @return bool
-         */
+     * Whether validation enabled for this element
+     *
+     * @name HTMLElement#canValidate
+     * @return bool
+     */
     /**
-         * returns whether element is disabled (has disabled attribute)
-         *
-         * @name HTMLElement#disabled
-         * @returns {bool}
-         */
+     * returns whether element is disabled (has disabled attribute)
+     *
+     * @name HTMLElement#disabled
+     * @returns {bool}
+     */
     /**
-         * @function
-         * @name NodeList#each
-         * @param {Function}
-         *                hnd
-         */
+     * @function
+     * @name NodeList#each
+     * @param {Function}
+     *                hnd
+     */
     NodeList.prototype.each = function(hnd) {
         var sel = [];
         var args = Array.prototype.slice.call(arguments, 1);
@@ -4093,15 +4051,14 @@ function ___dom() {
             Array.prototype.unshift.call(ta, this.item(i), i);
             hnd.apply(this, ta);
         }
-    }
-    ;
+    };
     /**
-         * @function
-         * @name NodeList#select
-         * @param {Function}
-         *                hnd
-         * @returns array
-         */
+     * @function
+     * @name NodeList#select
+     * @param {Function}
+     *                hnd
+     * @returns array
+     */
     NodeList.prototype.select = function(hnd) {
         var sel = [];
         var args = Array.prototype.slice.call(arguments, 1);
@@ -4115,8 +4072,7 @@ function ___dom() {
             }
         }
         return sel;
-    }
-    ;
+    };
     domReady(function() {
         document.onkeydown = document.onkeypress = function(e) {
             if (e.keyCode == 8) {
@@ -4132,12 +4088,11 @@ function ___dom() {
             if (doPrevent) {
                 e.preventDefault();
             }
-        }
-        ;
+        };
     });
     /*
-         * Main function parses all elements
-         */
+     * Main function parses all elements
+     */
     domReady(function() {
         __prototype__.parseDOM.call(document);
         //              window.forceHash();
@@ -4159,10 +4114,11 @@ function ___domReady() {
             window.addEventListener("DOMContentLoaded", h, false);
     }
 
-    ;/**
-         * @id domReady fires when DOM Loaded or document and libraries are
-         *     ready
-         */
+    ;
+    /**
+     * @id domReady fires when DOM Loaded or document and libraries are
+     *     ready
+     */
     window.domReady = domReady;
 
 }
@@ -4178,8 +4134,8 @@ function ___parser() {
         } catch (err) {
             collRect = null;
         }
-        var x = [rc[0], rc[2]]
-          , y = [rc[1], rc[3]];
+        var x = [rc[0], rc[2]],
+            y = [rc[1], rc[3]];
         if (isset(collRect) && collRect.length > 0) {
             rect = collRect[0];
             for (var i = 0; i < 2; i++) {
@@ -4199,7 +4155,7 @@ function ___parser() {
                     e.stopImmediatePropagation();
                     e.returnValue = false;
                     if (window.CustomEvent) {
-                        var event = new CustomEvent('rectclick',{
+                        var event = new CustomEvent('rectclick', {
                             // detail : a,
                             bubbles: b,
                             cancelable: true
@@ -4278,13 +4234,13 @@ function ___parser() {
         'data-control-form-element-group': '',
     };
     /**
-         * @namespace
-         * @name dataAttributeParser
-         */
+     * @namespace
+     * @name dataAttributeParser
+     */
     var dataAttributeParser = {
 
-        _template: function(v, n, oh) {// var data = v;
-        // this.removeAttribute(n);
+        _template: function(v, n, oh) { // var data = v;
+            // this.removeAttribute(n);
         },
         event: {
             // region: {
@@ -4307,11 +4263,11 @@ function ___parser() {
             // },
             hash: {
                 /**
-                                         * //FIXME DEPRECATE
-                                         *
-                                         * @namespace
-                                         * @name dataAttributeParser.event.hash.listener
-                                         */
+                 * //FIXME DEPRECATE
+                 *
+                 * @namespace
+                 * @name dataAttributeParser.event.hash.listener
+                 */
                 listener: function(v) {
                     // v = addSourceUrl.call(this,
                     // v, 'listener');
@@ -4321,9 +4277,9 @@ function ___parser() {
                     this.addEventListener('hashChanged', handle, false);
                     // forceHash();
                     this.addEventListener('remove', function(h, e) {
-                        e.target.removeEventListener(h, false);
-                    }
-                    .bind(window, handle));
+                            e.target.removeEventListener(h, false);
+                        }
+                        .bind(window, handle));
                 }
             }
         },
@@ -4334,7 +4290,7 @@ function ___parser() {
                 var data = typeof fn === 'function' ? fn.call(this) : v;
                 this.removeAttribute(n);
                 ca.event.listen('click', function(e) {
-                    var d = new ca.ui.controls.dialog('Yardım',{
+                    var d = new ca.ui.controls.dialog('Yardım', {
                         size: {
                             w: 500,
                             h: 'content'
@@ -4343,10 +4299,10 @@ function ___parser() {
                     d.container.innerHTML = data;
                     var linker = _$('div').text('Daha fazla yardım');
                     linker.onclick = function() {
-                        d.close();
-                        self.location.hash = '#1/yardim';
-                    }
-                    .bind(d);
+                            d.close();
+                            self.location.hash = '#1/yardim';
+                        }
+                        .bind(d);
                     d.addMenuItem(linker);
                     d.show(true, true);
                 }, this);
@@ -4383,11 +4339,11 @@ function ___parser() {
                         this.checked = input.value == data[0];
                     }
                     ca.event.listen('click', function(e) {
-                        this.checked = !this.checked;
-                        this.firstElementChild.value = this.checked ? data[0] : data[1];
-                        ca.event.raise('change', {}, this.firstElementChild, true);
-                    }
-                    .bind(this), this, false);
+                            this.checked = !this.checked;
+                            this.firstElementChild.value = this.checked ? data[0] : data[1];
+                            ca.event.raise('change', {}, this.firstElementChild, true);
+                        }
+                        .bind(this), this, false);
 
                     this.removeAttribute(n);
                 },
@@ -4517,7 +4473,7 @@ function ___parser() {
                 this.removeAttribute('data-control-constructor-arguments');
                 a.source = this;
                 var o = v.toObject();
-                new o(a,this);
+                new o(a, this);
             },
             tooltip: function(v) {
 
@@ -4525,8 +4481,8 @@ function ___parser() {
                 try {
                     eval('opts=' + v + '');
                     ')';
-                } catch (e) {// TODO: handle
-                // exception
+                } catch (e) { // TODO: handle
+                    // exception
                 }
                 var pe, sh;
                 if (opts instanceof Object) {
@@ -4541,8 +4497,7 @@ function ___parser() {
                             message: v,
                             hideEvent: he
                         });
-                    }
-                    ).bind(this, v, he);
+                    }).bind(this, v, he);
                 }
                 this.addEventListener(pe, sh, false);
             },
@@ -4563,94 +4518,93 @@ function ___parser() {
 
                 messages: {
                     /**
-                                                 * @param {Object}
-                                                 *                v
-                                                 * @deprecated
-                                                 */
+                     * @param {Object}
+                     *                v
+                     * @deprecated
+                     */
                     empty: function(v) {
                         this.setError = (function(oh, v) {
                             var a = Array.prototype.splice.call(arguments, 2);
                             a[0] = v;
                             oh.apply(this, a);
-                        }
-                        ).bind(this, this.setError, v);
+                        }).bind(this, this.setError, v);
                     }
                 }
             },
             /**
-                                 * use compare for eauality and unequal for
-                                 * unequality comparison //TODO:use events in
-                                 * validation
-                                 */
+             * use compare for eauality and unequal for
+             * unequality comparison //TODO:use events in
+             * validation
+             */
             validators: function(v) {
                 var ar = v instanceof Array ? v : v.object;
                 this.validate = function(ar) {
-                    console.info('validating with inline validators', this, arguments);
-                    this.isValid = true;
-                    if (this.canValidate == false)
-                        return true;
-                    var cev = {
-                        valid: undefined
-                    };
-                    ca.event.raise('validate', cev, this, true);
-                    if (cev.valid === true || cev.valid === false) {
-                        this.isValid = cev.valid;
-                        if (this.form && cev.valid === false)
-                            this.form.isValid = false;
+                        console.info('validating with inline validators', this, arguments);
+                        this.isValid = true;
+                        if (this.canValidate == false)
+                            return true;
+                        var cev = {
+                            valid: undefined
+                        };
+                        ca.event.raise('validate', cev, this, true);
+                        if (cev.valid === true || cev.valid === false) {
+                            this.isValid = cev.valid;
+                            if (this.form && cev.valid === false)
+                                this.form.isValid = false;
+                            return this.isValid;
+                        }
+                        ar.each(function(o, i, el) {
+                            var test;
+                            if (o.compare || o.unequal) {
+                                function checkParam(el, pName) {
+                                    return typeof pName !== 'undefined' ? pName instanceof HTMLElement ? pName : pName.$ ? pName.$ : el.form && el.form[pName] ? el.form[pName] : undefined : undefined;
+                                }
+                                var com = checkParam(el, o.compare);
+                                var uneq = checkParam(el, o.unequal);
+                                test = function(u, v) {
+                                        if (u)
+                                            return this.getValue() != v;
+                                        else
+                                            return this.getValue() == v;
+                                    }
+                                    .bind(com || uneq, uneq);
+                            } else if (o.pattern) {
+                                if (o.pattern instanceof Function)
+                                    test = o.pattern.bind(el);
+                                else {
+                                    var r = o.pattern instanceof RegExp ? o.pattern : new RegExp(o.pattern);
+                                    test = r.test.bind(r);
+                                }
+                            }
+                            if (test instanceof Function) {
+                                if (!test(el.getValue())) {
+                                    var target = el;
+                                    if (o.target instanceof Function) {
+                                        target = o.target.call(el);
+                                    } else if (typeof o.target == 'string ') {
+                                        target = o.target.$;
+                                    }
+                                    var availHeight = getClientHeight(),
+                                        rect = target.clientRect;
+                                    if (isset(rect) && (rect.top > availHeight || rect.top < 0)) {
+                                        var bTop = document.body.scrollTop;
+                                        window.scrollTo(0, bTop + parseInt(rect.top - parseInt(availHeight / 2)));
+                                    }
+                                    ca.event.raise('error-set', o, target, true);
+                                    target.focus();
+                                    target.setError({
+                                        message: o.message,
+                                        timeOut: 5000
+                                    });
+                                    if (el.form)
+                                        el.form.isValid = false;
+                                    el.isValid = false;
+                                }
+                            }
+                        }, this);
                         return this.isValid;
                     }
-                    ar.each(function(o, i, el) {
-                        var test;
-                        if (o.compare || o.unequal) {
-                            function checkParam(el, pName) {
-                                return typeof pName !== 'undefined' ? pName instanceof HTMLElement ? pName : pName.$ ? pName.$ : el.form && el.form[pName] ? el.form[pName] : undefined : undefined;
-                            }
-                            var com = checkParam(el, o.compare);
-                            var uneq = checkParam(el, o.unequal);
-                            test = function(u, v) {
-                                if (u)
-                                    return this.getValue() != v;
-                                else
-                                    return this.getValue() == v;
-                            }
-                            .bind(com || uneq, uneq);
-                        } else if (o.pattern) {
-                            if (o.pattern instanceof Function)
-                                test = o.pattern.bind(el);
-                            else {
-                                var r = o.pattern instanceof RegExp ? o.pattern : new RegExp(o.pattern);
-                                test = r.test.bind(r);
-                            }
-                        }
-                        if (test instanceof Function) {
-                            if (!test(el.getValue())) {
-                                var target = el;
-                                if (o.target instanceof Function) {
-                                    target = o.target.call(el);
-                                } else if (typeof o.target == 'string ') {
-                                    target = o.target.$;
-                                }
-                                var availHeight = getClientHeight()
-                                  , rect = target.clientRect;
-                                if (isset(rect) && (rect.top > availHeight || rect.top < 0)) {
-                                    var bTop = document.body.scrollTop;
-                                    window.scrollTo(0, bTop + parseInt(rect.top - parseInt(availHeight / 2)));
-                                }
-                                ca.event.raise('error-set', o, target, true);
-                                target.focus();
-                                target.setError({
-                                    message: o.message,
-                                    timeOut: 5000
-                                });
-                                if (el.form)
-                                    el.form.isValid = false;
-                                el.isValid = false;
-                            }
-                        }
-                    }, this);
-                    return this.isValid;
-                }
-                .bind(this, ar);
+                    .bind(this, ar);
             },
             on: {
                 ready: function(v, n, o, a, ns) {
@@ -4669,12 +4623,12 @@ function ___parser() {
                 this.removeAttribute(n);
                 this.removeAttribute(targetAttName);
                 ca.event.listen('click', function(e) {
-                    if (target)
-                        window.open(href, target);
-                    else
-                        self.location.href = href;
-                }
-                .bind(this), this, false);
+                        if (target)
+                            window.open(href, target);
+                        else
+                            self.location.href = href;
+                    }
+                    .bind(this), this, false);
 
             },
             region: function(v, n, oh) {
@@ -4705,8 +4659,7 @@ function ___parser() {
                         }
                     }, (function() {
                         this.show();
-                    }
-                    ).bind(this), data);
+                    }).bind(this), data);
                 }
             }
         },
@@ -4715,7 +4668,7 @@ function ___parser() {
                 add: function(v, n, oh) {
                     if (typeof v == 'string')
                         v = v.toObject();
-                    if (v[1]instanceof Function) {
+                    if (v[1] instanceof Function) {
                         var nsa = v[0].split('.');
                         var fn = Array.prototype.pop.call(nsa);
                         var o = use(Array.prototype.join.call(nsa, '.'));
@@ -4733,43 +4686,45 @@ function ___parser() {
     };
     var parserNs = 'ca.utility.attribute.parser';
     use(parserNs);
-    function parseDataAttribute(attName, h) {// var xp = "count(@" +
-    // attName
-    // + ")";
-    // var iterator = document.evaluate(xp, this, null ,
-    // XPathResult.ANY_TYPE, null );
-    //
-    // if (iterator.numberValue > 1)
-    // /* never raises , php cleans duplicate attributes */
-    // throw new Error('Duplicate attribute ' + attName);
-    // var fn = attName.replace(/((\-)?([^\-]+))/g, function(match,
-    // p1, p2,
-    // p3)
-    // {
-    // return (p2 ? '.' : '') + utility.toLower(p3);
-    // console.info('replace', arguments);
-    // });
-    //
-    // var pn = parserNs;
-    // var pns = pn.split('.');
-    //
-    // var fns = fn.split('.');
-    // fns = Array.prototype.concat.call(pns, fns);
-    // var h = window;
-    // while (fns.length) {
-    // var ns = Array.prototype.shift.call(fns);
-    // // console.info('ns', ns);
-    // if (typeof h[ns] !== 'undefined')
-    // h = h[ns];
-    // else {
-    // h = undefined;
-    // break;
-    // }
-    // }
-    // console.info('fn', h, h instanceof Function);
+
+    function parseDataAttribute(attName, h) { // var xp = "count(@" +
+        // attName
+        // + ")";
+        // var iterator = document.evaluate(xp, this, null ,
+        // XPathResult.ANY_TYPE, null );
+        //
+        // if (iterator.numberValue > 1)
+        // /* never raises , php cleans duplicate attributes */
+        // throw new Error('Duplicate attribute ' + attName);
+        // var fn = attName.replace(/((\-)?([^\-]+))/g, function(match,
+        // p1, p2,
+        // p3)
+        // {
+        // return (p2 ? '.' : '') + utility.toLower(p3);
+        // console.info('replace', arguments);
+        // });
+        //
+        // var pn = parserNs;
+        // var pns = pn.split('.');
+        //
+        // var fns = fn.split('.');
+        // fns = Array.prototype.concat.call(pns, fns);
+        // var h = window;
+        // while (fns.length) {
+        // var ns = Array.prototype.shift.call(fns);
+        // // console.info('ns', ns);
+        // if (typeof h[ns] !== 'undefined')
+        // h = h[ns];
+        // else {
+        // h = undefined;
+        // break;
+        // }
+        // }
+        // console.info('fn', h, h instanceof Function);
     }
     ca.utility.attribute.parser.attributes = [];
     ca.utility.attribute.parser.data = dataAttributeParser;
+
     function addSourceUrl(v, s) {
         if (!DEVELOPMENT_MODE)
             return v;
@@ -4787,13 +4742,14 @@ function ___parser() {
         }
         return v;
     }
+
     function parseNamespaceElements() {
         if (this.getAttribute('ui:context-menu')) {
             // oncontextmenu="window.event.preventDefault();'$ctxMenuID'.$.cls('context-menu').show();"
             var data = this.getAttribute('ui:context-menu');
             if (data)
                 data = data.toObject();
-            new ca.ui.controls.contextMenu(this,data);
+            new ca.ui.controls.contextMenu(this, data);
             this.removeAttribute('ui:context-menu');
         }
         // end context menu
@@ -4815,6 +4771,7 @@ function ___parser() {
             }
         }
     }
+
     function stubTraverser(el, stub, a, ns) {
         console.info('stub handler type for ' + stub);
         this.parentInstance = undefined;
@@ -4831,7 +4788,7 @@ function ___parser() {
         ch.forEach(function(o, i, a) {
             var name = o.split('-').first;
             var stub = this.stub + '-' + name;
-            var h = new stubTraverser(this.control,stub);
+            var h = new stubTraverser(this.control, stub);
             h.parentInstance = this;
             parseStub.call(this.control, stub, h);
             this.properties[name] = h.properties;
@@ -4841,8 +4798,7 @@ function ___parser() {
             this.onLoad();
         // console.groupEnd();
         // ajax.exec(properties);
-    }
-    ;
+    };
     stubTraverser.prototype.setProperty = function(name, v) {
         if (/\w+\-\w+/.test(name)) {
             this.childHandlers.push(name);
@@ -4861,8 +4817,7 @@ function ___parser() {
                 obj = false;
             this.properties[name] = obj ? obj : v;
         }
-    }
-    ;
+    };
     var ajaxStubTraverser = function() {
         console.log('ajaxStubTraverser', this);
         this.constructor.apply(this, Array.prototype.slice.call(arguments));
@@ -4875,19 +4830,18 @@ function ___parser() {
                 this.properties["write"] = this.control;
             if (this.properties.event) {
                 ca.event.listen(this.properties.event, function(e) {
-                    this.properties.event = undefined;
-                    ajax.exec(this.properties);
-                }
-                .bind(this), this.control);
+                        this.properties.event = undefined;
+                        ajax.exec(this.properties);
+                    }
+                    .bind(this), this.control);
             } else {
                 domReady(function() {
-                    ajax.exec(this.properties);
-                }
-                .bind(this));
+                        ajax.exec(this.properties);
+                    }
+                    .bind(this));
             }
         }
-    }
-    ;
+    };
     var dataAttributeStubHandlers = {
         'data-ajax-property': ajaxStubTraverser,
         'data-control-function': {
@@ -4904,6 +4858,7 @@ function ___parser() {
             }
         }
     };
+
     function parseStub(stub, handler) {
         stub += '-';
         var xp = "@*[contains(name(),'" + stub + "')]";
@@ -4921,6 +4876,7 @@ function ___parser() {
             this.removeAttribute(removes.pop());
         }
     }
+
     function parseStubAttributes(a, ns) {
         // begin stub attributes
         for (var key in dataAttributeStubHandlers) {
@@ -4935,15 +4891,15 @@ function ___parser() {
             var attNode = iterator.iterateNext();
             if (attNode) {
                 var stubObj = dataAttributeStubHandlers[key];
-                instance = stubObj instanceof Function ? new stubObj(this,key,a,ns) : {
+                instance = stubObj instanceof Function ? new stubObj(this, key, a, ns) : {
                     setProperty: stubObj.setProperty ? stubObj.setProperty.bind(this) : undefined,
                 };
             }
             while (attNode) {
                 var fn = attNode.name.split(stub).last;
                 var code = attNode.value;
-                var handler = instance.setProperty
-                  , arg = code;
+                var handler = instance.setProperty,
+                    arg = code;
                 instance.setProperty(fn, arg, a, ns);
                 removes.push(attNode.name);
                 attNode = iterator.iterateNext();
@@ -4954,22 +4910,24 @@ function ___parser() {
                 this.removeAttribute(removes.pop());
             }
             /*
-                         * try { } catch (er) { console.error(er); if ( er
-                         * instanceof evalError) throw er; }
-                         */
+             * try { } catch (er) { console.error(er); if ( er
+             * instanceof evalError) throw er; }
+             */
         }
     }
     var dataAttributeParserHandles;
+
     function parseDataAttributes(a, ns) {
         if (typeof dataAttributeParserHandles === 'undefined') {
             dataAttributeParserHandles = {};
+
             function traverse(o, n, depth) {
                 depth++;
                 for (var key in o) {
                     if (o.hasOwnProperty(key)) {
                         var nsa = n + '-' + key;
                         // console.log(nsa, key);
-                        if (o[key]instanceof Function) {
+                        if (o[key] instanceof Function) {
                             dataAttributeParserHandles[nsa] = o[key];
                         } else
                             traverse(o[key], nsa, depth);
@@ -4987,11 +4945,13 @@ function ___parser() {
             }
         }
     }
+
     function getObjectFromAttribute(elm, att, remove) {
         var data = getStringFromAttribute(elm, att, remove);
         var ob = data.object;
         return ob;
     }
+
     function getStringFromAttribute(elm, n, remove) {
         var data = elm.getAttribute(n);
         if (remove === true)
@@ -4999,11 +4959,11 @@ function ___parser() {
         return data;
     }
     /**
-         * @param a
-         *                ajax session
-         * @param ns
-         *                client namespace
-         */
+     * @param a
+     *                ajax session
+     * @param ns
+     *                client namespace
+     */
     function parseElement(a, ns) {
         ns = typeof ns === 'undefined' ? {} : ns;
         if (this instanceof HTMLSelectElement || this instanceof HTMLInputElement || this instanceof HTMLTextAreaElement) {
@@ -5012,8 +4972,8 @@ function ___parser() {
                     ca.event.raise('change', {
                         source: this
                     }, this.form, false);
-                }
-                ).bind(this), this, true);
+                }).bind(this), this, true);
+
                 function cleanFunc(e) {
                     var tg = e.target;
                     if (!tg.dirty) {
@@ -5021,12 +4981,13 @@ function ___parser() {
                         ca.event.raise('change', {
                             source: tg
                         }, tg.form, false);
-                        var cf = cleanFunc
-                          , df = dirtyFunc;
+                        var cf = cleanFunc,
+                            df = dirtyFunc;
                         tg.removeEventListener('keyup', cf, true);
                         tg.addEventListener('keyup', df, true);
                     }
                 }
+
                 function dirtyFunc(e) {
                     var tg = e.target;
                     if (tg.dirty) {
@@ -5034,8 +4995,8 @@ function ___parser() {
                         ca.event.raise('change', {
                             source: tg
                         }, tg.form, false);
-                        var cf = cleanFunc
-                          , df = dirtyFunc;
+                        var cf = cleanFunc,
+                            df = dirtyFunc;
                         tg.removeEventListener('keyup', df, true);
                         tg.addEventListener('keyup', cf, true);
                     }
@@ -5058,8 +5019,7 @@ function ___parser() {
             if (!this.hasAttribute('data-form-allow-submit'))
                 this.onsubmit = function() {
                     return false;
-                }
-                ;
+                };
             this.initialElementsCount = this.elementsCount;
         }
         if (this instanceof HTMLTextAreaElement) {
@@ -5087,33 +5047,33 @@ function ___parser() {
             if (this.hasAttribute('data-control-verb-transform')) {
                 var d = getObjectFromAttribute(this, 'data-control-verb-transform', true);
                 ca.event.listen('personalize', function(d, e) {
-                    function preg(dc) {
-                        var tg = 'innerHTML';
-                        for (var i = 0, n = dc.params.length; i < n; ++i) {
-                            this[tg] = this[tg].replace(dc.params[i][0], dc.params[i][1]);
-                        }
-                    }
-                    if (e.detail.personal === false) {
-                        if (d.common) {
-                            if (d.common instanceof Object) {
-                                preg.call(this, d.common);
-                            } else {
-                                d.personal = this.textContent;
-                                this.text(d.common);
+                        function preg(dc) {
+                            var tg = 'innerHTML';
+                            for (var i = 0, n = dc.params.length; i < n; ++i) {
+                                this[tg] = this[tg].replace(dc.params[i][0], dc.params[i][1]);
                             }
                         }
-                    } else if (e.detail.personal === true) {
-                        if (d.personal) {
-                            if (d.personal instanceof Object) {
-                                preg.call(this, d.personal);
-                            } else {
-                                d.common = this.textContent;
-                                this.text(d.personal);
+                        if (e.detail.personal === false) {
+                            if (d.common) {
+                                if (d.common instanceof Object) {
+                                    preg.call(this, d.common);
+                                } else {
+                                    d.personal = this.textContent;
+                                    this.text(d.common);
+                                }
+                            }
+                        } else if (e.detail.personal === true) {
+                            if (d.personal) {
+                                if (d.personal instanceof Object) {
+                                    preg.call(this, d.personal);
+                                } else {
+                                    d.common = this.textContent;
+                                    this.text(d.personal);
+                                }
                             }
                         }
                     }
-                }
-                .bind(this, d), this.eventNode, false);
+                    .bind(this, d), this.eventNode, false);
             }
             if (this.hasAttribute('data-control-event-rect')) {
                 var oClk = undefined;
@@ -5142,43 +5102,43 @@ function ___event() {
     var event = {
 
         /**
-                         * Event Object
-                         *
-                         * @namespace
-                         * @name ca.event
-                         */
+         * Event Object
+         *
+         * @namespace
+         * @name ca.event
+         */
         /**
-                         * @function
-                         * @name remove
-                         * @memberOf ca.event
-                         * @param {Object}
-                         *                name event name
-                         * @param {eventCallBack}
-                         *                callBack listener handle
-                         * @param {Object?}
-                         *                [target=window] event target
-                         * @param {bool?}
-                         *                [useCapture=false] useCapture
-                         */
+         * @function
+         * @name remove
+         * @memberOf ca.event
+         * @param {Object}
+         *                name event name
+         * @param {eventCallBack}
+         *                callBack listener handle
+         * @param {Object?}
+         *                [target=window] event target
+         * @param {bool?}
+         *                [useCapture=false] useCapture
+         */
         remove: function(n, h, t, d) {
             d = (d === false || d === true) ? d : false;
             t = t || window;
             t.removeEventListener(n, h, d);
         },
         /**
-                         * @function
-                         * @name listen
-                         * @memberOf ca.event
-                         * @param {Object}
-                         *                name event name
-                         * @param {eventCallBack}
-                         *                callBack listener handle
-                         * @param {Object?}
-                         *                [target=window] event target
-                         * @param {bool?}
-                         *                [useCapture=false] useCapture
-                         * @link https://developer.mozilla.org/en-US/docs/Web/API/EventTarget.addEventListener
-                         */
+         * @function
+         * @name listen
+         * @memberOf ca.event
+         * @param {Object}
+         *                name event name
+         * @param {eventCallBack}
+         *                callBack listener handle
+         * @param {Object?}
+         *                [target=window] event target
+         * @param {bool?}
+         *                [useCapture=false] useCapture
+         * @link https://developer.mozilla.org/en-US/docs/Web/API/EventTarget.addEventListener
+         */
         listen: function(n, h, t, d) {
             var re = /[\s]+/;
             var nameList = n.split(re);
@@ -5194,25 +5154,24 @@ function ___event() {
 
                 t.addEventListener(n, h, d);
 
-            }
-            ;
+            };
         },
         /**
-                         * @function
-                         * @name raise
-                         * @memberOf ca.event
-                         * @param {Object}
-                         *                name event name
-                         * @param {Object}
-                         *                arguments passed as event.detail
-                         * @param {Object?}
-                         *                [target=window] event target
-                         * @param {bool?}
-                         *                [bubbles=false] whether event bubbles
-                         * @param {bool?}
-                         *                [cancellable=true] whether event
-                         *                cancellable
-                         */
+         * @function
+         * @name raise
+         * @memberOf ca.event
+         * @param {Object}
+         *                name event name
+         * @param {Object}
+         *                arguments passed as event.detail
+         * @param {Object?}
+         *                [target=window] event target
+         * @param {bool?}
+         *                [bubbles=false] whether event bubbles
+         * @param {bool?}
+         *                [cancellable=true] whether event
+         *                cancellable
+         */
         raise: function(n, a, t, b, c, doTrace) {
             c = typeof c === 'undefined' || c === null ? true : c;
 
@@ -5221,7 +5180,7 @@ function ___event() {
             if (e)
                 e.preventDefault();
             if (window.CustomEvent) {
-                var event = new CustomEvent(n,{
+                var event = new CustomEvent(n, {
                     detail: a,
                     bubbles: b,
                     cancelable: c
@@ -5247,7 +5206,7 @@ window.use = function(ns) {
     var ctx = window;
     for (var i = 0; i < nsArr.length; i++) {
         var n = nsArr[i];
-        if (! Object.hasOwnProperty.call(ctx, n))
+        if (!Object.hasOwnProperty.call(ctx, n))
             Object.defineProperty(ctx, n, {
                 enumerable: true,
                 configurable: false,
@@ -5259,8 +5218,7 @@ window.use = function(ns) {
     }
     return ctx;
 
-}
-;
+};
 
 ___event();
 ___domReady();
@@ -5286,24 +5244,23 @@ ___dom();
         var namesArr = text.split(' ');
 
         var parts = [];
-        namesArr.forEach((n)=>{
+        namesArr.forEach((n) => {
 
             var ps = n.split('');
             n = ps.shift().toUpperCase() + ps.join('');
 
             parts.push(n);
-        }
-        )
+        })
 
         return parts.join(' ');
 
     }
-   
+
 
     var ui = Object.create(null);
-    
-    window.contacts=[];
-    window.csvStack=[];
+
+    window.contacts = [];
+    window.csvStack = [];
 
     let contactForm = function(dlg, container, contact) {
         ayanoglu.DOM.style(`
@@ -5330,23 +5287,22 @@ ___dom();
         var properties = fieldsObj.properties;
         var placeHolders = fieldsObj.defaults;
 
-        let addField = (label,name,tag,index,value)=>{
-            var row = _$('div').att('id', 'field-' + index).att('title',index).addTo(table);
+        let addField = (label, name, tag, index, value) => {
+            var row = _$('div').att('id', 'field-' + index).att('title', index).addTo(table);
             if (sumMap.split(',').indexOf(index.toString()) === -1)
                 row.style.display = 'none';
             var labelCell = _$('div').text(label).addTo(row);
 
             var inputCell = _$('div').addTo(row);
             var input = _$(tag ? tag : 'input').att('name', name).addTo(inputCell);
-            if(placeHolder=placeHolders[index.toString()]) input.att('placeholder',placeHolder);
+            if (placeHolder = placeHolders[index.toString()]) input.att('placeholder', placeHolder);
             if (value)
                 input.value = value;
-            row.getValue = ()=>{
+            row.getValue = () => {
                 return input.value;
             }
             return input;
-        }
-        ;
+        };
 
         var contactMap = {
             "0": "name",
@@ -5361,16 +5317,16 @@ ___dom();
                 value: "work"
             },
             "40": {
-               // options: ['Reyaphasta', 'Kolanhasta', 'Verahasta']
-               value:''
+                // options: ['Reyaphasta', 'Kolanhasta', 'Verahasta']
+                value: ''
             },
         }
         var sumMap = '0,8,25,28,31,32,39,40,42,43,47,48';
 
-        fields.forEach((field,i)=>{
+        fields.forEach((field, i) => {
             if (/.+\s+Yomi/i.test(field) || /Yomi\s+.+/i.test(field))
                 return;
-    var property=properties[i.toString()];
+            var property = properties[i.toString()];
             var tag;
             if (field === "Notes")
                 tag = "textarea";
@@ -5386,52 +5342,46 @@ ___dom();
                         tag = "select";
                 }
             }
-            if(property==='webSite1Value'){
-            	var phone=contact.phone1Value;
+            if (property === 'webSite1Value') {
+                var phone = contact.phone1Value;
                 var wPhone = phone.replace(/[^\d]/g, '');
 
-              if (!/^9\d+/.test(wPhone))
-                  wPhone = '9' + wPhone; 
-              value = 'https://wa.me/' + wPhone;
-            }
-            else      if(property==='webSite1Type'){ 
-              value = 'Whatsapp';
+                if (!/^9\d+/.test(wPhone))
+                    wPhone = '9' + wPhone;
+                value = 'https://wa.me/' + wPhone;
+            } else if (property === 'webSite1Type') {
+                value = 'Whatsapp';
             }
             var input = addField(field, 'field-' + i, tag, i, value);
             if (tag === "select") {
-                map.options.forEach((option)=>{
+                map.options.forEach((option) => {
                     _$('option').att('value', option).addTo(input).textContent = option;
-                }
-                )
+                })
             }
-        }
-        )
-        let toggleField = (on)=>{
-            fields.forEach((field,i)=>{
+        })
+        let toggleField = (on) => {
+            fields.forEach((field, i) => {
                 if (row = table.querySelector('div#field-' + i)) {
                     if (on)
                         row.style.display = 'unset';
                     else if (sumMap.split(',').indexOf(i.toString()) === -1)
                         row.style.display = 'none';
                 }
-            }
-            )
+            })
 
         }
 
-        dlg.menu('Summary', ()=>{
+        dlg.menu('Summary', () => {
             toggleField(false);
-        }
-        );
-        dlg.menu('Full', ()=>{
+        });
+        dlg.menu('Full', () => {
             toggleField(true);
-        }
-        );
+        });
 
-        let buildContactText = ()=>{
+        let buildContactText = () => {
             var formValues = [];
 
-            fields.forEach((field,i)=>{
+            fields.forEach((field, i) => {
                 var value;
                 if (row = table.querySelector('div#field-' + i)) {
                     value = row.getValue();
@@ -5440,8 +5390,7 @@ ___dom();
 
                 formValues.push(value);
 
-            }
-            )
+            })
 
             var name = formValues[0];
             var nameObj = ayanoglu.utility.formatName(name);
@@ -5457,30 +5406,28 @@ ___dom();
             formValues[47] = 'Whatsapp';
             formValues[48] = 'https://wa.me/' + wPhone;
 
-            var values = formValues.map((item)=>{
+            var values = formValues.map((item) => {
                 return '"' + item + '"';
-            }
-            );
+            });
 
             var output = values.join(',');
 
             return output;
         }
 
-        let saveAsCSV = ()=>{
+        let saveAsCSV = () => {
 
             var output = getCSVText();
 
             ayanoglu.utility.download("contacts-" + getFileNameStamp() + ".csv", output);
             csvStack = [];
-        }
-        ;
+        };
 
-        let addToStack = ()=>{
+        let addToStack = () => {
             buildContactText();
         }
 
-        let resetStack = ()=>{
+        let resetStack = () => {
             csvStack = [];
         }
 
@@ -5497,160 +5444,157 @@ ___dom();
         return obj;
     }
 
-    let contactListDialog=function(title,handleClicks){
-    	  var dlg = ayanoglu.ui.dialog();
-    	    dlg.title = title?title:'Kişiler'
-    	    dlg.control.style.height = '100%';
-    	    
-    	    var textBox = _$('textarea').cls('list').addTo(dlg.container);
+    let contactListDialog = function(title, handleClicks) {
+        var dlg = ayanoglu.ui.dialog();
+        dlg.title = title ? title : 'Kişiler'
+        dlg.control.style.height = '100%';
 
-    	    var label = _$('div').cls('pop-label').addTo(dlg.container);
-    	    
-    	    let saveAsCSV = ()=>{
+        var textBox = _$('textarea').cls('list').addTo(dlg.container);
 
-    	        var output = getCSVText();
-var prefix=prompt('Dosya adı','contacts');
-if(prefix.length===0) prefix='contacts';
+        var label = _$('div').cls('pop-label').addTo(dlg.container);
 
-    	        ayanoglu.utility.download(prefix + "-" + getFileNameStamp() + ".csv", output);
-    	        csvStack = [];
-    	        window.contacts = [];
-    	        textBox.value='';
-    	    }
-    	 
+        let saveAsCSV = () => {
 
-    	    let resetStack = ()=>{
-    	        csvStack = [];
-    	        window.contacts = [];
-    	        textBox.value='';
-    	    }
+            var output = getCSVText();
+            var prefix = prompt('Dosya adı', 'contacts');
+            if (prefix.length === 0) prefix = 'contacts';
 
-    	    dlg.button('Kaydet', saveAsCSV    );
-    	    dlg.button('Temizle', resetStack    );
-    	   
-    	    
-    	    var labelTmo;
-    	    
-    	    let editContact = (e)=>{
-    	        console.log(e.type);
-
-    	        var sel = window.getSelection();
-    	        var text = textBox.value;
-    	        var lines = text.split('\n');
-    	        var sPos = textBox.selectionStart;
-    	        var counter = 0;
-    	        var line = false;
-    	        var lineNum = 0;
-    	        for (var i = 0; i < lines.length; i++) {
-    	            if (sPos >= counter && sPos < counter + lines[i].length) {
-    	                line = lines[i];
-    	                lineNum = i;
-    	                break;
-    	            }
-    	            counter += lines[i].length + 1;
-
-    	        }
-
-    	        if (line && lineNum>0) {
-    	            if (e.type === 'dblclick') {
-    	 
-    	                console.clear();
-    	                console.log(line);
-    	                var contact = parseContactCSV(line);
-    	                console.dir(contact); 
+            ayanoglu.utility.download(prefix + "-" + getFileNameStamp() + ".csv", output);
+            csvStack = [];
+            window.contacts = [];
+            textBox.value = '';
+        }
 
 
-    	                
-    	                var contactDlg = ayanoglu.ui.dialog();
-    	                contactDlg.control.style.height = '100%'
-    	                contactDlg.title = contact.name;
-    	                var frm = ayanoglu.ui.contactForm(contactDlg, contactDlg.container, contact);
+        let resetStack = () => {
+            csvStack = [];
+            window.contacts = [];
+            textBox.value = '';
+        }
 
-    	                contactDlg.button('Kaydet', ()=>{ 
-    	                    var csv = frm.getCsv();
-    	                    lines[lineNum] = csv;
-    	                    textBox.value = lines.join('\n');
-    updateCSVItems();
-    	                    contactDlg.close();
-    	                    contactDlg = undefined;
-    	                    frm = undefined;
+        dlg.button('Kaydet', saveAsCSV);
+        dlg.button('Temizle', resetStack);
 
-    	                }
-    	                )
-    	                ;
-    	                return;
-    	            }
-    	            textBox.selectionStart = counter;
-    	            textBox.selectionEnd = sPos;
 
-    	            var fields = document.getSelection().toString().split(',');
-    	            var gHeaders = ayanoglu.google.parseContactCSVFields();
-    	            textBox.selectionStart = sPos;
-    	            var headers = gHeaders.array;
+        var labelTmo;
 
-    	            var title = headers[fields.length - 1];
+        let editContact = (e) => {
+            console.log(e.type);
 
-    	            label.textContent = title;
-    	            label.style.display = 'flex';
-    	            label.style.left = e.clientX + 'px';
-    	            label.style.top = e.clientY + 'px';
-    	            clearTimeout(labelTmo);
-    	            labelTmo = setTimeout(()=>{
-    	                label.style.display = 'none';
-    	            }
-    	            , 5000)
+            var sel = window.getSelection();
+            var text = textBox.value;
+            var lines = text.split('\n');
+            var sPos = textBox.selectionStart;
+            var counter = 0;
+            var line = false;
+            var lineNum = 0;
+            for (var i = 0; i < lines.length; i++) {
+                if (sPos >= counter && sPos < counter + lines[i].length) {
+                    line = lines[i];
+                    lineNum = i;
+                    break;
+                }
+                counter += lines[i].length + 1;
 
-    	        }
+            }
 
-    	    }
-    	    
+            if (line && lineNum > 0) {
+                if (e.type === 'dblclick') {
 
-    let updateCSVItems=(e)=>{
-    	var text=e.target.value;
-    	
-    	var lines=text.split('\n');
-    	lines.shift();
-    	csvStack=lines;
+                    console.clear();
+                    console.log(line);
+                    var contact = parseContactCSV(line);
+                    console.dir(contact);
+
+
+
+                    var contactDlg = ayanoglu.ui.dialog();
+                    contactDlg.control.style.height = '100%'
+                    contactDlg.title = contact.name;
+                    var frm = ayanoglu.ui.contactForm(contactDlg, contactDlg.container, contact);
+
+                    contactDlg.button('Kaydet', () => {
+                        var csv = frm.getCsv();
+                        lines[lineNum] = csv;
+                        textBox.value = lines.join('\n');
+                        updateCSVItems();
+                        contactDlg.close();
+                        contactDlg = undefined;
+                        frm = undefined;
+
+                    });
+                    return;
+                }
+                textBox.selectionStart = counter;
+                textBox.selectionEnd = sPos;
+
+                var fields = document.getSelection().toString().split(',');
+                var gHeaders = ayanoglu.google.parseContactCSVFields();
+                textBox.selectionStart = sPos;
+                var headers = gHeaders.array;
+
+                var title = headers[fields.length - 1];
+
+                label.textContent = title;
+                label.style.display = 'flex';
+                label.style.left = e.clientX + 'px';
+                label.style.top = e.clientY + 'px';
+                clearTimeout(labelTmo);
+                labelTmo = setTimeout(() => {
+                    label.style.display = 'none';
+                }, 5000)
+
+            }
+
+        }
+
+
+        let updateCSVItems = (e) => {
+            var text = e.target.value;
+
+            var lines = text.split('\n');
+            lines.shift();
+            csvStack = lines;
+        }
+
+        textBox.addEventListener('change', updateCSVItems);
+
+
+        if (handleClicks !== false) {
+            textBox.addEventListener('dblclick', editContact);
+            textBox.addEventListener('mouseup', editContact);
+
+        }
+        dlg.writeText = function(text) {
+            textBox.value = text;
+        }
+        dlg.clearText = function() {
+            textBox.value = '';
+        }
+        Object.defineProperty(dlg, 'text', {
+            get: function() {
+                return textBox.value;
+            },
+            set: function(v) { textBox.value = v; },
+
+            configurable: false,
+            enumerable: true
+        })
+        return dlg;
     }
+    let getCSVText = function() {
+        var gHeaders = ayanoglu.google.parseContactCSVFields();
+        var headersStr = gHeaders.string;
 
-     textBox.addEventListener('change', updateCSVItems);
-
-
-    if(handleClicks!==false){
-        textBox.addEventListener('dblclick', editContact);
-        textBox.addEventListener('mouseup', editContact);
-    	
-    }
-    	    dlg.writeText=function(text){
-    	    	textBox.value=text;
-    	    }
-    dlg.clearText=function(){
-    	textBox.value='';
-    	    }
-    Object.defineProperty(dlg, 'text', {
-        get: function() {
-            return textBox.value;
-        },
-        set: function(v) {textBox.value=v;},
-
-        configurable: false,
-        enumerable: true
-    })
-    return dlg;
-    }
-    let getCSVText=function(){
-   	 var gHeaders = ayanoglu.google.parseContactCSVFields();
-   	  var headersStr = gHeaders.string;
-   	  
-          var ta = Array.prototype.slice.call(csvStack);
+        var ta = Array.prototype.slice.call(csvStack);
         ta.unshift(headersStr)
 
         return ta.join('\n');
-   }
-    ui.getCSVText=getCSVText;
+    }
+    ui.getCSVText = getCSVText;
     ui.contactForm = contactForm;
     ui.contactListDialog = contactListDialog;
-    
+
     let dialogBase = function() {
 
         var cssText = `
@@ -5702,31 +5646,29 @@ if(prefix.length===0) prefix='contacts';
         let _$ = ayanoglu.DOM._$;
         var d = window.document;
 
-        let button = (text,handler)=>{
+        let button = (text, handler) => {
             var btn = _$('input').att('type', 'button').att('value', text).addTo(footer);
             btn.addEventListener('click', handler);
             return btn;
-        }
-        ;
-        let addMenu = (text,handler)=>{
+        };
+        let addMenu = (text, handler) => {
             var btn = _$('div').text(text).addTo(toolBar);
             btn.addEventListener('click', handler);
             return btn;
-        }
-        ;
+        };
 
         let makeDraggable = function(element) {
-            var offSetX = 0
-              , offSetY = 0;
+            var offSetX = 0,
+                offSetY = 0;
             var dragging = false;
 
-            let moveHandle = (e)=>{
+            let moveHandle = (e) => {
                 if (dragging) {
                     //element.style.cursor = "move";
                     document.body.style.cursor = "move";
                     // e.preventDefault();
-                    var x = e.clientX
-                      , y = e.clientY;
+                    var x = e.clientX,
+                        y = e.clientY;
 
                     x -= offSetX;
                     y -= offSetY;
@@ -5738,13 +5680,13 @@ if(prefix.length===0) prefix='contacts';
                 }
             }
 
-            let clickHnd = (e)=>{
+            let clickHnd = (e) => {
 
                 e.preventDefault();
                 e.stopPropagation();
                 return false;
             }
-            let unHook = ()=>{
+            let unHook = () => {
                 document.body.style.cursor = "default";
                 dragging = false;
                 document.body.removeEventListener('mousemove', moveHandle);
@@ -5752,7 +5694,7 @@ if(prefix.length===0) prefix='contacts';
                 document.body.removeEventListener('click', clickHnd);
             }
 
-            let bodyMouseUp = (e)=>{
+            let bodyMouseUp = (e) => {
                 e.preventDefault();
                 e.stopPropagation();
                 e.stopImmediatePropagation();
@@ -5760,9 +5702,9 @@ if(prefix.length===0) prefix='contacts';
                 unHook();
             }
 
-            element.addEventListener('mousedown', (e)=>{
-            	 if('TEXTAREA,INPUT'.split(',').indexOf(e.target.tagName)!==-1) return false;
-                 
+            element.addEventListener('mousedown', (e) => {
+                if ('TEXTAREA,INPUT'.split(',').indexOf(e.target.tagName) !== -1) return false;
+
                 dragging = true;
 
                 offSetX = (e.clientX - parseInt(getComputedStyle(element).left));
@@ -5771,21 +5713,19 @@ if(prefix.length===0) prefix='contacts';
                 document.body.addEventListener('mousemove', moveHandle);
                 document.body.addEventListener('mouseup', bodyMouseUp);
                 document.body.addEventListener('click', clickHnd);
-            }
-            );
+            });
 
-            element.addEventListener('mouseup', (e)=>{
+            element.addEventListener('mouseup', (e) => {
                 dragging = false;
                 unHook();
-            }
-            );
+            });
         }
         var panelContainer = _$('div').cls('ayanoglu-dialog-container').addTo(document.body);
         var panel = _$('div').cls('ayanoglu-dialog').addTo(panelContainer);
         makeDraggable(panel);
-        
 
-      //  panel.classList.add('slide-in');
+
+        //  panel.classList.add('slide-in');
         var header = _$('div').cls('h').addTo(panel);
 
         var headerTxt = _$('div').cls('txt').text('Untitled').addTo(header);
@@ -5800,7 +5740,7 @@ if(prefix.length===0) prefix='contacts';
         var maxBtn = _$('div').cls('icon-window-maximize').addTo(headerCmd);
         var resBtn = _$('div').cls('icon-window-restore').css('display:none;').addTo(headerCmd);
 
-        maxBtn.addEventListener('click', (e)=>{
+        maxBtn.addEventListener('click', (e) => {
             if (!resStyle)
                 resStyle = panel.getAttribute('style');
             panel.style.width = 'auto';
@@ -5809,10 +5749,9 @@ if(prefix.length===0) prefix='contacts';
             maxBtn.style.display = 'none';
             resBtn.style.display = 'block';
 
-        }
-        );
+        });
 
-        resBtn.addEventListener('click', (e)=>{
+        resBtn.addEventListener('click', (e) => {
             panel.setAttribute('style', resStyle);
             /* panel.style.width=  pWidth +  'px';
             	 panel.style.left=pLeft;
@@ -5820,31 +5759,27 @@ if(prefix.length===0) prefix='contacts';
             resBtn.style.display = 'none';
             maxBtn.style.display = 'block';
 
-        }
-        );
+        });
 
-        arrLeft.addEventListener('click', (e)=>{
+        arrLeft.addEventListener('click', (e) => {
             panel.style.width = pWidth + 'px';
             panel.style.left = '0px';
             panel.style.right = 'auto';
 
-        }
-        );
+        });
 
-        arrRight.addEventListener('click', (e)=>{
+        arrRight.addEventListener('click', (e) => {
             panel.style.width = pWidth + 'px';
             panel.style.right = '0px';
             panel.style.left = 'auto';
-        }
-        );
+        });
 
         var closerBox = _$('div').cls('closer fnt-before').addTo(headerCmd);
-        closerBox.addEventListener('click', (e)=>{
+        closerBox.addEventListener('click', (e) => {
             //	ca.event.raise('will-close',{},panel,true);
             document.body.removeChild(panelContainer);
 
-        }
-        );
+        });
 
         var toolBar = _$('div').cls('t').addTo(panel);
         var body = _$('div').cls('b').addTo(panel);
@@ -5855,10 +5790,10 @@ if(prefix.length===0) prefix='contacts';
             control: panel,
             button: button,
             menu: addMenu,
-            add: (child)=>{
+            add: (child) => {
                 body.add(child);
             },
-            close:()=>{
+            close: () => {
                 document.body.removeChild(panelContainer);
             }
         }
@@ -5900,15 +5835,15 @@ if(prefix.length===0) prefix='contacts';
     };
 
 
-function modalDialog(){
-var dlg=dialogBase();
-dlg.control.classList.add('modal');
-dlg.control.classList.add('slide-in');
-dlg.control.classList.add('slide-out');
-return dlg;
-}
+    function modalDialog() {
+        var dlg = dialogBase();
+        dlg.control.classList.add('modal');
+        dlg.control.classList.add('slide-in');
+        dlg.control.classList.add('slide-out');
+        return dlg;
+    }
 
- 
+
 
     ui.modalDialog = modalDialog;
     ui.dialog = dialogBase;
@@ -6005,16 +5940,16 @@ return dlg;
             }).cls('icon-ellipsis').css('display:none;').addTo(d.body);
 
             container = _$('div').addTo(popCommand);
-            var offSetX = 0
-              , offSetY = 0;
+            var offSetX = 0,
+                offSetY = 0;
             var dragging = false;
-            let moveH = (e)=>{
+            let moveH = (e) => {
                 if (dragging) {
                     //popCommand.style.cursor = "move";
                     document.body.style.cursor = "move";
                     // e.preventDefault();
-                    var x = e.clientX
-                      , y = e.clientY;
+                    var x = e.clientX,
+                        y = e.clientY;
 
                     x -= offSetX;
                     y -= offSetY;
@@ -6026,13 +5961,13 @@ return dlg;
                 }
             }
 
-            let clickHnd = (e)=>{
+            let clickHnd = (e) => {
 
                 e.preventDefault();
                 e.stopPropagation();
                 return false;
             }
-            let unHook = ()=>{
+            let unHook = () => {
                 document.body.style.cursor = "default";
                 dragging = false;
                 document.body.removeEventListener('mousemove', moveH);
@@ -6040,7 +5975,7 @@ return dlg;
                 document.body.removeEventListener('click', clickHnd);
             }
 
-            let bMouseUp = (e)=>{
+            let bMouseUp = (e) => {
                 e.preventDefault();
                 e.stopPropagation();
                 e.stopImmediatePropagation();
@@ -6048,7 +5983,7 @@ return dlg;
                 unHook();
             }
 
-            popCommand.addEventListener('mousedown', (e)=>{
+            popCommand.addEventListener('mousedown', (e) => {
                 dragging = true;
 
                 offSetX = (e.clientX - parseInt(getComputedStyle(popCommand).left));
@@ -6057,31 +5992,28 @@ return dlg;
                 document.body.addEventListener('mousemove', moveH);
                 document.body.addEventListener('mouseup', bMouseUp);
                 document.body.addEventListener('click', clickHnd);
-            }
-            );
+            });
 
-            popCommand.addEventListener('mouseup', (e)=>{
+            popCommand.addEventListener('mouseup', (e) => {
                 dragging = false;
                 unHook();
-            }
-            );
+            });
 
         } else {
             container = popCommand.firstElementChild;
         }
 
         return {
-            add: (title,handle,className)=>{
+            add: (title, handle, className) => {
                 if (popCommand.style.display === 'none')
                     popCommand.style.display = 'flex';
                 var btn = _$('div').cls(className ? className : 'icon-menu').atts({
                     title: title
                 }).addTo(container);
                 if (typeof handle === 'function')
-                    btn.addEventListener('click', (e)=>{
+                    btn.addEventListener('click', (e) => {
                         handle(e);
-                    }
-                    )
+                    })
             }
         }
     }
@@ -6100,12 +6032,11 @@ return dlg;
         var panel = d.getElementById(panelID);
         var commandRow;
 
-        let button = (text,handler)=>{
+        let button = (text, handler) => {
             var btn = _$('input').att('type', 'button').att('value', text).addTo(commandRow);
             btn.addEventListener('click', handler);
             return btn;
-        }
-        ;
+        };
 
         if (!panel) {
             panel = _$('div').addTo(document.body);
@@ -6123,7 +6054,7 @@ return dlg;
             var maxBtn = _$('div').cls('icon-window-maximize').addTo(header);
             var resBtn = _$('div').cls('icon-window-restore').css('display:none;').addTo(header);
 
-            maxBtn.addEventListener('click', (e)=>{
+            maxBtn.addEventListener('click', (e) => {
                 if (!resStyle)
                     resStyle = panel.getAttribute('style');
                 panel.style.width = 'auto';
@@ -6132,10 +6063,9 @@ return dlg;
                 maxBtn.style.display = 'none';
                 resBtn.style.display = 'block';
 
-            }
-            );
+            });
 
-            resBtn.addEventListener('click', (e)=>{
+            resBtn.addEventListener('click', (e) => {
                 panel.setAttribute('style', resStyle);
                 /* panel.style.width=  pWidth +  'px';
             	 panel.style.left=pLeft;
@@ -6143,61 +6073,54 @@ return dlg;
                 resBtn.style.display = 'none';
                 maxBtn.style.display = 'block';
 
-            }
-            );
+            });
 
-            arrLeft.addEventListener('click', (e)=>{
+            arrLeft.addEventListener('click', (e) => {
                 panel.style.width = pWidth + 'px';
                 panel.style.left = '0px';
                 panel.style.right = 'auto';
 
-            }
-            );
+            });
 
-            arrRight.addEventListener('click', (e)=>{
+            arrRight.addEventListener('click', (e) => {
                 panel.style.width = pWidth + 'px';
                 panel.style.right = '0px';
                 panel.style.left = 'auto';
-            }
-            );
+            });
 
             var closerBox = _$('div').cls('closer fnt-before').addTo(header);
-            closerBox.addEventListener('click', (e)=>{
+            closerBox.addEventListener('click', (e) => {
                 ca.event.raise('will-close', {}, panel, true);
                 document.body.removeChild(panel);
 
-            }
-            );
+            });
 
             textBox = _$('textarea');
             panel.appendChild(textBox);
 
-            commandRow = _$('div').cls('command-box').addTo(panel);
-            ;var closer = button('Kapat', (e)=>{
+            commandRow = _$('div').cls('command-box').addTo(panel);;
+            var closer = button('Kapat', (e) => {
                 ca.event.raise('will-close', {}, panel, true);
                 document.body.removeChild(panel);
 
-            }
-            );
+            });
 
-            var copier = button('Kopyala', (e)=>{
+            var copier = button('Kopyala', (e) => {
 
                 textBox.select();
                 document.execCommand('copy');
 
-            }
-            );
-            var cleaner = button('Temizle', (e)=>{
+            });
+            var cleaner = button('Temizle', (e) => {
 
                 textBox.value = '';
 
-            }
-            );
+            });
 
             var label = _$('div').cls('label').addTo(panel);
             var labelTmo;
 
-            let editContact = (e)=>{
+            let editContact = (e) => {
                 console.log(e.type);
 
                 var sel = window.getSelection();
@@ -6240,7 +6163,7 @@ return dlg;
                             var values = raw.split(',');
                             var headers = getGoogleContactCSVFields().array;
 
-                            headers.forEach((header,i)=>{
+                            headers.forEach((header, i) => {
                                 var value = values[i];
                                 value = value.replace(/^"(.*)"$/, '$1');
                                 var row = _$('div').addTo(table);
@@ -6248,19 +6171,18 @@ return dlg;
                                 var valueCell = _$('div').addTo(row);
                                 var editor = _$('input').att('type', 'text').att('value', value).addTo(valueCell);
                                 editor.addEventListener('change', function(i, ev) {
-                                    var ed = ev.target;
-                                    values[i] = '"' + ed.value + '"';
-                                }
-                                .bind(editor, i));
+                                        var ed = ev.target;
+                                        values[i] = '"' + ed.value + '"';
+                                    }
+                                    .bind(editor, i));
 
-                            }
-                            );
+                            });
 
                             var footer = _$('div').cls('f').addTo(control);
 
                             var submit = _$('input').att('type', 'button').att('value', 'Kaydet').addTo(footer);
 
-                            submit.onclick = (e)=>{
+                            submit.onclick = (e) => {
                                 this.data = values.join(',');
                                 if (typeof this.onSubmit === 'function')
                                     this.onSubmit(this.data);
@@ -6269,20 +6191,19 @@ return dlg;
 
                             var closer = _$('input').att('type', 'button').att('value', 'Kapat').addTo(footer);
 
-                            closer.onclick = (e)=>{
+                            closer.onclick = (e) => {
                                 d.body.removeChild(control);
                             }
 
                         };
 
                         var editor = new contactEditor(line);
-                        editor.onSubmit = (data)=>{
+                        editor.onSubmit = (data) => {
                             lines[lineNum] = data;
                             textBox.value = lines.join('\n');
                             console.log(data);
 
-                        }
-                        ;
+                        };
                         return;
                     }
                     textBox.selectionStart = counter;
@@ -6300,15 +6221,13 @@ return dlg;
                     label.style.left = e.clientX + 'px';
                     label.style.top = e.clientY + 'px';
                     clearTimeout(labelTmo);
-                    labelTmo = setTimeout(()=>{
+                    labelTmo = setTimeout(() => {
                         label.style.display = 'none';
-                    }
-                    , 5000)
+                    }, 5000)
 
                 }
 
-            }
-            ;
+            };
 
             textBox.addEventListener('dblclick', editContact);
             textBox.addEventListener('mouseup', editContact);
@@ -6323,17 +6242,15 @@ return dlg;
         var panelObj = {
             control: panel,
             button: button,
-            append: (line)=>{
+            append: (line) => {
                 textBox.value = textBox.value + line
-            }
-            ,
+            },
             appendLine: function(line) {
                 textBox.value = textBox.value + '\n' + line
             },
-            clear: ()=>{
+            clear: () => {
                 textBox.value = ''
-            }
-            ,
+            },
         }
 
         Object.defineProperty(panelObj, 'text', {
@@ -6359,37 +6276,37 @@ return dlg;
         let _$ = ayanoglu.DOM._$;
         var sId = 'selector-pop';
 
-        var selectedText,listRow;
+        var selectedText, listRow;
         var selPop = document.getElementById(sId);
         if (selPop && reset !== true) {
             document.body.removeChild(selPop);
             selPop = undefined;
         }
-        let openEditor = ()=>{
+        let openEditor = () => {
 
-            chrome.storage.sync.get(storageKey, (result)=>{
+            chrome.storage.sync.get(storageKey, (result) => {
                 var values = result[storageKey];
                 if (!values)
                     values = [];
                 var dlg = new ayanoglu.ui.dialog();
-              
+
                 dlg.title = 'Replies';
-                dlg.control.style.height='-webkit-fill-available';
+                dlg.control.style.height = '-webkit-fill-available';
                 var frm = _$('div').cls('ayanoglu').addTo(dlg.container);
 
-                let addEditor = (value,i)=>{
-                    var valueObj=typeof value==='object'?value:{text:value};
-                    value=valueObj.text;
-                   
+                let addEditor = (value, i) => {
+                    var valueObj = typeof value === 'object' ? value : { text: value };
+                    value = valueObj.text;
+
                     var row = _$('div').css('margin-bottom:10px;').addTo(frm);
                     var inputCell = _$('div').css(`display: flex;align-items: center;justify-content: space-between;`).addTo(row);
                     var valueElement = _$('textarea').css('min-height:70px;width: -webkit-fill-available;').addTo(inputCell);
-                    var toolBox=_$('div').cls('').addTo(inputCell);
+                    var toolBox = _$('div').cls('').addTo(inputCell);
                     var delBtn = _$('div').att('title', (i === -1) ? 'Ekle' : 'Sil').css(`margin-left: 10px;`).cls(i === -1 ? 'icon-plus' : 'icon-eraser').addTo(toolBox);
 
-                    valueElement.value = value!=false ? value : '';
+                    valueElement.value = value != false ? value : '';
 
-                    valueElement.addEventListener('change', (e)=>{
+                    valueElement.addEventListener('change', (e) => {
                         if (i === -1)
                             return false;
 
@@ -6398,15 +6315,13 @@ return dlg;
                         var data = {};
                         data[storageKey] = values;
 
-                        chrome.storage.sync.set(data, ()=>{
+                        chrome.storage.sync.set(data, () => {
                             loadMenu(true);
 
-                        }
-                        );
-                    }
-                    );
+                        });
+                    });
 
-                    delBtn.addEventListener('click', (e)=>{
+                    delBtn.addEventListener('click', (e) => {
 
                         if (i !== -1 && !confirm('Mesaj silinecek !'))
                             return;
@@ -6425,135 +6340,122 @@ return dlg;
                         var data = {};
                         data[storageKey] = values;
 
-                        chrome.storage.sync.set(data, ()=>{
+                        chrome.storage.sync.set(data, () => {
                             loadMenu(true);
 
                             frm.innerText = '';
                             addEditor(false, -1);
                             values.forEach(addEditor);
 
-                        }
-                        );
-                    }
-                    );
+                        });
+                    });
 
                 }
 
                 addEditor(false, -1);
-                  values.sort((a, b) => a.localeCompare(b));
+                values.sort((a, b) => a.localeCompare(b));
                 values.forEach(addEditor);
 
-                var mnuData=dlg.menu('Data', ()=>{
+                var mnuData = dlg.menu('Data', () => {
 
                     frm.style.display = 'none';
-                    mnuData.style.display='none';
+                    mnuData.style.display = 'none';
 
-                    var bulkRow=dlg.container.querySelector('div#bulk-editor');
+                    var bulkRow = dlg.container.querySelector('div#bulk-editor');
 
-                    if(!bulkRow){
-                         bulkRow = _$('div').att('id','bulk-editor').css('margin-bottom:20px;');
+                    if (!bulkRow) {
+                        bulkRow = _$('div').att('id', 'bulk-editor').css('margin-bottom:20px;');
                         dlg.container.insertBefore(bulkRow, frm);
                         var inputCell = _$('div').addTo(bulkRow);
                         var txtElement = _$('textarea').css('width: -webkit-fill-available;height:200px;margin-bottom:10px;').addTo(inputCell);
                         txtElement.value = JSON.stringify(values);
 
                         var saveBtn = _$('input').att('type', 'button').css('margin-left:0px;').att('value', 'Kaydet').addTo(inputCell);
-                        saveBtn.addEventListener('click', (e)=>{
-                           
-                            var rawValue=txtElement.value;
-                            var changedValues=JSON.parse(rawValue)
+                        saveBtn.addEventListener('click', (e) => {
 
-                                if(typeof changedValues==='object' && typeof changedValues.push==='function' ){
-                                    values=changedValues;
-                                       var data = {};
-                                                        data[storageKey] = values;
+                            var rawValue = txtElement.value;
+                            var changedValues = JSON.parse(rawValue)
 
-                                                        chrome.storage.sync.set(data, ()=>{
-                                                            loadMenu(true);
-                                                            frm.style.display = 'unset';
-                                                            mnuData.style.display = 'unset';
-                                                             dlg.container.removeChild(bulkRow);
-                                                            frm.innerText = '';
-                                                            addEditor(false, -1);
-                                                            values.forEach(addEditor);
+                            if (typeof changedValues === 'object' && typeof changedValues.push === 'function') {
+                                values = changedValues;
+                                var data = {};
+                                data[storageKey] = values;
 
-                                                        }
-                                                        );
-                                }
-                                else
-                                {
-                                    alert('Invalid list format!!!');
-                                }
+                                chrome.storage.sync.set(data, () => {
+                                    loadMenu(true);
+                                    frm.style.display = 'unset';
+                                    mnuData.style.display = 'unset';
+                                    dlg.container.removeChild(bulkRow);
+                                    frm.innerText = '';
+                                    addEditor(false, -1);
+                                    values.forEach(addEditor);
+
+                                });
+                            } else {
+                                alert('Invalid list format!!!');
+                            }
 
 
-                           
 
-                        }
-                        )
+
+                        })
 
                         var clsBtn = _$('input').att('type', 'button').att('value', 'Kapat').addTo(inputCell);
-                        clsBtn.addEventListener('click', (e)=>{
+                        clsBtn.addEventListener('click', (e) => {
                             frm.style.display = 'unset';
                             mnuData.style.display = 'unset';
                             dlg.container.removeChild(bulkRow);
-                             mnuData.style.display='unset';
-                            bulkRow=undefined;
-                        }
-                        )
+                            mnuData.style.display = 'unset';
+                            bulkRow = undefined;
+                        })
 
                         saveBtn.disabled = true;
-                        txtElement.addEventListener('change', (e)=>{
+                        txtElement.addEventListener('change', (e) => {
                             saveBtn.disabled = false;
-                        }
-                        );
+                        });
 
 
                     }
-                    
 
-                }
-                );
 
-            }
-            );
+                });
+
+            });
 
             return;
 
         }
-        let loadMenu = (reset)=>{
+        let loadMenu = (reset) => {
             if (reset === true) {
                 var items = Array.prototype.slice.call(listRow.children);
-                items.forEach((item)=>{
+                items.forEach((item) => {
                     if (item.className !== 'new')
                         listRow.removeChild(item);
-                }
-                );
+                });
             }
-            chrome.storage.sync.get(storageKey, (result)=>{
+            chrome.storage.sync.get(storageKey, (result) => {
                 var values = result[storageKey];
                 if (!values)
                     values = [];
-                    values.sort((a, b) => a.localeCompare(b));
+                values.sort((a, b) => a.localeCompare(b));
                 values.forEach(addMenu)
 
-            }
-            );
+            });
 
         }
-        let addMenu = (text)=>{
+        let addMenu = (text) => {
             var mnu = _$('div').addTo(listRow);
-            var textElement = _$('div').att('title',text).text(text).cls('t').addTo(mnu);
-            
+            var textElement = _$('div').att('title', text).text(text).cls('t').addTo(mnu);
+
             if (handle)
-                textElement.addEventListener('click', (e)=>{
+                textElement.addEventListener('click', (e) => {
                     handle(textElement.textContent);
-                }
-                )
+                })
         }
 
         if (!selPop) {
 
-        ayanoglu.DOM.style(`
+            ayanoglu.DOM.style(`
 
 #${sId} {
 
@@ -6644,18 +6546,18 @@ flex-direction:column;
             var storageKey = 'wup-message-replies';
             var editRow = _$('div').cls('new').addTo(selPop);
             var toggleRow = _$('div').cls('toggle').addTo(selPop);
-             var listRow = _$('div').cls('list').addTo(selPop);
-             
+            var listRow = _$('div').cls('list').addTo(selPop);
+
             var addBtn = _$('div').text('Seçimi Ekle').addTo(editRow);
 
-            var searchBox=_$('input').att('type','text').addTo(editRow);
+            var searchBox = _$('input').att('type', 'text').addTo(editRow);
 
             var editBtn = _$('div').text('Düzenle').addTo(editRow);
 
-            addBtn.addEventListener('click', (e)=>{
+            addBtn.addEventListener('click', (e) => {
                 var text = selectedText;
 
-                chrome.storage.sync.get(storageKey, (result)=>{
+                chrome.storage.sync.get(storageKey, (result) => {
                     var values = result[storageKey];
                     if (!values)
                         values = [];
@@ -6664,41 +6566,36 @@ flex-direction:column;
                     var data = {};
                     data[storageKey] = values;
 
-                    chrome.storage.sync.set(data, ()=>{
+                    chrome.storage.sync.set(data, () => {
                         loadMenu(true);
 
-                    }
-                    );
+                    });
 
-                }
-                );
+                });
 
-            }
-            );
+            });
 
-            editBtn.addEventListener('click', (e)=>{
+            editBtn.addEventListener('click', (e) => {
                 openEditor()
-            }
-            );
+            });
 
-             searchBox.addEventListener('mouseup', (e)=>{
-        	e.stopPropagation()
-        });
-        searchBox.addEventListener('keydown', (e)=>{
-        	e.stopPropagation()
-        });
+            searchBox.addEventListener('mouseup', (e) => {
+                e.stopPropagation()
+            });
+            searchBox.addEventListener('keydown', (e) => {
+                e.stopPropagation()
+            });
 
             loadMenu();
 
-      
 
-        }
-        else {
-            listRow=selPop.querySelector('div.list');
+
+        } else {
+            listRow = selPop.querySelector('div.list');
         }
 
         var selecting = false;
-        let upHandler = (e)=>{
+        let upHandler = (e) => {
             if (e.target === selPop) {
                 selPop.style.display = 'flex';
                 return;
@@ -6732,13 +6629,12 @@ flex-direction:column;
         document.body.addEventListener('dblclick', upHandler);
         //document.addEventListener('selectionchange', upHandler);
 
-        document.addEventListener('selectstart', (e)=>{
+        document.addEventListener('selectstart', (e) => {
             selecting = true;
-        }
-        );
+        });
         document.body.addEventListener('mouseup', upHandler);
-        document.body.addEventListener('keydown', (e)=>{
-        	selPop.cls('');
+        document.body.addEventListener('keydown', (e) => {
+            selPop.cls('');
         });
 
     }
@@ -6746,31 +6642,27 @@ flex-direction:column;
 
     ui.floatMenu = floatMenu;
     ui.panel = uiPanel;
-console.log('DOM Loading...');
+    console.log('DOM Loading...');
     let DOM = Object.create(null);
 
     let populate = function(element) {
-        element.add = (child)=>{
+        element.add = (child) => {
             element.appendChild(child);
             populate(child);
             return child;
-        }
-        ;
-        element.addTo = (container)=>{
+        };
+        element.addTo = (container) => {
             container.appendChild(element);
             return element;
-        }
-        ;
+        };
         element.css = function(cssText) {
             element.setAttribute('style', cssText);
             return element;
-        }
-        ;
+        };
         element.cls = function(className) {
             element.className = className;
             return element;
-        }
-        ;
+        };
         element.att = function(name, value) {
             element.setAttribute(name, value);
 
@@ -6783,13 +6675,11 @@ console.log('DOM Loading...');
             }
 
             return element;
-        }
-        ;
+        };
         element['text'] = function(v) {
             element.textContent = v;
             return element;
-        }
-        ;
+        };
     }
     let _$ = function(tagName) {
         var element = document.createElement(tagName);
@@ -6815,7 +6705,7 @@ console.log('DOM Loading...');
             name = selector;
         if (typeof root === 'undefined')
             root = document;
-        return new Promise((resolve,reject)=>{
+        return new Promise((resolve, reject) => {
             if (element = root.querySelector(selector)) {
 
                 console.log(`"${name}" found`);
@@ -6826,10 +6716,8 @@ console.log('DOM Loading...');
                 console.trace('findElement');
                 console.error(`"${name}" not found`);
             }
-        }
-        );
-    }
-    ;
+        });
+    };
 
     DOM.simulateMouseEvents = function(element, eventName) {
 
@@ -6842,7 +6730,7 @@ console.log('DOM Loading...');
     let google = Object.create(null);
 
 
- 
+
 
     function getGoogleContactCSVFields() {
         var headersStr = '';
@@ -6968,7 +6856,7 @@ console.log('DOM Loading...');
         //59
         headersStr += 'Custom Field 5 - Value:customField5Value';
         //60
-        
+
 
         headersStr += 'Address 1 - Type:address1Type';
         //61 
@@ -6987,29 +6875,29 @@ console.log('DOM Loading...');
         headersStr += 'Address 1 - Extended Address:address1Extended';
         //68 
 
-       
+
 
         var headerLines = headersStr.split(',');
 
-var headers=[];
-var properties={};
-var defaults={};
-headerLines.forEach((line,i)=>{
-    var lineSp=line.split(':');
-    headers.push(lineSp[0]);
-    if(propName=lineSp[1]) properties[i.toString()]=propName;
-    else properties[i.toString()]=false;
+        var headers = [];
+        var properties = {};
+        var defaults = {};
+        headerLines.forEach((line, i) => {
+            var lineSp = line.split(':');
+            headers.push(lineSp[0]);
+            if (propName = lineSp[1]) properties[i.toString()] = propName;
+            else properties[i.toString()] = false;
 
-    if(defaultValue=lineSp[2]) defaults[i.toString()]=defaultValue;
-     else defaults[i.toString()]=false;
-});
+            if (defaultValue = lineSp[2]) defaults[i.toString()] = defaultValue;
+            else defaults[i.toString()] = false;
+        });
         var colsCount = headers.length;
-    
+
         return {
             'string': headers.join(','),
             'array': headers,
-            "properties":properties,
-            "defaults":defaults
+            "properties": properties,
+            "defaults": defaults
         }
     }
     let parseContactCSV = function(csv) {
@@ -7017,17 +6905,15 @@ headerLines.forEach((line,i)=>{
         var contactMap = ayanoglu.google.parseContactCSVFields().properties;
 
         var values = csv.split(',');
-        values = values.map((item)=>{
+        values = values.map((item) => {
             return item.replace(/\"/g, '');
-        }
-        );
+        });
         var contact = {};
 
-        values.forEach((value,i)=>{
+        values.forEach((value, i) => {
             if (propertyName = contactMap[i.toString()])
                 contact[propertyName] = value;
-        }
-        );
+        });
 
         var name = contact.name;
         var nameObj = ayanoglu.utility.formatName(name);
@@ -7042,12 +6928,12 @@ headerLines.forEach((line,i)=>{
         //  console.dir(values);
         return contact;
     }
-    
-    let buildContactCSV = function(contact,handler) {
+
+    let buildContactCSV = function(contact, handler) {
         var csvFields = ayanoglu.google.parseContactCSVFields();
         var contactMap = csvFields.properties;
         var fields = csvFields.array;
-        
+
         var name = contact.name;
         var nameObj = ayanoglu.utility.formatName(name);
 
@@ -7055,105 +6941,104 @@ headerLines.forEach((line,i)=>{
         contact.firstName = nameObj.firstName;
         contact.middleName = nameObj.middleName;
         contact.familyName = nameObj.familyName;
-        
-        var phone=contact.phone1Value;
+
+        var phone = contact.phone1Value;
         var wPhone = phone.replace(/[^\d]/g, '');
 
-      if (!/^9\d+/.test(wPhone))
-          wPhone = '9' + wPhone;
-      
-      contact.webSite1Type = 'Whatsapp';
-      contact.webSite1Value = 'https://wa.me/' + wPhone;
-        
-        
+        if (!/^9\d+/.test(wPhone))
+            wPhone = '9' + wPhone;
+
+        contact.webSite1Type = 'Whatsapp';
+        contact.webSite1Value = 'https://wa.me/' + wPhone;
+
+
         var values = [];
-        fields.forEach((field,i)=>{
+        fields.forEach((field, i) => {
             var propertyName = contactMap[i.toString()];
             var value = "";
             if (propertyName)
                 value = contact[propertyName];
-            
+
             if (value && value.length)
                 value = '"' + value + '"';
-            else value='';
-            if(typeof handler==='function'){
-            	var modifiedValue=handler(propertyName,value,i);
-            	if(modifiedValue) value=modifiedValue;
+            else value = '';
+            if (typeof handler === 'function') {
+                var modifiedValue = handler(propertyName, value, i);
+                if (modifiedValue) value = modifiedValue;
             }
             values.push(value);
-        }
-        )
-      
-        
+        })
+
+
         return values.join(',');
     }
 
-    google.buildContactCSV=buildContactCSV;
-google.parseContactCSV=parseContactCSV;
+    google.buildContactCSV = buildContactCSV;
+    google.parseContactCSV = parseContactCSV;
     google.parseContactCSVFields = getGoogleContactCSVFields;
     google.getGoogleContactCSVFields = getGoogleContactCSVFields;
 
-    
-    let buildContactsCSV = function(contacts,handler) { 
+
+    let buildContactsCSV = function(contacts, handler) {
         var gHeaders = getGoogleContactCSVFields();
         var headersStr = gHeaders.string;
- 
+
         var headers = gHeaders.array;
 
         var colsCount = headers.length;
-/*
-        headers.forEach((h,i)=>{
-            console.log(i, h);
-        }
-        );
-*/
-        
+        /*
+                headers.forEach((h,i)=>{
+                    console.log(i, h);
+                }
+                );
+        */
+
         var gCsv = [headersStr];
-  contacts.forEach((contact)=>{
-       var gLine = buildContactCSV(contact,handler);
+        contacts.forEach((contact) => {
+            var gLine = buildContactCSV(contact, handler);
 
-            gCsv.push(gLine); 
-  });
-       
+            gCsv.push(gLine);
+        });
 
-       
+
+
         var output = gCsv.join('\n');
-        return output; 
+        return output;
     }
-    google.buildContactsCSV=buildContactsCSV ;
+    google.buildContactsCSV = buildContactsCSV;
     let utilities = Object.create(null);
-    
 
-function getFileNameStamp() {
-    var d = new Date(),
-        month = '' + (d.getMonth() + 1),
-        day = '' + d.getDate(),
-        year = d.getFullYear(),
-        hour = d.getHours(),
-        min = d.getMinutes();
 
-    if (month.length < 2) 
-        month = '0' + month;
-    if (day.length < 2) 
-        day = '0' + day;
-    if (hour.length < 2) 
-        hour = '0' + hour;
-    if (min.length < 2) 
-        min = '0' + min;
+    function getFileNameStamp() {
+        var d = new Date(),
+            month = '' + (d.getMonth() + 1),
+            day = '' + d.getDate(),
+            year = d.getFullYear(),
+            hour = d.getHours(),
+            min = d.getMinutes();
 
-    return [year, month, day,hour,min].join('-');
-}
+        if (month.length < 2)
+            month = '0' + month;
+        if (day.length < 2)
+            day = '0' + day;
+        if (hour.length < 2)
+            hour = '0' + hour;
+        if (min.length < 2)
+            min = '0' + min;
 
-utilities.getFileNameStamp=getFileNameStamp;
+        return [year, month, day, hour, min].join('-');
+    }
 
-    utilities.saveAsCSV= (text)=>{
+    utilities.getFileNameStamp = getFileNameStamp;
 
-       
+    utilities.saveAsCSV = (text) => {
+
+
 
         ayanoglu.utility.download("contacts-" + getFileNameStamp() + ".csv", text);
- 
+
     };
-    
+
     utilities.download = function(filename, text) {
         var element = document.createElement('a');
         element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
@@ -7166,14 +7051,14 @@ utilities.getFileNameStamp=getFileNameStamp;
 
         document.body.removeChild(element);
     }
-    
-    utilities.formatName=(nameRaw)=>{
-      
-        var fullName = ''
-          , firstName = ''
-          , midName = ''
-          , familyName = '';
-    
+
+    utilities.formatName = (nameRaw) => {
+
+        var fullName = '',
+            firstName = '',
+            midName = '',
+            familyName = '';
+
         var pat = /(.+\.+ =?)?(.+)/;
 
         if (ms = pat.exec(nameRaw)) {
@@ -7183,11 +7068,10 @@ utilities.getFileNameStamp=getFileNameStamp;
 
             var namesUpper = name.split(' ');
             var names = [];
-            namesUpper.forEach((n)=>{
+            namesUpper.forEach((n) => {
                 n = firstToUpper(n);
                 names.push(n);
-            }
-            );
+            });
 
             if (names.length) {
                 firstName = names.shift();
@@ -7209,16 +7093,16 @@ utilities.getFileNameStamp=getFileNameStamp;
             fullName = nameParts.join(' ');
 
         }
-        
+
         return {
-        	fullName : fullName
-                , firstName : firstName
-                , midName : midName
-                , middleName : midName
-                , familyName: familyName
+            fullName: fullName,
+            firstName: firstName,
+            midName: midName,
+            middleName: midName,
+            familyName: familyName
         }
     }
-    
+
     utilities.copy = function(raw) {
         var element = _$('textarea').addTo(document.body);
         element.textContent = raw;
@@ -7229,12 +7113,12 @@ utilities.getFileNameStamp=getFileNameStamp;
 
     utilities.upperCase = function(raw) {
 
-        raw = raw.replace(/i/g, 'İ');
-        raw = raw.toUpperCase();
-        raw = raw.trim();
- return raw;
-    }
-      /*
+            raw = raw.replace(/i/g, 'İ');
+            raw = raw.toUpperCase();
+            raw = raw.trim();
+            return raw;
+        }
+        /*
       ayanoglu.utility.getHttpData('wup-replies').then((response)=>{
 	for(key in response){
 	   // console.log(response[key])
@@ -7252,7 +7136,7 @@ utilities.getFileNameStamp=getFileNameStamp;
     */
     utilities.getHttpData = function(name, serviceUrl) {
 
-        return new Promise((resolve,reject)=>{
+        return new Promise((resolve, reject) => {
 
             console.log("%cSending request", 'color:red;font-size:25px;');
             var req = new XMLHttpRequest();
@@ -7270,13 +7154,11 @@ utilities.getFileNameStamp=getFileNameStamp;
                         reject(req.status);
                     }
                 }
-            }
-            ;
+            };
 
             req.send();
 
-        }
-        );
+        });
 
     }
 
@@ -7294,7 +7176,6 @@ utilities.getFileNameStamp=getFileNameStamp;
     console.log('ca Library Loaded');
     console.dir(ca);
 
-}
-)();
+})();
 
 console.log('bootstrap loaded');

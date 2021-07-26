@@ -1,2 +1,8 @@
 
 sample/hadiii.zip
+*.vscode/*.*
+**/.vscode/*.*
+
+**/tsconfig.json
+**/jsconfig.json
+**/*.d.ts

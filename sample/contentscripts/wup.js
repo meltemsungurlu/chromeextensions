@@ -1,6 +1,8 @@
 //# sourceURL=@chrome-extension-wup.js
-let wupLib = Object.create(null);
-wupLib.workers = Object.create(null);
+let wupLib = {
+    workers: {}
+};
+
 
 wupLib.collectContactsWupLinks = function() {
 
@@ -8,7 +10,7 @@ wupLib.collectContactsWupLinks = function() {
     var nameSelector = '#list-container-inner > div';
     var lines = [];
     var rows = d.querySelectorAll(nameSelector);
-    rows.forEach((row)=>{
+    rows.forEach((row) => {
         if (nameNode = row.querySelector("div.name")) {
             console.log(nameNode.textContent);
             if (phoneNode = row.querySelector("div:nth-child(5) > a")) {
@@ -18,12 +20,10 @@ wupLib.collectContactsWupLinks = function() {
                     lines.push(ayanoglu.wup.makeWinShortcut(phoneNode.textContent, nameNode.textContent + ' - ' + compNode.textContent));
             }
         }
-    }
-    );
+    });
 
     ayanoglu.ui.panel('*Last Added Unknown Numbers*\n\n' + lines.join('\n'));
-}
-;
+};
 let collectUnknownSenders = function() {
 
     //  console.clear();
@@ -38,12 +38,12 @@ let collectUnknownSenders = function() {
         var i = 1;
 
         var itemSelector = '#pane-side > div:nth-child(1) > div > div > div';
-        var scroller = ()=>{
+        var scroller = () => {
 
             var items = Array.prototype.slice.call(document.querySelectorAll(itemSelector));
 
             // console.log('items length', items.length);
-            items.forEach((item)=>{
+            items.forEach((item) => {
                 // item.style.border = "1px solid blue";
 
                 var unReadSelector = 'div > div > div._3j7s9 > div._1AwDx > div._3Bxar > span:nth-child(1) > div > span';
@@ -58,14 +58,13 @@ let collectUnknownSenders = function() {
 
                     }
 
-                    if (unReadElement = item.querySelector(unReadSelector)) {//  console.log(name);
+                    if (unReadElement = item.querySelector(unReadSelector)) { //  console.log(name);
 
                     }
                     itemsCount++;
                 }
 
-            }
-            );
+            });
 
             var y = panel.clientHeight * i;
             //  console.log(panel.scrollTop);
@@ -78,18 +77,17 @@ let collectUnknownSenders = function() {
                 finalize();
         }
 
-        let finalize = ()=>{
+        let finalize = () => {
             console.log('contacts: ', contacts.length);
             console.log('final', 'i: ' + i + ', itemsCount: ' + itemsCount);
 
-            contacts.forEach((contact)=>{
+            contacts.forEach((contact) => {
                 var phone = contact;
                 var wPhone = phone.replace(/[^\d]/g, '');
                 var link = 'api.whatsapp.com/send?phone=' + wPhone;
                 textStack.push(link);
                 // output.appendLine(wPhone);
-            }
-            );
+            });
             var text = textStack.join('\r\n');
             ayanoglu.ui.panel(text);
             panel.scrollTo(0, 0);
@@ -105,7 +103,7 @@ wupLib.workers.collectUnknownSenders = collectUnknownSenders;
 
 function openChatPanel() {
 
-    return new Promise((resolve,reject)=>{
+    return new Promise((resolve, reject) => {
 
         var selector = '#main > header > div:first-child';
         var name = 'Header';
@@ -119,8 +117,7 @@ function openChatPanel() {
             console.log(`"${name}" found`);
             resolve(element);
         }
-    }
-    );
+    });
 
 }
 
@@ -128,7 +125,7 @@ wupLib.openChatPanel = openChatPanel;
 
 let collectGroupMembers = function(membersArr) {
 
-    return new Promise((finalResolve,finalReject)=>{
+    return new Promise((finalResolve, finalReject) => {
         if (typeof membersArr === 'undefined')
             membersArr = [];
 
@@ -146,40 +143,39 @@ let collectGroupMembers = function(membersArr) {
         var phoneSelector = ':scope span[class="_3ko75 _5h6Y_ _3Whw5"]';
         // 'div > div > div > div > div > div > div._2kHpK > div._3dtfX > div > span > span';
 
-        wupLib.openChatPanel().then(()=>{
+        wupLib.openChatPanel().then(() => {
 
             var name = 'Info Panel';
             var selector = '#app > div > div > div > div > span > div > span > div > div';
 
-            ayanoglu.DOM.findElement(selector, name).then((infoPanelElement)=>{
+            ayanoglu.DOM.findElement(selector, name).then((infoPanelElement) => {
 
-                let continueAfterExpander = ()=>{
+                let continueAfterExpander = () => {
                     // div._1TM40 > div:nth-child(5) > div:nth-child(2) > div > div:nth-child(2)
                     var itemSelector = ':scope section > div > div > div > div > div > div > div > div  span > span';
                     var pat = '[\\d+]{3}\\s[\\d+]{2}\\s[\\d+]{2}$';
                     var i = 0;
                     console.clear();
                     console.groupCollapsed('Collecting members...');
-                    var scroller = ()=>{
+                    var scroller = () => {
 
                         var items = Array.prototype.slice.call(infoPanelElement.querySelectorAll(itemSelector));
 
                         var raw = Array.from(infoPanelElement.querySelectorAll(itemSelector));
-                        var items = raw.filter(el=>el.textContent.search(pat) !== -1);
+                        var items = raw.filter(el => el.textContent.search(pat) !== -1);
 
                         console.log(items);
 
-                        items.forEach((item,i)=>{
+                        items.forEach((item, i) => {
                             var row = item.parentElement.parentElement.parentElement.parentElement;
                             if (row.children[1]) {
                                 if (row.children[1].children[1]) {
                                     // console.log(i,item.textContent, row.children[1].children[1].textContent);
                                     var phone = item.textContent;
                                     var name = row.children[1].children[1].textContent;
-                                    if (/[\w]{3,}/.test(name) && !membersArr.find((m)=>{
-                                        return m.phone1Value === phone
-                                    }
-                                    )) {
+                                    if (/[\w]{3,}/.test(name) && !membersArr.find((m) => {
+                                            return m.phone1Value === phone
+                                        })) {
 
                                         item.style.border = "1px solid blue";
                                         membersArr.push({
@@ -193,8 +189,7 @@ let collectGroupMembers = function(membersArr) {
                                 }
 
                             }
-                        }
-                        )
+                        })
 
                         /*   items.forEach((item)=>{
                                 // item.style.border = "1px solid blue";
@@ -241,21 +236,18 @@ let collectGroupMembers = function(membersArr) {
                 }
                 var expanderSelector = ':scope div > div > div div';
                 var numPat = '^\\d+\\s+more$';
-                var exp = Array.from(infoPanelElement.querySelectorAll(expanderSelector)).find(el=>el.textContent.search(numPat) !== -1);
+                var exp = Array.from(infoPanelElement.querySelectorAll(expanderSelector)).find(el => el.textContent.search(numPat) !== -1);
                 if (exp) {
                     ayanoglu.DOM.simulateMouseEvents(exp, 'click');
                     continueAfterExpander();
                 } else
                     continueAfterExpander();
 
-            }
-            )
+            })
 
-        }
-        );
+        });
 
-    }
-    )
+    })
 }
 
 wupLib.workers.collectGroupMembers = collectGroupMembers;
@@ -286,12 +278,12 @@ let iterateUsers = function(callBack) {
         var i = 1;
         var stopped = false;
 
-        var scroller = ()=>{
+        var scroller = () => {
 
             var items = Array.prototype.slice.call(document.querySelectorAll(itemSelector));
 
             // console.log('items length', items.length);
-            items.forEach((item,itemIndex)=>{
+            items.forEach((item, itemIndex) => {
                 //                    item.style.border = "1px solid blue";
                 var nameElement = item.querySelector(nameSelector);
                 var name = false;
@@ -342,8 +334,7 @@ let iterateUsers = function(callBack) {
                     }
                 }
 
-            }
-            );
+            });
 
             var y = panel.clientHeight * i;
             //  console.log(panel.scrollTop);
@@ -361,7 +352,7 @@ let iterateUsers = function(callBack) {
 
         }
 
-        let finalize = ()=>{
+        let finalize = () => {
             if (typeof callBack === 'function')
                 callBack(false);
             panel.scrollTo(0, 0);
@@ -375,7 +366,7 @@ let iterateUsers = function(callBack) {
 
 wupLib.workers.iterateUsers = iterateUsers;
 let collectUnknownNumbers_Old = function(callBack) {
-    return new Promise((resolve,reject)=>{
+    return new Promise((resolve, reject) => {
 
         // console.clear();
         var textStack = [];
@@ -389,12 +380,12 @@ let collectUnknownNumbers_Old = function(callBack) {
             var stopped = false;
             var itemSelector = '#pane-side > div:nth-child(1) > div > div > div';
 
-            var scroller = ()=>{
+            var scroller = () => {
 
                 var items = Array.prototype.slice.call(document.querySelectorAll(itemSelector));
 
                 // console.log('items length', items.length);
-                items.forEach((item)=>{
+                items.forEach((item) => {
                     // item.style.border = "1px solid blue";
 
                     var unReadSelector = 'div > div > div._3j7s9 > div._1AwDx > div._3Bxar > span:nth-child(1) > div > span';
@@ -410,19 +401,17 @@ let collectUnknownNumbers_Old = function(callBack) {
                                     if (callBack(name))
                                         stopped = true;
                                 }
-                            }
-                            ;
+                            };
 
                         }
 
-                        if (unReadElement = item.querySelector(unReadSelector)) {//  console.log(name);
+                        if (unReadElement = item.querySelector(unReadSelector)) { //  console.log(name);
 
                         }
                         itemsCount++;
                     }
 
-                }
-                );
+                });
 
                 var y = panel.clientHeight * i;
                 //  console.log(panel.scrollTop);
@@ -440,7 +429,7 @@ let collectUnknownNumbers_Old = function(callBack) {
 
             }
 
-            let finalize = ()=>{
+            let finalize = () => {
 
                 panel.scrollTo(0, 0);
                 resolve(contacts);
@@ -450,8 +439,7 @@ let collectUnknownNumbers_Old = function(callBack) {
 
         }
 
-    }
-    )
+    })
 }
 
 //    wupLib.workers.collectUnknownNumbers = collectUnknownNumbers;
@@ -459,8 +447,8 @@ let collectUnknownNumbers_Old = function(callBack) {
 let sendMessage = function(message) {
     var find = ayanoglu.DOM.findElement;
     var msgBoxSelector = '#main > footer > div._3pkkz.V42si.copyable-area > div._1Plpp > div > div._2S1VP.copyable-text.selectable-text';
-    msgBoxSelector = '#main > footer > div > div > div > div.copyable-text.selectable-text';
-    find(msgBoxSelector, 'textArea').then((element)=>{
+    msgBoxSelector = '#main > footer div > div > div > div.copyable-text.selectable-text';
+    find(msgBoxSelector, 'textArea').then((element) => {
 
         element.innerHTML = message;
 
@@ -472,15 +460,14 @@ let sendMessage = function(message) {
         //Click at Send Button
         ayanoglu.DOM.simulateMouseEvents(document.querySelector('span[data-icon="send"]'), 'click');
 
-    }
-    );
+    });
 }
 wupLib.workers.sendMessage = sendMessage;
 
 wupLib.makeWinShortcut = function(phone, name) {
     var wPhone = phone.replace(/[^\d]/g, '');
     if (/^[\d]{11,}$/.test(wPhone))
-        ;
+    ;
     else {
         if (/^[\d]{,10}$/.test(wPhone))
             wPhone = '90' + wPhone;
@@ -492,8 +479,7 @@ wupLib.makeWinShortcut = function(phone, name) {
     if (name)
         link = '*' + name + '* ' + link;
     return link;
-}
-;
+};
 wupLib.workers.makeShortcut = function(label) {
     // console.clear();
     let find = ayanoglu.DOM.findElement;
@@ -501,29 +487,26 @@ wupLib.workers.makeShortcut = function(label) {
     var numSelector = '#app > div > div > div.YD4Yw > div._1-iDe._14VS3 > span > div > span > div > div > div._2vsnU > div:nth-child(4) > div:nth-child(3) > div > div > span > span';
     var nameSelector = '#app > div > div > div.YD4Yw > div._1-iDe._14VS3 > span > div > span > div > div > div._2vsnU > div._1CRb5._34vig._3XgGT > span > span'
 
-    find(infoSelector, 'Header').then((element)=>{
+    find(infoSelector, 'Header').then((element) => {
         ayanoglu.DOM.simulateMouseEvents(element, 'click');
 
-        find(numSelector, 'Phone').then((phoneElement)=>{
+        find(numSelector, 'Phone').then((phoneElement) => {
             var phone = phoneElement.textContent;
             phone = phone.replace(/[^\d]/g, "");
             var link = 'api.whatsapp.com/send?phone=' + encodeURIComponent(phone);
 
-            find(nameSelector, 'Name').then((nameElement)=>{
+            find(nameSelector, 'Name').then((nameElement) => {
                 var name = nameElement.textContent;
 
                 var text = '*' + name + (label ? ' (' + label + ')' : '') + '* ' + link;
                 console.log(text);
                 copy(text);
 
-            }
-            )
+            })
 
-        }
-        )
+        })
 
-    }
-    );
+    });
 }
 
 window.ayanoglu.wup = wupLib;
@@ -532,72 +515,65 @@ var endLibrary = null;
 var popData = ["*Randevu almak için:*   \n\n    90 850 473 77 77", "9:00 - 18:00 arası çalışıyorum", "Allah ü Teala razı olsun", "Allah ü Teala razı olsun abicim", "Allah ü Teala Razı olsun abicim.\nBilmukabele biz de Mübarek Ramazan Bayramı'nızı tebrik ederiz. \n\nAllah ü Teala daha nice bayramlara eriştirsin.", "Allah ü Teala Razı olsun kardeşim.\n\nBilmukabele biz de Mübarek Ramazan Bayramı'nızı tebrik ederiz tebrik ederiz.\n\nAllah ü Teala daha nice bayramlara eriştirsin.", "Allah ü Teala razı olsun.\nBilmukabele biz de Mübarek Ramazan Bayramı'nızı tebrik ederiz tebrik ederiz.\n\nAllah ü Teala daha nice bayramlara eriştirsin.", "Amin efendim...", "bit.ly/kbb-burun", "Bu iyiye işaret", "Çok şükür iyiyiz, yaramazlık yok", "Cuma gününüz mübarek olsun", "Cuma gününüz mübarek olsun efendim...", "Eczanelerden reçetesiz alabilirsiniz.", "Estağfurullah abicim", "Estağfurullah...", "Geçmiş olsun ", "Hayırlı akşamlar efendim... 😊", "Hayırlı Ramazanlar ", "http://bit.ly/cayanoglu\n", "https://www.instagram.com/drcuneytayanoglu/\n", "İstediğiniz  zaman yazmakla rahat olun ", "İyi geceler efendim... 😊", "İyi günler efendim, görüşmek üzere 😊", "Merhaba", "Merhaba , nasılsınız ?", "Rahatsızlık sebebi ile 3. Haziran Çarşamba gününe kadar raporluyum. \nBu tarihten sonra görüşebiliriz.", "Ramazan Bayram'ınızı tebrik eder, sağlık ve huzurlu günler dilerim.", "Rica ederim 😊", "Selamün Aleyküm", "Siz nasılsınız ?", "Tabi abicim buyrun 😊", "Teşekkür ederim siz nasılsınız ?", "Teşekkür ederim,\nSizin de Ramazan Bayram'ınızı tebrik eder, sağlık ve huzurlu günler dilerim.", "Teşekkürler 😊", "Ve Aleyküm Selam"];
 
 var d = document;
-let onLoad = ()=>{
+let onLoad = () => {
 
     var pop = ayanoglu.ui.floatMenu();
-    pop.add('Open Group Member Collector', ()=>{
+    pop.add('Open Group Member Collector', () => {
         collectWupGroupMembers()
-    }
-    , 'icon-doc-text');
+    }, 'icon-doc-text');
 
-    pop.add('Parse Member Info', ()=>{
+    pop.add('Parse Member Info', () => {
         parseMemberInfo();
-    }
-    , 'icon-user');
+    }, 'icon-user');
 
-    pop.add('Collect Numbers', ()=>{
+    pop.add('Collect Numbers', () => {
         collectUnknownNumbers();
-    }
-    , 'icon-export');
+    }, 'icon-attach');
 
-    pop.add('Collect Cuma Numbers', ()=>{
-        collectUnknownNumbers((contact)=>{
-        	 
-            
-            var el=	contact.element.querySelector('#pane-side > div:nth-child(1) > div > div > div:nth-child(1) > div > div > div.TbtXF > div._1SjZ2 > div._2vfYK > span')
-           if(el){ 
-        	   var srcEl=contact.element.querySelector(':scope *[src^="https://web.whatsapp."]');
+    pop.add('Collect Cuma Numbers', () => {
+        collectUnknownNumbers((contact) => {
 
-        	   if(srcEl){
-        	  var src=srcEl.getAttribute('src');
-        	  var matches=/u=(\d+)%/.exec(src);
-        	  if(matches && matches[1]) {
-        		  contact.phone=matches[1];
-        	  }
-        	  else return false;
-        	   }  else return false;
-        	   var text=el.textContent;
-        	  return text.search(/cuma/i)
-           }
-            
+
+            var el = contact.element.querySelector('#pane-side > div:nth-child(1) > div > div > div:nth-child(1) > div > div > div.TbtXF > div._1SjZ2 > div._2vfYK > span')
+            if (el) {
+                var srcEl = contact.element.querySelector(':scope *[src^="https://web.whatsapp."]');
+
+                if (srcEl) {
+                    var src = srcEl.getAttribute('src');
+                    var matches = /u=(\d+)%/.exec(src);
+                    if (matches && matches[1]) {
+                        contact.phone = matches[1];
+                    } else return false;
+                } else return false;
+                var text = el.textContent;
+                return text.search(/cuma/i)
+            }
+
             return false;
-            });
-    }
-    , 'icon-export');
-    
-    pop.add('Show Collection', ()=>{
+        });
+    }, 'icon-export');
+
+    pop.add('Show Collection', () => {
         var dlg = contactListDialog('Member Collection');
         var output = getCSVText();
         dlg.writeText(output);
-    }
-    , 'icon-list');
+    }, 'icon-list');
 
-    pop.add('New Number', ()=>{
+    pop.add('New Number', () => {
 
 
         var phone = prompt('Telefon Numarası');
 
         var link = ayanoglu.wup.makeWinShortcut(phone);
-        
-//905332761903
-        var url='https://' + link;
-        var anchor=_$('a').att('href',url).addTo(document.body); 
-        ca.event.raise('click',{},anchor,true);
-        document.body.removeChild(dv); 
-    }
-    , 'icon-list');
 
-    pop.add('Translate', ()=>{
+        //905332761903
+        var url = 'https://' + link;
+        var anchor = _$('a').att('href', url).addTo(document.body);
+        ca.event.raise('click', {}, anchor, true);
+        document.body.removeChild(dv);
+    }, 'icon-phone');
+
+    pop.add('Translate', () => {
         var dlg = ayanoglu.ui.modalDialog();
         dlg.control.style.height = '500px'
         dlg.title = 'Translate';
@@ -605,23 +581,20 @@ let onLoad = ()=>{
         var txtArea = _$('textarea').css(`width: -webkit-fill-available;
     height: 100%;`).addTo(dlg.container);
 
-        dlg.button('Convert', ()=>{
+        dlg.button('Convert', () => {
             txtArea.value = ayanoglu.utility.upperCase(txtArea.value);
-        }
-        )
+        })
 
-    }
-    , 'icon-up-hand');
+    }, 'icon-up-hand');
 
-}
-;
+};
 addEventListener('load', onLoad)
 
 window.csvStack = [];
 
 let parseMemberInfo = function() {
 
-    parseContactInfo().then((contact)=>{
+    parseContactInfo().then((contact) => {
         console.dir(contact);
 
         if (contact.saved) {
@@ -632,7 +605,7 @@ let parseMemberInfo = function() {
 
             var table = _$('div').cls('ayanoglu flex-form').addTo(dlg.container);
 
-            let addField = (label,name,tag,index,value)=>{
+            let addField = (label, name, tag, index, value) => {
                 var row = _$('div').att('id', 'field-' + index).addTo(table);
 
                 var labelCell = _$('div').text(label + (index > -1 ? ` (${index})` : '')).addTo(row);
@@ -641,23 +614,21 @@ let parseMemberInfo = function() {
                 var input = _$(tag ? tag : 'input').att('name', name).addTo(inputCell);
                 if (value)
                     input.value = value;
-                row.getValue = ()=>{
+                row.getValue = () => {
                     return input.value;
                 }
                 return input;
             }
             var nameElement = addField('Etiket', 'label', false, -1, contact.name);
             var txtElement = addField('Etiket', 'text', 'textarea', -1);
-            txtElement.addEventListener('change', (e)=>{
+            txtElement.addEventListener('change', (e) => {
                 ayanoglu.utility.copy(txtElement.value);
-            }
-            );
-            dlg.button('Oluştur', ()=>{
+            });
+            dlg.button('Oluştur', () => {
                 var link = ayanoglu.wup.makeWinShortcut(contact.phone1Value, nameElement.value);
                 txtElement.value = link;
                 ayanoglu.utility.copy(link);
-            }
-            );
+            });
 
         } else {
 
@@ -666,48 +637,43 @@ let parseMemberInfo = function() {
             dlg.title = contact.name;
             var frm = ayanoglu.ui.contactForm(dlg, dlg.container, contact);
 
-            dlg.button('Ekle', ()=>{
+            dlg.button('Ekle', () => {
                 var line = frm.getCsv();
                 var exists = false;
                 var nContact = parseContactCSV(line);
 
-                csvStack.some((csvLine)=>{
+                csvStack.some((csvLine) => {
                     var tContact = parseContactCSV(csvLine);
                     if (nContact.phone1Value === tContact.phone1Value) {
                         exists = true;
                         return true;
                     }
-                }
-                )
+                })
                 if (!exists)
                     csvStack.push(line);
-            }
-            );
+            });
 
-            dlg.button('Liste', ()=>{
+            dlg.button('Liste', () => {
 
                 var dlg = contactListDialog('CSV Text', false);
                 var output = getCSVText();
                 dlg.writeText(output);
 
-            }
-            )
+            })
 
-            dlg.button('Sıfırla', ()=>{
+            dlg.button('Sıfırla', () => {
                 csvStack = [];
-            }
-            );
+            });
 
         }
 
-    }
-    );
+    });
 }
 
 function collectUnknownNumbers(filter) {
-if(!filter) filter=(contact)=>{
-	  return (contact.name === false)  ;
-}
+    if (!filter) filter = (contact) => {
+        return (contact.name === false);
+    }
     var dlg = ayanoglu.ui.dialog();
 
     dlg.title = 'Unknown Numbers';
@@ -719,37 +685,37 @@ if(!filter) filter=(contact)=>{
 
 
     var stack = [];
-var groupIndex=1;
-    ayanoglu.wup.workers.iterateUsers((contact)=>{
+    var groupIndex = 1;
+    ayanoglu.wup.workers.iterateUsers((contact) => {
         if (contact === false) {
 
             return;
         }
-        if(filter(contact)){
+        if (filter(contact)) {
 
             var link = ayanoglu.wup.makeWinShortcut(contact.phone);
             if (stack.length % 10 === 0) {
                 textElement.value += '\n\n\n*Group ' + (stack.length / 10) + '*\n\n';
-            groupIndex=1;
-            } 
-            textElement.value +=groupIndex + ') ' +  link + '\n\n';
+                groupIndex = 1;
+            }
+            textElement.value += groupIndex + ') ' + link + '\n\n';
 
             console.log(groupIndex + ') ' + link);
             stack.push(link);
             groupIndex++;
         }
-      
-    }
-    );
+
+    });
 
 }
+
 function getFileNameStamp() {
-    var d = new Date()
-      , month = '' + (d.getMonth() + 1)
-      , day = '' + d.getDate()
-      , year = d.getFullYear()
-      , hour = d.getHours()
-      , min = d.getMinutes();
+    var d = new Date(),
+        month = '' + (d.getMonth() + 1),
+        day = '' + d.getDate(),
+        year = d.getFullYear(),
+        hour = d.getHours(),
+        min = d.getMinutes();
 
     if (month.length < 2)
         month = '0' + month;
@@ -762,36 +728,39 @@ function getFileNameStamp() {
 
     return [year, month, day, hour, min].join('-');
 }
+const messagePanelSelector = '#main > div._1LcQK > div > div > div:nth-child(3)';
 
-const popPanel=ayanoglu.ui.controls.selectionPop((text)=>{
+const popPanel = ayanoglu.ui.controls.selectionPop((text) => {
     console.log(text);
     ayanoglu.wup.workers.sendMessage(text);
+}, true);
+
+popPanel.onWillSelect = (e) => {
+    let messagePanel = document.querySelector(messagePanelSelector);
+    if (messagePanel && messagePanel.contains(e.target)) return true;
+    return false;
 }
-, true);
 
-utility.addMenuItems([
-	{
-		'id':'open-editor',
-		'title' : 'Open Message Panel',
-		'contexts' : [
-			'page'
-			]
-	}
-	]);
-var mousePos;
-document.addEventListener('mouseup', function (e) {
-	  if (e.button == 2) {
-		  mousePos=e;
-	    var p = {clientX: e.clientX, clientY: e.clientY};
-	    var msg = {text: 'example', point: p, from: 'mouseup'};
-	  
-	    chrome.runtime.sendMessage(msg, function(response) {});
-	  }
-	})
+utility.addMenuItems([{
+    'id': 'open-editor',
+    'title': 'Open Message Panel',
+    'contexts': [
+        'page'
+    ]
+}]);
 
-utility.addMenuListener( (menu,info,tab)=>{
-	popPanel.show(mousePos); 
-})
+utility.addMenuItems([{
+    'id': 'open-editor',
+    'title': 'Open Message Panel',
+    'contexts': [
+        'page'
+    ]
+}]);
+
+
+// utility.addMenuListener((menu, info, tab) => {
+//     popPanel.show(mousePos);
+// })
 
 
 let parseContactInfo = function() {
@@ -799,25 +768,25 @@ let parseContactInfo = function() {
     var numSelector = '#app > div > div > div.YD4Yw > div._1-iDe._14VS3 > span > div > span > div > div > div._2vsnU > div._1CRb5._34vig._3XgGT > span > span';
     numSelector = '#app > div > div > div.YD4Yw > div._1-iDe._14VS3 > span > div > span > div > div > div.Mr-fu > div._2Bps4._1mTqm._1pDAt > span > span';
 
-    return new Promise((resolve,reject)=>{
+    return new Promise((resolve, reject) => {
 
-        ayanoglu.wup.openChatPanel().then((element)=>{
+        ayanoglu.wup.openChatPanel().then((element) => {
             var find = ayanoglu.DOM.findElement;
 
             var infoPaneSelector = '#app > div > div > div:nth-child(2) > div:nth-child(3)';
-            find(infoPaneSelector, 'infoPane').then((ipElement)=>{
+            find(infoPaneSelector, 'infoPane').then((ipElement) => {
 
                 var numSelector = ':scope span > div > span > div > div > div > div > span';
                 var nameSelector = ':scope span > div > span > div > div > div > div > div:nth-of-type(2)';
 
-                find(numSelector, 'num element', ipElement).then((numElement)=>{
+                find(numSelector, 'num element', ipElement).then((numElement) => {
                     var numText = numElement.textContent;
 
                     var num = numText.replace(/[^\d]/g, '');
                     if (/[\d]{10,}/.test(num)) {
                         var phone = num;
 
-                        find(nameSelector, 'Name', ipElement).then((nameElement)=>{
+                        find(nameSelector, 'Name', ipElement).then((nameElement) => {
                             //  console.log(nameElement.textContent);
                             name = nameElement.textContent
 
@@ -829,24 +798,21 @@ let parseContactInfo = function() {
 
                             });
 
-                        }
-                        , ()=>{
+                        }, () => {
                             console.log('Not a new number');
-                        }
-                        )
+                        })
                     }
 
                     //debugger;
 
-                }
-                )
+                })
 
-            }
-            )
+            })
 
             return;
-            var saved = false, name, phone;
-            find(numSelector, 'Phone').then((numElement)=>{
+            var saved = false,
+                name, phone;
+            find(numSelector, 'Phone').then((numElement) => {
                 // console.log(numElement.textContent);
 
                 phone = numElement.textContent;
@@ -856,7 +822,7 @@ let parseContactInfo = function() {
                     name = phone;
                     console.log('Name found', name);
                     numSelector = '#app > div > div > div.YD4Yw > div._1-iDe._14VS3 > span > div > span > div > div > div.Mr-fu > div:nth-child(4) > div:nth-child(3) > div > div > span > span'
-                    find(numSelector, 'Phone').then((phoneElement)=>{
+                    find(numSelector, 'Phone').then((phoneElement) => {
                         //  console.log(nameElement.textContent);
                         var phone = phoneElement.textContent
                         resolve({
@@ -866,15 +832,13 @@ let parseContactInfo = function() {
                             saved: true
                         });
 
-                    }
-                    , ()=>{
+                    }, () => {
 
                         reject();
-                    }
-                    )
+                    })
 
                 } else {
-                    find(nameSelector, 'Name').then((nameElement)=>{
+                    find(nameSelector, 'Name').then((nameElement) => {
                         //  console.log(nameElement.textContent);
                         name = nameElement.textContent
                         resolve({
@@ -885,25 +849,20 @@ let parseContactInfo = function() {
 
                         });
 
-                    }
-                    , ()=>{
+                    }, () => {
 
                         resolve({
                             phone1Type: 'mobile',
                             phone1Value: phone,
                             saved: false
                         });
-                    }
-                    )
+                    })
                 }
 
-            }
-            , reject)
-        }
-        , reject);
+            }, reject)
+        }, reject);
 
-    }
-    )
+    })
 
 }
 
@@ -921,32 +880,28 @@ let collectWupGroupMembers = function() {
 
     console.clear();
 
-    let collectMembers = ()=>{
+    let collectMembers = () => {
 
-        ayanoglu.wup.workers.collectGroupMembers(contacts).then((members)=>{
+        ayanoglu.wup.workers.collectGroupMembers(contacts).then((members) => {
             contacts = members;
             window.csvStack = [];
-            contacts.forEach((contact)=>{
+            contacts.forEach((contact) => {
                 csvStack.push(ayanoglu.google.buildContactCSV(contact));
-            }
-            );
+            });
             var str = ayanoglu.google.buildContactsCSV(contacts);
 
-            setTimeout(()=>{
+            setTimeout(() => {
                 dlg.writeText(str);
-            }
-            , 1);
+            }, 1);
 
-        }
-        , ()=>{}
-        );
+        }, () => {});
     }
 
     var dlg = contactListDialog('Grup kişiler');
 
     dlg.button('Collect', collectMembers);
 
-    dlg.button('Table List', ()=>{
+    dlg.button('Table List', () => {
         let addLocalStyle = function(element, css) {
             var style = _$('style').atts({
                 'type': 'text/css',
@@ -991,21 +946,18 @@ div.contact-table > div:first-child > div {
 
         var table = _$('div').cls('contact-table').addTo(listPop.container);
         var csvLines = dlg.text.split('\n');
-        csvLines.forEach((csvLine)=>{
+        csvLines.forEach((csvLine) => {
 
             var row = _$('div').css(``).addTo(table);
 
             var cCsvArr = csvLine.split(',');
-            fields.forEach((field,i)=>{
-                var value = cCsvArr[i].replace(/\"/g, '');
-                ;var cell = _$('div').css(``).text(value).addTo(row);
-            }
-            )
-        }
-        );
+            fields.forEach((field, i) => {
+                var value = cCsvArr[i].replace(/\"/g, '');;
+                var cell = _$('div').css(``).text(value).addTo(row);
+            })
+        });
 
-    }
-    );
+    });
 
     collectMembers();
 
@@ -1060,20 +1012,20 @@ function replaceSelectedText(cb) {
         range.text = replacementText;
     }
 }
+
 function menuHandler(menu, info, tab) {
 
     if (info.menuItemId === 'wup-selection') {
         if (!info.selectionText)
             return;
-        var cb = (selectionText)=>{
-            var d = document
-              , e = encodeURI;
+        var cb = (selectionText) => {
+            var d = document,
+                e = encodeURI;
             var f = 'https://api.whatsapp.com/send';
             var p = '?text=' + e(selectionText);
             var url = f + p + '\n\n\n' + selectionText;
             return url
-        }
-        ;
+        };
 
         replaceSelectedText(cb);
 
@@ -1082,6 +1034,25 @@ function menuHandler(menu, info, tab) {
         // "height=300,width=700,left=100,top=100,resizable=no,scrollbars=no,toolbar=no,menubar=no,location=no,directories=no,status=no,dialog=yes";
         // window.open( url, "wup-this",strWindowFeatures);
 
+        return info.selectionText;
+
+    } else if (info.menuItemId === 'wup-contact') {
+        if (!info.selectionText)
+            return;
+        let selectionText = info.selectionText;
+
+        var d = document,
+            e = encodeURI;
+        var f = 'https://contacts.google.com/search/';
+        var p = '' + e(selectionText);
+        var url = f + p;
+        //https://developer.mozilla.org/en-US/docs/Web/API/Window/open
+        var strWindowFeatures = "height=300,width=700,left=100,top=100,resizable=no,scrollbars=no,toolbar=no,menubar=no,location=no,directories=no,status=no,dialog=yes";
+        window.open(url, "wup-this" /* , strWindowFeatures */ );
+
+
+
+
         return;
 
     }
@@ -1089,17 +1060,22 @@ function menuHandler(menu, info, tab) {
 }
 
 utility.addMenuItems([{
-    'id': 'wup-selection',
-    'title': 'Send  "%s" to Whatsapp',
-    'contexts': ['selection']
-}, {
-    'id': 'entity',
-    'title': 'Collect Entity',
-    'contexts': ['link']
-}/*, {
-    'id': 'phones',
-    'title': 'Collect phones',
-    'contexts': ['page']
-}*/
+        'id': 'wup-contact',
+        'title': 'Search  "%s" in Contacts',
+        'contexts': ['selection']
+    }, {
+        'id': 'wup-selection',
+        'title': 'Send  "%s" to Whatsapp',
+        'contexts': ['selection']
+    }, {
+        'id': 'entity',
+        'title': 'Collect Entity',
+        'contexts': ['link']
+    }
+    /*, {
+        'id': 'phones',
+        'title': 'Collect phones',
+        'contexts': ['page']
+    }*/
 ]);
 utility.addMenuListener(menuHandler);
