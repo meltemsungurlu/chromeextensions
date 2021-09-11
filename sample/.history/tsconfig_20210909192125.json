@@ -1,0 +1,30 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "target": "es6",
+    "allowJs": true,
+    "checkJs": true,
+    "outDir": "out", 
+    "strict": true,
+    "typeRoots": [
+      "./shared", 
+      "./*.ts",
+      "./shared/*.ts"
+    ]
+  },
+  
+  "files": [
+    "lib.d.ts", 
+  ],
+  "include": [
+    "shared/*.js",
+    "contentscripts/*.js", 
+  ],
+  "exclude": [
+    "out/*.*", 
+  ],
+  "compileOnSave": true,
+  "typingOptions": {
+    "enableAutoDiscovery": true
+  }
+}

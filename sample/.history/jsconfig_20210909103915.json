@@ -1,0 +1,38 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "target": "es6",
+    "checkJs": true,
+    "moduleResolution": "node",
+    "allowSyntheticDefaultImports": true,
+  },
+  "files": [
+    "globals.d.ts",
+    "shared/lib.d.ts"
+  ],
+  "js/ts.implicitProjectConfig.checkJs": true,
+  "include": [
+    "lib/*.js",
+    "modules/*.mjs"
+    // "lib/desktop.js",   
+    // "lib/ajax.js",
+    // "modules/lib.mjs",
+    // "modules/view2.mjs"
+  ],
+  "exclude": [
+    "out/*",
+    "ts/*.*",
+    "data/*.*",
+    "src/*.*",
+    "desktop-prepend.js",
+    "drugs.js",
+    "less.min.js",
+    "lib/*.j_",
+    "lib/moduleLoader.js",
+    "lib/babel-server.js",
+    "*.txt",
+    "lib/jsdoc.js",
+    "lib/snippetLib.js",
+    "lib/temp.js"
+  ]
+}

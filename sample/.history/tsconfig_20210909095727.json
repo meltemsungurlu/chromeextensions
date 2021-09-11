@@ -1,0 +1,45 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "target": "es6",
+    "allowJs": true,
+    "checkJs": true,
+    "outDir": "out", 
+    "strict": true,
+    "typeRoots": [
+      "./lib",
+      "./modules",
+      "./*.ts",
+      "./modules/*.ts"
+    ]
+  },
+  "files": [
+    "globals.d.ts",
+    "lib.d.ts",
+    "modules/modules.d.ts"
+  ],
+  "include": [
+    "lib/*.js",
+    "modules/*.mjs", 
+  ],
+  "exclude": [
+    "out/*.*",
+    "data/*.*",
+    "src/*.*",
+    "desktop-prepend.js",
+    "drugs.js",
+    "less.min.js",
+    "lib/*.j_",
+    "lib/moduleLoader.js",
+    "lib/babel-server.js",
+    "my.js",
+    "*.txt",
+    "lib/jsdoc.js",
+    "lib/snippetLib.js",
+    "lib/temp.js"
+  ],
+  "compileOnSave": true,
+  "typingOptions": {
+    "enableAutoDiscovery": true
+  }
+}

@@ -1,21 +1,22 @@
 //# sourceURL=@chrome-extension-pop-editor.js
 console.log('Loading pop-editor.js...');
 
-const panel = new ayanoglu.ui.controls.templateSelector((text) => {
-    console.log(text);
+const panel = ayanoglu.ui.controls.templateSelector((text) => {
+    console.log('Choice: ' + text);
     //ayanoglu.wup.workers.sendMessage(text);
-}, true);
+}, true, 'template-selector-key');
 panel.onWillSelect = () => {
+
     return false;
 };
 
-utility.addMenuItems([{
-    'id': 'open-editor',
-    'title': 'Open Message Panel',
-    'contexts': [
-        'page'
-    ]
-}]);
+// utility.addMenuItems([{
+//     'id': 'open-editor-common',
+//     'title': 'Open Message Panel',
+//     'contexts': [
+//         'page'
+//     ]
+// }]);
 // var mousePos;
 // document.addEventListener('mouseup', function(e) {
 //     if (e.button == 0) {

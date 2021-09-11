@@ -1,0 +1,20 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "target": "es6",
+    "checkJs": true,
+    "moduleResolution": "node",
+    "allowSyntheticDefaultImports": true,
+  },
+  "files": [
+    "globals.d.ts",
+    "shared/lib.d.ts"
+  ],
+  "js/ts.implicitProjectConfig.checkJs": true,
+  "include": [
+    "shared/*.js",  
+    "contentscripts/*.js",
+  ],
+  "exclude": [ 
+  ]
+}

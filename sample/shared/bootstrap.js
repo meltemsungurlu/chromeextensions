@@ -1,5 +1,8 @@
 //# sourceURL=@chrome-extension-bootstrap.js
 /* jshint undef: true, unused: true, eqeqeq: true, maxdepth:2 */
+
+// const { type } = require("jquery");
+
 // console.clear();
 window.empty = function(o) {
     if (!isset(o))
@@ -140,6 +143,23 @@ class chromeResponse {
 
 }
 
+class runTimeRequest {
+    /**
+     * @param {any} type
+     * @param {any} [detail]
+     */
+    constructor(type, detail) {
+        this.type = type;
+        this.detail = detail;
+    }
+    type;
+    detail;
+ 
+
+
+
+}
+
 var chromeConsoleLevel = 1;
 console.log('%cconsole log level: ', 'color:red;', chromeConsoleLevel);
 
@@ -225,6 +245,9 @@ class contentPanel extends baseControl {
 
 
 class utility {
+    /**
+     * @deprecated
+     */
     static injectSharedStyle() {
         var target = document.head || document.documentElement;
 
@@ -239,14 +262,14 @@ class utility {
         target.appendChild(style);
     }
 
-    static injectFiles() {
+    static injectBootsrapStyleSheet() {
 
         console.log('injecting...')
             // if(typeof document ==='undefined') return;
         var target = document.head || document.documentElement;
 
         var styleLoaded = false;
-        var href = chrome.extension.getURL('_modules/llebnplhkecpjbnlgafdfinohdfdchjn/bootstrap.css');
+        var href = chrome.extension.getURL('shared/bootstrap.css');
         var styles = document.styles || [];
         // in order not to load from multiple extension
         for (var i = 0; i < styles.length; i++) {
@@ -282,6 +305,8 @@ class utility {
 
         }
         if (!styleLoaded) {
+
+
             var style = document.createElement('style');
             style.type = 'text/css';
             var css = '';
@@ -313,6 +338,22 @@ class utility {
             css += ' font-weight: normal; font-style: normal;';
             css += '}';
 
+
+            css += `
+@font-face {
+    font-family: 'Material Icons';
+    font-style: normal;
+    font-weight: 400;
+    src: url(${ chrome.extension.getURL( 'shared/fonts/materials/MaterialIcons-Regular.eot' ) });
+    /* For IE6-8 */
+    src: local('Material Icons'), local('MaterialIcons-Regular'), 
+    url(${ chrome.extension.getURL( 'shared/fonts/materials/MaterialIcons-Regular.woff2' ) }) format('woff2'), 
+    url(${ chrome.extension.getURL( 'shared/fonts/materials/MaterialIcons-Regular.woff' ) }) format('woff'), 
+    url(${ chrome.extension.getURL( 'shared/fonts/materials/MaterialIcons-Regular.ttf' ) }) format('truetype');
+}
+
+`;
+
             style.textContent = css;
 
             target.appendChild(style);
@@ -335,7 +376,7 @@ class utility {
         chrome.runtime.sendMessage({
             contextMenuItems: items
         }, function(response) {
-            console.log(response);
+            //             console.log(response);
         });
     }
 
@@ -5226,7 +5267,7 @@ ___parser();
 
 ___dom();
 
-(function() {
+(function uiLib() {
 
     function simulateMouseEvents(element, eventName) {
 
@@ -5594,55 +5635,17 @@ ___dom();
     ui.getCSVText = getCSVText;
     ui.contactForm = contactForm;
     ui.contactListDialog = contactListDialog;
-
-    let dialogBase = function() {
+    //TASK
+    let dialogBase = function(options) {
 
         var cssText = `
- 
- 
-
-.slide-in {
-    transform: translate(100%,-110%);  
-}
-
-.slide-out {
-    animation: slide-out 0.5s forwards;
-    -webkit-animation: slide-out 0.5s forwards;
-}
-    
-@keyframes slide-in {
-    100% { transform: translate(100%,-100%); }
-}
-
-@-webkit-keyframes slide-in {
-    100% { -webkit-transform: translate(100%,-100%); }
-}
-    
-@keyframes slide-out {
-    0% { transform: translate(100%,-110%); }
-    100% { transform: translate(100%,10%); }
-}
-
-@-webkit-keyframes slide-out {
-    0% { -webkit-transform: translate(100%,-110%); }
-    100% { -webkit-transform: translate(100%,10%); }
-}
-
-        .ayanoglu-dialog-container {
-            position: fixed;
-            top: 0px;
-            right: 0px;
-            bottom: 0px;
-            left: 0px;
-            z-index: 101000;
-            background-color: rgba(0, 0, 0, 0.23);
-        }
-        .ayanoglu-dialog > div.f:empty {
-    display: none
-}
+  
 
     `;
         ayanoglu.DOM.style(cssText);
+
+        options = options || {};
+        let title = options.title || 'Untitled';
         let _$ = ayanoglu.DOM._$;
         var d = window.document;
 
@@ -5728,7 +5731,7 @@ ___dom();
         //  panel.classList.add('slide-in');
         var header = _$('div').cls('h').addTo(panel);
 
-        var headerTxt = _$('div').cls('txt').text('Untitled').addTo(header);
+        var headerTxt = _$('div').cls('txt').text(title).addTo(header);
         var headerCmd = _$('div').cls('cmd').addTo(header);
 
         var pWidth = panel.offsetWidth;
@@ -5754,8 +5757,8 @@ ___dom();
         resBtn.addEventListener('click', (e) => {
             panel.setAttribute('style', resStyle);
             /* panel.style.width=  pWidth +  'px';
-            	 panel.style.left=pLeft;
-            	 panel.style.right=pRight;*/
+                 panel.style.left=pLeft;
+                 panel.style.right=pRight;*/
             resBtn.style.display = 'none';
             maxBtn.style.display = 'block';
 
@@ -5836,7 +5839,7 @@ ___dom();
 
 
     function modalDialog() {
-        var dlg = dialogBase();
+        var dlg = dialogBase.apply(this, Array.prototype.slice.call(arguments));
         dlg.control.classList.add('modal');
         dlg.control.classList.add('slide-in');
         dlg.control.classList.add('slide-out');
@@ -5856,7 +5859,7 @@ ___dom();
         var popId = 'pop-command-win';
 
         ayanoglu.DOM.style(`
-    	#${popId} {
+    	#${ popId } {
     	position:fixed;
     	top:50px;
     	left:450px;
@@ -5871,7 +5874,7 @@ ___dom();
     	}
 
 
-    	#${popId} > div  {
+    	#${ popId } > div  {
     	position:absolute;
     	left:30px;
         height: inherit;
@@ -5883,16 +5886,16 @@ ___dom();
     	transform: scale(0,1);
     	opacity: 0;
     	}
-#${popId}:hover  {
+#${ popId }:hover  {
     		border-radius:5px 0px 0px 5px; 
     		
     	} 
-    	#${popId}:hover > div {
+    	#${ popId }:hover > div {
     		transform: scale(1,1);
     		opacity: 1;
     	} 
 
-    	#${popId} > div  > div  
+    	#${ popId } > div  > div  
     	{
     	    display: flex;
     	    justify-content: center;
@@ -5902,19 +5905,19 @@ ___dom();
     	    color: black; 
            cursor:pointer;
     	}
-    	#${popId} > div  > div:last-child {
+    	#${ popId } > div  > div:last-child {
     	        
     	    border-radius:0px 5px 5px 0px;
     	}
 
-#${popId} > div  > div + div {
+#${ popId } > div  > div + div {
 
     	    border-left: 1px groove rgba(226, 221, 221, 0.25);
 }
 
 
-#${popId}:before,
-    	#${popId} > div > div:before {
+#${ popId }:before,
+    	#${ popId } > div > div:before {
     		color:inherit; 
     		font-size: inherit;
 	font-style: normal !important;
@@ -6068,8 +6071,8 @@ ___dom();
             resBtn.addEventListener('click', (e) => {
                 panel.setAttribute('style', resStyle);
                 /* panel.style.width=  pWidth +  'px';
-            	 panel.style.left=pLeft;
-            	 panel.style.right=pRight;*/
+                 panel.style.left=pLeft;
+                 panel.style.right=pRight;*/
                 resBtn.style.display = 'none';
                 maxBtn.style.display = 'block';
 
@@ -6457,7 +6460,7 @@ ___dom();
 
             ayanoglu.DOM.style(`
 
-#${sId} {
+#${ sId } {
 
 position:fixed;
 top:0px;
@@ -6479,13 +6482,13 @@ width:400px;
      font-size:14px;
 }
 
-#${sId}[class='pop'] {    
+#${ sId }[class='pop'] {    
 transform : scale(1);
 opacity:1;
 
 }
 
-#${sId} > div.new {  
+#${ sId } > div.new {  
 background-color:rgba(0, 0, 0, 0.15);
   display: flex;
    flex-direction: row;
@@ -6509,13 +6512,13 @@ background-color:rgba(0, 0, 0, 0.15);
     outline: none;
 }
 
-#${sId} > div.list {   
+#${ sId } > div.list {   
 display:flex;
 flex-direction:column;  
     overflow-y:auto;
     flex-grow:2;
 }
-#${sId} > div.list > div {
+#${ sId } > div.list > div {
     font-size: 14px;
     font-family: sans-serif;
     cursor: pointer;
@@ -6527,14 +6530,14 @@ flex-direction:column;
 }
 
 
-#${sId} > div.new > div { 
+#${ sId } > div.new > div { 
  padding: 12px; 
 }
 
-#${sId} > div > div.t { 
+#${ sId } > div > div.t { 
     padding: 12px;
 }
-#${sId} > div > div.icon-edit {
+#${ sId } > div > div.icon-edit {
  margin-left:8px;
  margin-right:8px;
 }
@@ -6697,8 +6700,29 @@ flex-direction:column;
                 'type': 'text/css',
                 'id': 'snippet-style-sheet'
             }).addTo(document.head);
-        if (css)
-            style.textContent += '\n' + css;
+        if (css) {
+            let tempStyle = document.getElementById('snippet-style-sheet-temp');
+            if (!tempStyle) {
+                tempStyle = _$('style').atts({
+                    'type': 'text/css',
+                    'id': 'snippet-style-sheet-temp'
+                }).addTo(document.head);
+                tempStyle.textContent = css;
+            }
+            let sheet = style.sheet;
+            let tempSheet = tempStyle.sheet;
+            //             console.log(tempSheet.rules);
+            Array.from(tempSheet.rules).forEach((newRule) => {
+                if (!Array.from(sheet.rules).find((ruleTest) => {
+                        return ruleTest.selectorText === newRule.selectorText &&
+                            ruleTest.cssText === newRule.cssText;
+                    })) {
+                    style.sheet.insertRule(newRule.cssText);
+                    //                     console.log('rule', newRule.selectorText);
+                }
+            })
+            tempStyle.remove();
+        }
     }
     DOM.findElement = function(selector, name, root) {
         if (typeof name === 'undefined')
@@ -6708,13 +6732,13 @@ flex-direction:column;
         return new Promise((resolve, reject) => {
             if (element = root.querySelector(selector)) {
 
-                console.log(`"${name}" found`);
+                console.log(`"${ name }" found`);
                 resolve(element);
 
             } else {
                 reject();
                 console.trace('findElement');
-                console.error(`"${name}" not found`);
+                console.error(`"${ name }" not found`);
             }
         });
     };
@@ -7104,7 +7128,7 @@ flex-direction:column;
     }
 
     utilities.copy = function(raw) {
-        var element = _$('textarea').addTo(document.body);
+        var element = _$('textarea').css('opacity:0;position:fixed;left:-1000px;top:-1000px;').addTo(document.body);
         element.textContent = raw;
         element.select();
         document.execCommand('copy');
@@ -7119,21 +7143,21 @@ flex-direction:column;
             return raw;
         }
         /*
-      ayanoglu.utility.getHttpData('wup-replies').then((response)=>{
-	for(key in response){
-	   // console.log(response[key])
-	   var text=response[key];
-	      var item=_$('div').text(text).addTo(selPop);
-	    if(handle)  item.addEventListener('click',(e)=>{
-	             handle(e.target.textContent);
-	      })
-	}
+ayanoglu.utility.getHttpData('wup-replies').then((response)=>{
+for(key in response){
+// console.log(response[key])
+var text=response[key];
+  var item=_$('div').text(text).addTo(selPop);
+if(handle)  item.addEventListener('click',(e)=>{
+         handle(e.target.textContent);
+  })
+}
 }
 , (status)=>{
-	console.log(status)
+console.log(status)
 }
 );
-    */
+*/
     utilities.getHttpData = function(name, serviceUrl) {
 
         return new Promise((resolve, reject) => {

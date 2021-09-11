@@ -1,230 +1,377 @@
 @charset "UTF-8";
 
-#selector-pop {
-	position: fixed;
-	top: 0px;
-	left: 0px;
-	z-index: 1000000;
-	background-color: rgb(255 255 201/ 1);
-	border-radius: 5px;
-	display: flex;
-	flex-direction: column;
-	transform-origin: 0 0;
-	transform: scale(0);
-	opacity: 0;
-	transition: transform 0.5s;
-	transition: opacity 0.9s;
-	height: 600px;
-	width: 400px;
+/*///////////////////////////////////////// begin controls dialog ///////////////////////////////////*/
+
+body[class~="ayanoglu-modal"]>*:not([class~="ayanoglu-panel"]) {
+    opacity: 0.3 !important;
+    background-color: rgb(0 0 0 / 15%);
+    pointer-events: none;
 }
 
-
- 
-#selector-pop * {
- font-size:14px;
+.ayanoglu-panel {
+    border-radius: 8px;
+    box-shadow: 0px 1px 3px 2px rgb(155 154 154 / 49%);
+    background-color: rgb(255, 255, 197);
 }
 
-#selector-pop[class='pop'] {    
-transform : scale(1);
-opacity:1;
-
+.ayanoglu-panel * {
+    line-height: 15px !important;
 }
 
- 
-#selector-pop > div.header {
-	background-color: rgb(0 0 0/ 11%);
-	display: flex;
-	flex-direction: row;
-	justify-content: space-between;
-	align-items: center;
+.ayanoglu-panel button {
+    padding: 8px;
+    border-radius: 4px;
+    background-color: rgb(0 0 0 / 22%);
+    border-width: 1px;
+    border-color: rgb(0 0 0 / 43%);
+    letter-spacing: 0.04rem;
+    font-family: 'Roboto';
 }
 
-#selector-pop > div.header > i {
-	
-}
-#selector-pop > div.header > i::before {
-    font-size: 19px;
-    margin:0px;
-}
-
-#selector-pop > div.header > :is(input,i) {
-    
-    margin-right:10px
-}
-#selector-pop > div.header > i.faws-close-2::before {
-    font-size: 19px;
+.ayanoglu-panel[class~="extension-dialog"] {
+    position: fixed;
+    z-index: 100000;
+    top: 100px;
+    left: 100px;
+    min-width: 192px;
+    min-height: 128px;
+    flex-direction: column;
+    display: none;
 }
 
-#selector-pop > div.toggle {	
-	flex-direction: column;
-	height: 500px;
-	display:none;
+.ayanoglu-panel[class~="extension-dialog"][class~="on"] {
+    display: flex;
 }
-#selector-pop > div.toggle[class~="pop"]{
-		display: flex;
-}
-#selector-pop > div.toggle textarea {
+
+.ayanoglu-panel[class~="extension-dialog"]>.h {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
     width: -webkit-fill-available;
-    height: -webkit-fill-available;
+    padding: 8px 0px 8px 8px;
+    flex-grow: 1;
+}
+
+.ayanoglu-panel[class~="extension-dialog"]>.h>div {
+    font-weight: 400;
+    font-size: 1.01rem;
+    font-family: 'Roboto';
+}
+
+.ayanoglu-panel[class~="extension-dialog"] .h>i.closer {}
+
+.ayanoglu-panel[class~="extension-dialog"] .h>i.closer::before {
+    content: "\e801";
+    font-size: 18px !important;
+    margin-right: 6px;
+    cursor: pointer;
+    font-family: fontello;
+    font-style: normal !important;
+    font-weight: normal !important;
+    box-sizing: border-box;
+    text-rendering: auto;
+    -webkit-font-smoothing: antialiased;
+}
+
+.ayanoglu-panel[class~="extension-dialog"]>.b {
+    overflow-y: auto;
+    flex-grow: 10;
+}
+
+.ayanoglu-panel[class~="extension-dialog"]>.f {
+    flex-grow: 1;
+}
+
+
+/*///////////////////////////////////////// end controls dialog ///////////////////////////////////*/
+
+
+/*///////////////////////////////////////// begin dialog ///////////////////////////////////*/
+
+.slide-in {
+    transform: translate(100%, -110%);
+}
+
+.slide-out {
+    animation: slide-out 0.5s forwards;
+    -webkit-animation: slide-out 0.5s forwards;
+}
+
+@keyframes slide-in {
+    100% {
+        transform: translate(100%, -100%);
+    }
+}
+
+@-webkit-keyframes slide-in {
+    100% {
+        -webkit-transform: translate(100%, -100%);
+    }
+}
+
+@keyframes slide-out {
+    0% {
+        transform: translate(100%, -110%);
+    }
+    100% {
+        transform: translate(100%, 10%);
+    }
+}
+
+@-webkit-keyframes slide-out {
+    0% {
+        -webkit-transform: translate(100%, -110%);
+    }
+    100% {
+        -webkit-transform: translate(100%, 10%);
+    }
+}
+
+.ayanoglu-dialog-container {
+    position: fixed;
+    top: 0px;
+    right: 0px;
+    bottom: 0px;
+    left: 0px;
+    z-index: 101000;
+    background-color: rgba(0, 0, 0, 0.23);
+}
+
+.ayanoglu-dialog>div.f:empty {
+    display: none
+}
+
+
+/*///////////////////////////////////////// end dialog ///////////////////////////////////*/
+
+#selector-pop {
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    z-index: 1000000;
+    background-color: rgb(255 255 201/ 1);
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+    transform-origin: 0 0;
+    transform: scale(0);
+    opacity: 0;
+    transition: transform 0.5s;
+    transition: opacity 0.9s;
+    height: 600px;
+    width: 400px;
+}
+
+#selector-pop * {
+    font-size: 14px;
+}
+
+#selector-pop[class~='pop'] {
+    transform: scale(1);
+    opacity: 1;
+}
+
+#selector-pop>div.header {
+    background-color: rgb(0 0 0/ 11%);
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#selector-pop>div.header>i {}
+
+#selector-pop>div.header>i::before {
+    font-size: 19px;
+    margin: 0px;
+}
+
+#selector-pop>div.header> :is(input, i) {
+    margin-right: 10px
+}
+
+#selector-pop>div.header>i.faws-close-2::before {
+    font-size: 19px;
+}
+
+#selector-pop>div.toggle {
+    flex-direction: column;
+    height: 500px;
+    display: none;
+}
+
+#selector-pop[class~="editing"]>div.toggle,
+#selector-pop>div.toggle[class~="pop"] {
+    display: flex;
+}
+
+#selector-pop[class~="editing"]>div.header>i[class~="icon-cog"]::before {
+    color: red;
+}
+
+#selector-pop>div.toggle textarea {
+    width: -webkit-fill-available;
+    height: 100%;
     padding-right: 23px;
+    outline: 1px solid rgb(220 220 220);
+    border-color: transparent;
 }
 
- 
-#selector-pop > div.toggle   {
-    
+#selector-pop>div.toggle {
     position: relative;
+    padding: 4px;
+    max-height: 100px;
 }
 
-#selector-pop > div.toggle > i {
-    position: absolute;    
+#selector-pop>div.toggle>i {
+    position: absolute;
     top: 3px;
     right: 0px;
     bottom: 0px;
 }
 
-#selector-pop > div.toggle > i[class~="icon-plus"] {
-    
+#selector-pop>div.toggle>i[class~="icon-picture"],
+#selector-pop>div.toggle>i[class~="icon-plus"] {
     top: auto;
     bottom: 0px;
 }
 
-#selector-pop > div.toggle > i:before {
+#selector-pop>div.toggle>i:before {
     font-size: 20px;
     cursor: pointer;
 }
-#selector-pop > .list::-webkit-scrollbar {
+
+#selector-pop>.list::-webkit-scrollbar {
     width: 7px;
     background-color: rgb(0 0 0 / 0.03);
-} 
+}
 
-#selector-pop > .list::-webkit-scrollbar-thumb {
-     
+#selector-pop>.list::-webkit-scrollbar-thumb {
     background-color: rgb(0 0 0 / 0.13);
-} 
-#selector-pop > :is(div.header, div.list) > div  {
-padding:7px;
-cursor: pointer; 
 }
 
- 
-
-#selector-pop > :is(div.header, div.list) > div > div {
-     font-size:13px;
-    line-height: 19px; 
-}
-#selector-pop > div.header > input[type=checkbox]{
-	transform: scale(1.6);
+#selector-pop> :is(div.header, div.list)>div {
+    padding: 4px;
+    cursor: pointer;
 }
 
-
-#selector-pop > div.header > input[type=text] {
-margin: 6px;
-border-radius: 4px;
-background-color: #ffffffc2;
-border: 0px;    
-flex-grow: 2;    
-outline: none;
-padding:5px;
+#selector-pop> :is(div.header, div.list)>div>div {
+    font-size: 13px;
+    line-height: 19px;
+    padding: 4px;
 }
 
-#selector-pop > div.list {   
-display:flex;
-flex-direction:column;  
-overflow-y:auto;
-flex-grow:2;
-}
-#selector-pop > div.list > div {
-font-size: 14px;
-font-family: sans-serif;
-cursor: pointer;
-border-top: 1px solid #0000001c;
-display:flex;
- justify-content: space-between;
- align-items: center;
-
+#selector-pop>div.header>input[type=checkbox] {
+    transform: scale(1.6);
 }
 
-#selector-pop > div.header > div { 
-padding: 12px; 
+#selector-pop>div.header>input[type=text] {
+    margin: 6px;
+    border-radius: 4px;
+    background-color: #ffffffc2;
+    border: 0px;
+    flex-grow: 2;
+    outline: none;
+    padding: 5px;
 }
 
-#selector-pop > div > div.t { 
-padding: 12px;
-}
-#selector-pop > div > div.icon-edit {
-margin-left:8px;
-margin-right:8px;
-}
-
-    
-
-    	#pop-command-win {
-    	position:fixed;
-    	top:50px;
-    	left:450px;
-    	z-index:1000000;
-    	height:30px;
-    	background-color:rgb(255,255,150);
-    	border-radius:5px;
-    	width: 30px;
-        font-size: 24px; 
-        align-items: center;
-    	display:flex;
-    	}
-
-
-    	#pop-command-win > div  {
-    	position:absolute;
-    	left:30px;
-        height: inherit;
-    	background-color:inherit;
-    	display:flex; 
-    	transform-style: flat;
-    	transform-origin: left 0px;
-    	transition: transform transform 0.3s ease-out,opacity 0.5s ease-out;
-    	transform: scale(0,1);
-    	opacity: 0;
-    	}
-#pop-command-win:hover  {
-    		border-radius:5px 0px 0px 5px; 
-    		
-    	} 
-    	#pop-command-win:hover > div {
-    		transform: scale(1,1);
-    		opacity: 1;
-    	} 
-
-    	#pop-command-win > div  > div  
-    	{
-    	    display: flex;
-    	    justify-content: center;
-    	    align-items: center; 
-    	    font-size: 19px;
-    	    width: 30px;
-    	    color: black; 
-           cursor:pointer;
-    	}
-    	#pop-command-win > div  > div:last-child {
-    	        
-    	    border-radius:0px 5px 5px 0px;
-    	}
-
-#pop-command-win > div  > div + div {
-
-    	    border-left: 1px groove rgba(226, 221, 221, 0.25);
+#selector-pop>div.list {
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    flex-grow: 2;
 }
 
+#selector-pop>div.list>div {
+    font-size: 14px;
+    font-family: sans-serif;
+    cursor: pointer;
+    border-top: 1px solid #0000001c;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#selector-pop>div.header>div {
+    padding: 12px;
+}
+
+#selector-pop>div.header i[class*="icon-"]::before {
+    color: rgba(0, 0, 0, 0.7)
+}
+
+#selector-pop>div>div.t {
+    padding: 12px;
+}
+
+#selector-pop>div>div.icon-edit {
+    margin-left: 8px;
+    margin-right: 8px;
+}
+
+#pop-command-win {
+    position: fixed;
+    top: 50px;
+    left: 450px;
+    z-index: 1000000;
+    height: 30px;
+    background-color: rgb(255, 255, 150);
+    border-radius: 5px;
+    width: 30px;
+    font-size: 24px;
+    align-items: center;
+    display: flex;
+}
+
+#pop-command-win>div {
+    position: absolute;
+    left: 30px;
+    height: inherit;
+    background-color: inherit;
+    display: flex;
+    transform-style: flat;
+    transform-origin: left 0px;
+    transition: transform transform 0.3s ease-out, opacity 0.5s ease-out;
+    transform: scale(0, 1);
+    opacity: 0;
+}
+
+#pop-command-win:hover {
+    border-radius: 5px 0px 0px 5px;
+}
+
+#pop-command-win:hover>div {
+    transform: scale(1, 1);
+    opacity: 1;
+}
+
+#pop-command-win>div>div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 19px;
+    width: 30px;
+    color: black;
+    cursor: pointer;
+}
+
+#pop-command-win>div>div:last-child {
+    border-radius: 0px 5px 5px 0px;
+}
+
+#pop-command-win>div>div+div {
+    border-left: 1px groove rgba(226, 221, 221, 0.25);
+}
 
 #pop-command-win:before,
-    	#pop-command-win > div > div:before {
-    		color:inherit; 
-    		font-size: inherit;
-	font-style: normal !important;
-	font-weight: normal !important;
-	box-sizing: border-box;
-	text-rendering: auto;
-	-webkit-font-smoothing: antialiased;
-    		/*content: "\f0c9";*/
-    	}
-
-    	
+#pop-command-win>div>div:before {
+    color: inherit;
+    font-size: inherit;
+    font-style: normal !important;
+    font-weight: normal !important;
+    box-sizing: border-box;
+    text-rendering: auto;
+    -webkit-font-smoothing: antialiased;
+    /*content: "\f0c9";*/
+}

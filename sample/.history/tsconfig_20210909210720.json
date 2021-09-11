@@ -1,0 +1,35 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "target": "es6",
+    "allowJs": true,
+    "checkJs": true,
+    "outDir": "out", 
+    "strict": true,
+    "typeRoots": [
+      "./*.ts",
+      "./shared", 
+      "./shared/*.ts"
+    ]
+    ,"types": [
+      "chrome"
+    ]
+  },
+  
+  "files": [
+    "lib.d.ts", 
+    "shared/lib.d.ts"
+  ],
+  "include": [
+    "*.js",
+    "shared/*.js",
+    "contentscripts/*.js", 
+  ],
+  "exclude": [
+    "out/*.*", 
+  ],
+  "compileOnSave": true,
+  "typingOptions": {
+    "enableAutoDiscovery": true
+  }
+}

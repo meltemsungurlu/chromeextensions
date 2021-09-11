@@ -1,0 +1,209 @@
+{
+
+    "manifest_version": 2,
+    "name": "Hadi Paylas",
+    "version": "1.0.0.1",
+    "description": "Collection of utilities by hadiii.com",
+
+
+    "background": {
+        "scripts": [
+            {
+                "matches":[
+                    "http://*/*",
+                    "https://*/*"
+                ]
+            },
+            "shared/bootstrap.js",
+            "background.js"
+        ],
+        "persistent": true
+    },
+    "content_scripts": [{
+            "matches": [
+                "http://*/*",
+                "https://*/*"
+            ],
+            "run_at": "document_end",
+            "exclude_matches": [
+                "http://api.hadiii.com/*"
+            ],
+            "js": [
+                "shared/bootstrap.js",
+                "shared/ui.js",
+                "content.js",
+                "contentscripts/twitter.js"
+            ],
+            "css": [
+                "shared/bootstrap.css",
+                "shared/ui.css"
+            ]
+        }, {
+            "matches": [
+                "http://*.hadiii.com/*",
+                "https://*.hadiii.com/*"
+            ],
+            "run_at": "document_end",
+            "js": [
+                "shared/bootstrap.js",
+                "shared/ui.js",
+                "contentscripts/pop-editor.js"
+            ],
+            "css": [
+                "shared/bootstrap.css",
+                "shared/ui.css"
+            ]
+        },
+        {
+            "matches": [
+                "http://*.youtube.com/*",
+                "https://*.youtube.com/*"
+            ],
+            "run_at": "document_end",
+            "js": [
+                "shared/bootstrap.js",
+                "contentscripts/ytb.js"
+            ],
+            "css": [
+                "shared/bootstrap.css"
+            ]
+        },
+        {
+            "matches": [
+                "http://*.imdb.com/*",
+                "https://*.imdb.com/*"
+            ],
+            "run_at": "document_end",
+            "js": [
+                "shared/bootstrap.js",
+                "contentscripts/movie.js"
+            ],
+            "css": [
+                "shared/bootstrap.css"
+            ]
+        },
+        {
+            "matches": [
+                "https://*.whatsapp.com/*"
+            ],
+            "run_at": "document_end",
+            "js": [
+                "shared/bootstrap.js",
+                "shared/ui.js",
+                "contentscripts/wup.js"
+            ],
+            "css": [
+                "shared/bootstrap.css",
+                "shared/ui.css"
+            ]
+        },
+        {
+            "matches": [
+                "https://*.google.com/maps/place/*"
+            ],
+            "run_at": "document_end",
+            "js": [
+                "shared/bootstrap.js",
+                "contentscripts/maps.js"
+            ],
+            "css": [
+                "shared/bootstrap.css"
+            ]
+        },
+        {
+            "matches": [
+                "https://www.linkedin.com/*"
+            ],
+            "run_at": "document_end",
+            "js": [
+                "shared/bootstrap.js",
+                "shared/ui.js",
+                "contentscripts/pop-editor.js"
+            ],
+            "css": [
+                "shared/bootstrap.css",
+                "shared/ui.css",
+                "shared/font.css"
+            ]
+        }, {
+            "matches": [
+                "https://contacts.google.com/*"
+            ],
+            "run_at": "document_end",
+            "js": [
+                "shared/bootstrap.js",
+                "shared/ui.js",
+                "contentscripts/gcontacts.js",
+                "contentscripts/pop-editor.js"
+            ],
+            "css": [
+                "shared/bootstrap.css",
+                "shared/ui.css",
+                "shared/font.css"
+            ]
+        }
+    ],
+    "content_security_policy": "script-src 'self' 'unsafe-eval'; connect-src http://*.whatsapp.com 'self'; object-src 'self'; font-src 'self' data:*;",
+    "page_action": {
+        "default_popup": "popup.html",
+        "default_icon": {
+            "16": "shared/images/hadiii-16.png",
+            "32": "shared/images/hadiii-32.png",
+            "48": "shared/images/hadiii-48.png",
+            "128": "shared/images/hadiii-128.png"
+        }
+    },
+    "icons": {
+        "16": "shared/images/hadiii-16.png",
+        "32": "shared/images/hadiii-32.png",
+        "48": "shared/images/hadiii-48.png",
+        "128": "shared/images/hadiii-128.png"
+    },
+    "permissions": [
+        "management",
+        "activeTab",
+        "declarativeContent",
+        "storage",
+        "contextMenus",
+        "cookies",
+        "*://*/*",
+        "tabs",
+        "webNavigation",
+        "http://*/*",
+        "https://*/*",
+        "http://192.168.1.93/*",
+        "https://web.whatsapp.com/*"
+    ],
+    "commands": {
+        "tab-right": {
+            "suggested_key": {
+                "default": "Ctrl+Shift+L",
+                "mac": "Command+Shift+L"
+            },
+            "description": "Toggle feature foo"
+        },
+        "tab-left": {
+            "suggested_key": {
+                "default": "Ctrl+Shift+K",
+                "mac": "Command+Shift+K"
+            },
+            "description": "Toggle feature foo"
+        },
+        "_execute_browser_action": {
+            "suggested_key": {
+                "windows": "Ctrl+Shift+Right",
+                "mac": "Command+Shift+Y",
+                "chromeos": "Ctrl+Shift+U",
+                "linux": "Ctrl+Shift+J"
+            }
+        },
+        "_execute_page_action": {
+            "suggested_key": {
+                "default": "Ctrl+Shift+E",
+                "windows": "Alt+Shift+P",
+                "mac": "Alt+Shift+P"
+            }
+        }
+    },
+    "options_page": "options.html"
+}

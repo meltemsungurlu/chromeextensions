@@ -1,0 +1,67 @@
+body {
+    background-color: cornsilk;
+    font-family: Roboto;
+    font-weight: 400;
+    font-size: 15px;
+    height: 400px;
+    margin: 0px;
+    padding: 0px;
+    display: flex;
+    flex-direction: column;
+}
+
+body , body * {
+    font-family: Roboto;
+}
+body > div.h {
+        font-size: 1.108em;
+        padding: 8px;
+        font-weight: 500;
+}
+.container {
+    padding: 8px;
+    height: 100%;
+    width: 400px;
+    background-color: cornsilk;
+    display: flex;
+    flex-direction: column;
+    /* height: -webkit-fill-available; */
+    flex-grow: 10;
+}
+
+.tab-control {
+    height: 100%;
+    box-sizing: border-box;
+    /* margin-bottom: 16px; */
+    display: flex;
+    flex-direction: column;
+}
+
+.tab-control > .tabs {
+    display: flex;
+}
+
+.tab-control > .content {
+    padding: 8px;
+    background-color: hsl(48deg 83% 88%);
+    height: inherit;
+    height: 100%;
+}
+
+.tab-control > .tabs > div {
+    box-shadow: 0px -1px 2px 1px #8080803b;
+    width: fit-content;
+    padding: 4px 8px 4px 8px;
+    margin-left: 8px;
+    border-radius: 4px 4px 0px 0px;
+    background-color: hsl(48deg 83% 88%);
+    border: 1px solid hsl(0deg 0% 99%);
+    border-bottom-width: 0px;
+    padding-bottom :6px;
+    cursor: pointer;
+}
+
+.hyper-link {
+    color: blue;
+    cursor: pointer;
+}
