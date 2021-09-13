@@ -1,4 +1,4 @@
-
+.history
 sample/hadiii.zip
 *.vscode/*.*
 **/.vscode/*.*
@@ -6,3 +6,5 @@ sample/hadiii.zip
 **/tsconfig.json
 **/jsconfig.json
 **/*.d.ts
+*.ini
+**/*.ini
